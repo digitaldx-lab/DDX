@@ -1,0 +1,1585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="./images/digilogo.png">
+    <title>About Us | Digital Diagnostics Lab</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="sophia.css" rel="stylesheet">
+
+      <!-- In your HTML files -->
+  <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="cart.css">
+    <script src="cart.js"></script>
+    <style>
+        :root {
+            --primary: #9200b6;
+            --secondary: #f8f9fa;
+            --accent: #f12004;
+            --text-dark: #333;
+            --text-light: #fff;
+            --gray-light: #e9ecef;
+            --gray-medium: #adb5bd;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        .dark-mode {
+            --primary: #48cae4;
+            --secondary: #121212;
+            --accent: #2ecc71;
+            --text-dark: #f8f9fa;
+            --text-light: #121212;
+            --gray-light: #2d2d2d;
+            --gray-medium: #5a5a5a;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--secondary);
+            transition: var(--transition);
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header & Navigation */
+        header {
+            background-color: var(--secondary);
+            box-shadow: var(--shadow);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            width: 50%;
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .logo i {
+            margin-right: 10px;
+            font-size: 1.8rem;
+        }
+
+        .nav-links {
+            width: 100%;
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--text-dark);
+            margin-left: 20px;
+            transition: var(--transition);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--gray-light);
+            transform: rotate(360deg);
+        }
+
+        .mobile-menu {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-dark);
+            transition: var(--transition);
+        }
+
+        .mobile-menu:hover {
+            color: var(--primary);
+        }
+
+        .contact{
+            background-color: var(--primary);
+            color: var(--text-light) !important;
+            padding: 8px 15px;
+            border-radius: 20px;
+        }
+        .contact:hover{
+            background-color: var(--accent);
+            color: var(--text-light) !important;
+        }
+       .logo>a {text-decoration: none;
+            color: var(--primary);
+        }
+
+        /* About Page Specific Styles */
+        .page-hero {
+            padding: 150px 0 80px;
+            background: linear-gradient(135deg, var(--primary) 0%, #00a8e8 100%);
+            color: var(--text-light);
+            text-align: center;
+            position: relative;
+            min-height: 100vh;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .page-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.1" d="M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,213.3C672,192,768,128,864,128C960,128,1056,192,1152,192C1248,192,1344,128,1392,96L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .page-hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .page-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .breadcrumb {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .breadcrumb a:hover {
+            color: var(--accent);
+        }
+
+        .breadcrumb span {
+            margin: 0 10px;
+            opacity: 0.7;
+        }
+
+        /* Story Section */
+        .story {
+            padding: 100px 0;
+            background-color: var(--secondary);
+        }
+
+        .story-container {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+        }
+
+        .story-content {
+            flex: 1;
+        }
+
+        .story-image {
+            flex: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .story-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: var(--transition);
+        }
+
+        .story-image:hover img {
+            transform: scale(1.03);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--gray-medium);
+            margin-bottom: 30px;
+        }
+
+        /* Mission & Vision */
+        .mission-vision {
+            padding: 100px 0;
+            background-color: var(--gray-light);
+        }
+
+        .mv-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .mv-card {
+            background-color: var(--secondary);
+            border-radius: 10px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mv-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background-color: var(--primary);
+        }
+
+        .mv-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .mv-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .mv-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+
+        /* Values Section */
+        .values {
+            padding: 100px 0;
+            background-color: var(--secondary);
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .value-card {
+            background-color: var(--gray-light);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .value-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .value-card:hover::before {
+            left: 100%;
+        }
+
+        .value-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .value-icon {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+
+        .value-card:hover .value-icon {
+            transform: scale(1.2);
+        }
+
+        .value-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+
+        /* Team Section */
+        .team {
+            padding: 100px 0;
+            background-color: var(--gray-light);
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .team-member {
+            background-color: var(--secondary);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .team-member:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .member-image {
+            height: 250px;
+            overflow: hidden;
+        }
+
+        .member-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .team-member:hover .member-image img {
+            transform: scale(1.05);
+        }
+
+        .member-info {
+            padding: 25px 20px;
+        }
+
+        .member-name {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+
+        .member-role {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .member-bio {
+            color: var(--gray-medium);
+            margin-bottom: 20px;
+        }
+
+        .member-social {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .member-social a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 35px;
+            height: 35px;
+            background-color: var(--gray-light);
+            color: var(--primary);
+            border-radius: 50%;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .member-social a:hover {
+            background-color: var(--primary);
+            color: var(--text-light);
+            transform: translateY(-3px);
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 80px 0;
+            background: linear-gradient(135deg, var(--primary) 0%, #00a8e8 100%);
+            color: var(--text-light);
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+        }
+
+        .stat-item {
+            padding: 20px;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Timeline Section */
+        .timeline {
+            padding: 100px 0;
+            background-color: var(--secondary);
+        }
+
+        .timeline-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 2px;
+            background-color: var(--primary);
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .timeline-content {
+            width: 45%;
+            padding: 20px;
+            background-color: var(--gray-light);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+
+        .timeline-year {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--primary);
+            color: var(--text-light);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            z-index: 1;
+        }
+
+        .timeline-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 100px 0;
+            background-color: var(--gray-light);
+            text-align: center;
+        }
+
+        .cta-section .btn {
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transition: width 0.6s, height 0.6s, top 0.6s, left 0.6s;
+            transform: translate(-50%, -50%);
+        }
+
+        .btn:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: var(--text-light);
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-primary:hover {
+            background-color: #27ae60;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--gray-light);
+            padding: 70px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            color: var(--gray-medium);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .footer-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .footer-links a:hover::after {
+            width: 100%;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-icons a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: var(--gray-medium);
+            color: var(--secondary);
+            border-radius: 50%;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .social-icons a:hover {
+            background-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid var(--gray-medium);
+            color: var(--gray-medium);
+            font-size: 0.9rem;
+        }
+
+        /* Progress Scroll Indicator */
+        .scroll-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            z-index: 1001;
+            transition: width 0.3s ease;
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-in.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .slide-in-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .slide-in-left.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slide-in-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .slide-in-right.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .stagger-animation > * {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .stagger-animation.active > * {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .stagger-animation.active > *:nth-child(1) { transition-delay: 0.1s; }
+        .stagger-animation.active > *:nth-child(2) { transition-delay: 0.2s; }
+        .stagger-animation.active > *:nth-child(3) { transition-delay: 0.3s; }
+        .stagger-animation.active > *:nth-child(4) { transition-delay: 0.4s; }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .story-container {
+                flex-direction: column;
+            }
+            
+            .timeline-container::before {
+                left: 30px;
+            }
+            
+            .timeline-item {
+                flex-direction: row !important;
+            }
+            
+            .timeline-content {
+                width: calc(100% - 80px);
+                margin-left: 80px;
+            }
+            
+            .timeline-year {
+                left: 0;
+                transform: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                background-color: var(--secondary);
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: var(--shadow);
+                z-index: 1000;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links li {
+                margin: 10px 0;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .page-hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /* MEGA DROPDOWN STYLES */
+        .nav-links > li {
+            position: relative;
+        }
+
+        .mega-dropdown {
+            position: absolute;
+            top: 100%;
+            width: 100vw;
+            left: -56rem;
+            background-color: var(--secondary);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            padding: 30px 0;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            border-top: 3px solid var(--primary);
+        }
+
+        .mega-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .mega-container {
+            width: 90%;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 30px;
+        }
+
+        .mega-column {
+            padding: 0 15px;
+        }
+
+        .mega-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--gray-light);
+            position: relative;
+        }
+
+        .mega-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--accent);
+        }
+
+        .mega-links {
+            list-style: none;
+        }
+
+        .mega-links li {
+            margin-bottom: 12px;
+        }
+
+        .mega-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            position: relative;
+        }
+
+        .mega-links a::before {
+            content: '';
+            position: absolute;
+            left: -10px;
+            width: 3px;
+            height: 0;
+            background-color: var(--accent);
+            transition: height 0.3s ease;
+        }
+
+        .mega-links a:hover::before {
+            height: 100%;
+        }
+
+        .mega-links a:hover {
+            color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .mega-links i {
+            margin-right: 10px;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .mega-column.featured {
+            grid-column: span 2;
+            gap: 50px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        .mega-feature {
+            background: linear-gradient(135deg, var(--primary) 0%, #00a8e8 100%);
+            border-radius: 10px;
+            padding: 25px;
+            color: var(--text-light);
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .mega-feature h4 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .mega-feature h4 i {
+            margin-right: 10px;
+        }
+
+        .mega-feature p {
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .mega-btn {
+            display: inline-block;
+            background-color: var(--accent);
+            color: var(--text-light);
+            padding: 10px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .mega-btn:hover {
+            background-color: #27ae60;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1200px) {
+            .mega-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .mega-column.featured {
+                grid-column: span 3;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mega-dropdown {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+   
+<!--                                                                                                                  -->
+<!--                                                                                                                  -->
+<!--                                              Chat                                                                -->
+<!--                                                                                                                  -->
+<!--                                                                                                                  -->
+
+
+
+
+
+    <!-- Floating Chat Icon -->
+    <div class="floating-chat-icon" id="chatIcon">
+        <i class="fas fa-comments"></i>
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-external-link-alt"></i> Sophia</h2>
+                <button class="close-btn" id="closeModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <iframe id="modal-frame" src="about:blank"></iframe>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator" id="scrollIndicator"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="container nav-container">
+            <div class="logo">
+                <a href="./index.html">
+                    <img src="./images/digilogo.png" alt="digilogo" style="height: 40px; vertical-align: middle; margin-left: 8px; padding-right: 20px;">
+                    <span>Digital Diagnostics Lab</span>
+                </a>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="./index.html">Home</a></li>
+                <li><a href="./about.html" style="color: var(--accent);">About us</a></li>
+                <li class="has-mega"><a href="#">Competencies <i class="fas fa-chevron-down"></i></a>
+                <!-- MEGA DROPDOWN -->
+                    <div class="mega-dropdown">
+                        <div class="mega-container">
+                            <div class="mega-column">
+                                <h3 class="mega-title">Hematology</h3>
+                                <ul class="mega-links">
+                                    <li><a href="#"><i class="fas fa-arrow-right"></i> Complete Blood Count</a></li>
+                                    <li><a href="#"><i class="fas fa-arrow-right"></i> Blood Smear Analysis</a></li>
+                                    <li><a href="#"><i class="fas fa-arrow-right"></i> Coagulation Studies</a></li>
+                                    <li><a href="#"><i class="fas fa-arrow-right"></i> Hemoglobin Electrophoresis</a></li>
+                                    <li><a href="#"><i class="fas fa-arrow-right"></i> Reticulocyte Count</a></li>
+                                </ul>
+                            </div>
+                            
+                            <div class="mega-column">
+                                <h3 class="mega-title">Molecular Diagnosis</h3>
+                                <ul class="mega-links">
+                                    <li><a href="#"><i class="fas fa-arrow-right"></i> PCR Testing</a></li>
+                                    <li><a href="#"><i class="fas fa-arrow-right"></i> Genetic Marker Analysis</a></li>
+                                    <li><a href="#"><i class="fas fa-arrow-right"></i> Viral Load Testing</a></li>
+                                    <li><a href="#"><i class="fas fa-arrow-right"></i> Pharmacogenomics</a></li>
+                                    <li><a href="#"><i class="fas fa-arrow-right"></i> Microarray Analysis</a></li>
+                                </ul>
+                            </div>
+                            
+                            <div class="mega-column">
+                                <h3 class="mega-title">Microbiology</h3>
+                                <ul class="mega-links">
+                                    <li><a href="#"><i class="fas fa-arrow-right"></i> Bacterial Culture & ID</a></li>
+                                    <li><a href="#"><i class="fas fa-arrow-right"></i> Antibiotic Sensitivity</a></li>
+                                    <li><a href="#"><i class="fas fa-arrow-right"></i> Fungal Culture</a></li>
+                                    <li><a href="#"><i class="fas fa-arrow-right"></i> Urine Culture</a></li>
+                                    <li><a href="#"><i class="fas fa-arrow-right"></i> Stool Culture</a></li>
+                                </ul>
+                            </div>
+                            
+                            <div class="mega-column">
+                                <h3 class="mega-title">Chemical Pathology</h3>
+                                <ul class="mega-links">
+                                    <li><a href="#"><i class="fas fa-arrow-right"></i> Liver Function Tests</a></li>
+                                    <li><a href="#"><i class="fas fa-arrow-right"></i> Kidney Function Tests</a></li>
+                                    <li><a href="#"><i class="fas fa-arrow-right"></i> Lipid Profile</a></li>
+                                    <li><a href="#"><i class="fas fa-arrow-right"></i> Cardiac Markers</a></li>
+                                    <li><a href="#"><i class="fas fa-arrow-right"></i> Electrolytes</a></li>
+                                    <li><a href="#"><i class="fas fa-arrow-right"></i> Hormone Assays</a></li>
+                                </ul>
+                            </div>
+                            
+                            <div class="mega-column">
+                                <h3 class="mega-title">Parasitology</h3>
+                                <ul class="mega-links">
+                                    <li><a href="#"><i class="fas fa-arrow-right"></i> Malaria Detection</a></li>
+                                    <li><a href="#"><i class="fas fa-arrow-right"></i> Intestinal Parasites</a></li>
+                                    <li><a href="#"><i class="fas fa-arrow-right"></i> Filariasis Testing</a></li>
+                                    <li><a href="#"><i class="fas fa-arrow-right"></i> Schistosomiasis</a></li>
+                                    <li><a href="#"><i class="fas fa-arrow-right"></i> Trypanosomiasis</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li><a href="./shop.html">Shop Tests</a></li>
+                <li><a href="#">Resources</a></li>
+                <li><a href="#">Career</a></li>
+                <li><a class="contact" href="#">Contact Us</a></li>
+                <li>
+                    <button class="theme-toggle" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </li>
+            </ul>
+
+            <div class="mobile-menu" id="mobileMenu">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Hero Section -->
+    <section class="page-hero">
+        <div class="container page-hero-content">
+            <h1 class="fade-in">About Digital Diagnostics Lab</h1>
+            <p class="fade-in">Pioneering the future of diagnostic medicine through innovation, precision, and compassion.</p>
+            <div class="breadcrumb fade-in">
+                <a href="./index.html">Home</a>
+                <span>/</span>
+                <a href="./about.html">About Us</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Story Section -->
+    <section class="story">
+        <div class="container story-container">
+            <div class="story-content slide-in-left">
+                <h2 class="section-title">Our Story</h2>
+                <p class="section-subtitle">From humble beginnings to diagnostic excellence</p>
+                <p>Founded in 2005, Digital Diagnostics Lab began as a small research facility with a big vision: to revolutionize diagnostic medicine through technology and innovation. What started as a single laboratory has grown into a comprehensive diagnostic network serving healthcare providers across the region.</p>
+                <p>Our journey has been marked by continuous investment in cutting-edge technology and the recruitment of top medical talent. Today, we process over 50,000 tests monthly and have expanded our services to include molecular diagnostics, AI-powered analysis, and remote diagnostic solutions.</p>
+                <p>At the heart of our success is an unwavering commitment to accuracy, reliability, and patient-centered care. We believe that precise diagnostics are the foundation of effective treatment, and we're dedicated to providing healthcare professionals with the tools they need to make informed decisions.</p>
+            </div>
+            <div class="story-image slide-in-right">
+                <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Digital Diagnostics Lab Facility">
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission & Vision Section -->
+    <section class="mission-vision">
+        <div class="container">
+            <h2 class="section-title fade-in text-center">Our Mission & Vision</h2>
+            <p class="section-subtitle fade-in text-center">Guiding principles that drive our innovation</p>
+            <div class="mv-container stagger-animation">
+                <div class="mv-card">
+                    <div class="mv-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h3 class="mv-title">Our Mission</h3>
+                    <p>To provide accurate, accessible, and timely diagnostic solutions that empower healthcare providers and improve patient outcomes through technological innovation and scientific excellence.</p>
+                </div>
+                <div class="mv-card">
+                    <div class="mv-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <h3 class="mv-title">Our Vision</h3>
+                    <p>To be Africa's leading diagnostic laboratory, recognized for innovation, precision, and commitment to advancing healthcare through cutting-edge technology and research.</p>
+                </div>
+                <div class="mv-card">
+                    <div class="mv-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h3 class="mv-title">Our Promise</h3>
+                    <p>We promise to deliver reliable results with uncompromising quality, maintain the highest ethical standards, and put patient care at the center of everything we do.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Values Section -->
+    <section class="values">
+        <div class="container">
+            <h2 class="section-title fade-in text-center">Our Values</h2>
+            <p class="section-subtitle fade-in text-center">The principles that define who we are</p>
+            <div class="values-grid stagger-animation">
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-flask"></i>
+                    </div>
+                    <h3 class="value-title">Excellence</h3>
+                    <p>We strive for the highest standards in all our diagnostic services, continuously improving our processes and technologies.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3 class="value-title">Compassion</h3>
+                    <p>We approach every test with empathy, understanding that behind each sample is a person seeking answers about their health.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="value-title">Integrity</h3>
+                    <p>We maintain the highest ethical standards, ensuring confidentiality, transparency, and honesty in all our interactions.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3 class="value-title">Innovation</h3>
+                    <p>We embrace new technologies and methodologies to stay at the forefront of diagnostic medicine and improve patient care.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="team">
+        <div class="container">
+            <h2 class="section-title fade-in text-center">Meet Our Leadership</h2>
+            <p class="section-subtitle fade-in text-center">The experts driving our diagnostic excellence</p>
+            <div class="team-grid stagger-animation">
+                <div class="team-member">
+                    <div class="member-image">
+                        <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Dr. Adebayo Johnson">
+                    </div>
+                    <div class="member-info">
+                        <h3 class="member-name">Dr. Adebayo Johnson</h3>
+                        <p class="member-role">Chief Executive Officer</p>
+                        <p class="member-bio">With over 20 years of experience in diagnostic medicine, Dr. Johnson leads our vision for innovation and excellence in healthcare.</p>
+                        <div class="member-social">
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="member-image">
+                        <img src="https://images.unsplash.com/photo-1594824947933-d0501ba2fe65?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Dr. Chioma Okoro">
+                    </div>
+                    <div class="member-info">
+                        <h3 class="member-name">Dr. Chioma Okoro</h3>
+                        <p class="member-role">Chief Medical Officer</p>
+                        <p class="member-bio">A specialist in pathology with 15 years of experience, Dr. Okoro oversees our clinical operations and quality assurance.</p>
+                        <div class="member-social">
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="member-image">
+                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Dr. Ibrahim Mohammed">
+                    </div>
+                    <div class="member-info">
+                        <h3 class="member-name">Dr. Ibrahim Mohammed</h3>
+                        <p class="member-role">Director of Research</p>
+                        <p class="member-bio">Leading our R&D initiatives, Dr. Mohammed focuses on developing innovative diagnostic solutions and improving existing methodologies.</p>
+                        <div class="member-social">
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <h2 class="fade-in" style="margin-bottom: 50px;">Our Impact in Numbers</h2>
+            <div class="stats-grid stagger-animation">
+                <div class="stat-item">
+                    <div class="stat-number">50,000+</div>
+                    <div class="stat-label">Tests Monthly</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">99.7%</div>
+                    <div class="stat-label">Accuracy Rate</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">150+</div>
+                    <div class="stat-label">Healthcare Partners</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">Years of Excellence</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section class="timeline">
+        <div class="container">
+            <h2 class="section-title fade-in text-center">Our Journey</h2>
+            <p class="section-subtitle fade-in text-center">Milestones in our growth and development</p>
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-content slide-in-left">
+                        <h3 class="timeline-title">Foundation</h3>
+                        <p>Digital Diagnostics Lab was established with a vision to revolutionize diagnostic medicine through technology and innovation.</p>
+                    </div>
+                    <div class="timeline-year">2005</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content slide-in-right">
+                        <h3 class="timeline-title">Expansion</h3>
+                        <p>We expanded our services to include molecular diagnostics and established partnerships with major healthcare providers.</p>
+                    </div>
+                    <div class="timeline-year">2014</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content slide-in-left">
+                        <h3 class="timeline-title">Technology Integration</h3>
+                        <p>Implemented AI-powered analysis and digital reporting systems, significantly improving accuracy and turnaround times.</p>
+                    </div>
+                    <div class="timeline-year">2018</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content slide-in-right">
+                        <h3 class="timeline-title">Regional Recognition</h3>
+                        <p>Awarded "Diagnostic Laboratory of the Year" for our innovative approaches and commitment to quality healthcare.</p>
+                    </div>
+                    <div class="timeline-year">2021</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content slide-in-left">
+                        <h3 class="timeline-title">Future Vision</h3>
+                        <p>Launching telemedicine integration and expanding our mobile testing services to reach underserved communities.</p>
+                    </div>
+                    <div class="timeline-year">2023+</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2 class="section-title fade-in">Ready to Experience Our Diagnostic Excellence?</h2>
+            <p class="section-subtitle fade-in">Join thousands of healthcare providers and patients who trust us with their diagnostic needs.</p>
+            <a href="./shop.html" class="btn btn-primary fade-in">Order a Test Today</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content stagger-animation">
+                <div class="footer-column">
+                    <h3>Digital Diagnostics Lab</h3>
+                    <p>Revolutionizing healthcare through precision diagnostics and cutting-edge technology.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="./index.html">Home</a></li>
+                        <li><a href="./about.html">About Us</a></li>
+                        <li><a href="#">Tests</a></li>
+                        <li><a href="#">Testimonials</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Services</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">AI-Powered Analysis</a></li>
+                        <li><a href="#">Remote Diagnostics</a></li>
+                        <li><a href="#">Data Security</a></li>
+                        <li><a href="#">24/7 Support</a></li>
+                        <li><a href="#">Research Partnerships</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> 61 Clifford Road, Aba.</li>
+                        <li><i class="fas fa-phone"></i> +234 812 052 7885</li>
+                        <li><i class="fas fa-envelope"> </i> xtrimresearch@gmail.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Digital Diagnostics Lab. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+            </div>
+        </div>
+    </footer>
+
+
+
+    <!-- JavaScript -->
+  <script src="script.js"></script>
+  <script src="sophia.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        // Theme Toggle with Session Storage
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        
+        // Check for saved theme preference or default to light
+        const currentTheme = sessionStorage.getItem('theme') || 'light';
+        
+        // Apply the saved theme on page load
+        if (currentTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            
+            // Update icon and save theme preference
+            if (document.body.classList.contains('dark-mode')) {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                sessionStorage.setItem('theme', 'dark');
+            } else {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+                sessionStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Mobile Menu Toggle
+        const mobileMenu = document.getElementById('mobileMenu');
+        const navLinks = document.querySelector('.nav-links');
+        
+        mobileMenu.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            // Toggle menu icon
+            const icon = mobileMenu.querySelector('i');
+            if (navLinks.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    navLinks.classList.remove('active');
+                    const icon = mobileMenu.querySelector('i');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+        });
+
+        // Scroll Progress Indicator
+        const scrollIndicator = document.getElementById('scrollIndicator');
+        
+        window.addEventListener('scroll', () => {
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight - windowHeight;
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollPercentage = (scrollTop / documentHeight) * 100;
+            
+            scrollIndicator.style.width = `${scrollPercentage}%`;
+        });
+
+        // Intersection Observer for Animations
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all elements with animation classes
+        document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right, .stagger-animation').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Add animation delay to staggered elements
+        document.querySelectorAll('.stagger-animation').forEach(container => {
+            const children = container.children;
+            for (let i = 0; i < children.length; i++) {
+                children[i].style.transitionDelay = `${(i + 1) * 0.1}s`;
+            }
+        });
+
+        // Header background on scroll
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.backgroundColor = 'var(--secondary)';
+                header.style.boxShadow = 'var(--shadow)';
+            } else {
+                header.style.backgroundColor = 'var(--secondary)';
+                header.style.boxShadow = 'var(--shadow)';
+            }
+        });
+
+        // Add text-center utility class
+        document.querySelectorAll('.text-center').forEach(el => {
+            el.style.textAlign = 'center';
+        });
+
+
+
+        // Mega Dropdown Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const competenciesMenuItem = document.querySelector('.has-mega');
+            const megaDropdown = document.querySelector('.mega-dropdown');
+            
+            // Show mega dropdown on hover
+            competenciesMenuItem.addEventListener('mouseenter', function() {
+                megaDropdown.classList.add('active');
+            });
+            
+            // Hide mega dropdown when mouse leaves
+            competenciesMenuItem.addEventListener('mouseleave', function(e) {
+                // Check if mouse is leaving the menu item or the dropdown
+                if (!e.relatedTarget || !e.relatedTarget.closest('.has-mega')) {
+                    megaDropdown.classList.remove('active');
+                }
+            });
+            
+            // Also hide when leaving the dropdown itself
+            megaDropdown.addEventListener('mouseleave', function(e) {
+                if (!e.relatedTarget || !e.relatedTarget.closest('.has-mega')) {
+                    megaDropdown.classList.remove('active');
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,1926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Diagnostics Lab | Precision Diagnostic Solutions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- In your HTML files -->
+    <link rel="stylesheet" href="cart.css">
+    <link rel="stylesheet" href="jade.css">
+    <script src="cart.js"></script>
+    <style>
+        :root {
+            --primary: #b60600;
+            --secondary: #f8f9fa;
+            --accent: #FFA500;
+            --text-dark: #333;
+            --text-light: #fff;
+            --gray-light: #e9ecef;
+            --gray-medium: #adb5bd;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        .dark-mode {
+            --primary: #b848e4;
+            --secondary: #121212;
+            --accent: #2ecc71;
+            --text-dark: #f8f9fa;
+            --text-light: #121212;
+            --gray-light: #2d2d2d;
+            --gray-medium: #5a5a5a;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--secondary);
+            transition: var(--transition);
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .container-cards {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header & Navigation */
+        header {
+            background-color: var(--secondary);
+            box-shadow: var(--shadow);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            width: 50%;
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .logo i {
+            margin-right: 10px;
+            font-size: 1.8rem;
+        }
+
+        .nav-links {
+            width: 100%;
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--text-dark);
+            margin-left: 20px;
+            transition: var(--transition);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--gray-light);
+            transform: rotate(15deg);
+        }
+
+        .mobile-menu {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-dark);
+            transition: var(--transition);
+        }
+
+        .mobile-menu:hover {
+            color: var(--primary);
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-in.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .slide-in-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .slide-in-left.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slide-in-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .slide-in-right.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .zoom-in {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .zoom-in.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .stagger-animation > * {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .stagger-animation.active > * {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .stagger-animation.active > *:nth-child(1) { transition-delay: 0.1s; }
+        .stagger-animation.active > *:nth-child(2) { transition-delay: 0.2s; }
+        .stagger-animation.active > *:nth-child(3) { transition-delay: 0.3s; }
+        .stagger-animation.active > *:nth-child(4) { transition-delay: 0.4s; }
+
+        /* Hero Section */
+        .hero {
+            padding: 150px 0 100px;
+            background: linear-gradient(135deg, var(--primary) 0%, #00a8e8 100%);
+            color: var(--text-light);
+            text-align: center;
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.1" d="M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,213.3C672,192,768,128,864,128C960,128,1056,192,1152,192C1248,192,1344,128,1392,96L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+        }
+
+        .floating-element {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .floating-element:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            top: 60%;
+            left: 80%;
+            animation-delay: 2s;
+        }
+
+        .floating-element:nth-child(3) {
+            width: 40px;
+            height: 40px;
+            top: 80%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+            }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transition: width 0.6s, height 0.6s, top 0.6s, left 0.6s;
+            transform: translate(-50%, -50%);
+        }
+
+        .btn:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: var(--text-light);
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-primary:hover {
+            background-color: #27ae60;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-light);
+            border: 2px solid var(--text-light);
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--text-light);
+            color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* NEW: Scrolling Images Section */
+        .scrolling-images {
+            padding: 80px 0;
+            background-color: var(--gray-light);
+            overflow: hidden;
+        }
+
+        .scrolling-container {
+            display: flex;
+            animation: scroll 30s linear infinite;
+            width: max-content;
+        }
+
+        .scrolling-item {
+            flex: 0 0 auto;
+            width: 300px;
+            height: 200px;
+            margin: 0 15px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .scrolling-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .scrolling-item:hover img {
+            transform: scale(1.05);
+        }
+
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* NEW: Process Cards Section */
+        .process-cards {
+            width: 100%;
+            padding: 100px 0;
+            background-color: var(--secondary);
+        }
+
+        .process-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 50px;
+        }
+
+        .process-card {
+            background-color: var(--gray-light);
+            border-radius: 10px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .process-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background-color: var(--primary);
+            transform: scaleX(0);
+            transition: transform 0.5s ease;
+        }
+
+        .process-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .process-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .process-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+
+        .process-card:hover .process-icon {
+            transform: scale(1.2);
+            color: var(--accent);
+        }
+
+        .process-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+
+        /* NEW: Why Choose Us Section */
+        .why-choose-us {
+            padding: 100px 0;
+            background-color: var(--gray-light);
+        }
+
+        .pillars {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .pillar {
+            text-align: center;
+            padding: 30px 20px;
+            background-color: var(--secondary);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pillar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 0;
+            background-color: var(--accent);
+            transition: height 0.5s ease;
+        }
+
+        .pillar:hover::before {
+            height: 100%;
+        }
+
+        .pillar:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .pillar-icon {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+
+        .pillar:hover .pillar-icon {
+            transform: rotateY(180deg);
+        }
+
+        .pillar-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+
+        /* NEW: Flash Deals Section */
+        .flash-deals {
+            padding: 100px 0;
+            background-color: var(--secondary);
+        }
+
+        .deals-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .deal-card {
+            background-color: var(--gray-light);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .deal-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .deal-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: var(--accent);
+            color: var(--text-light);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 2;
+        }
+
+        .deal-image {
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .deal-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .deal-card:hover .deal-image img {
+            transform: scale(1.05);
+        }
+
+        .deal-content {
+            padding: 20px;
+        }
+
+        .deal-category {
+            font-size: 0.8rem;
+            color: var(--gray-medium);
+            margin-bottom: 5px;
+        }
+
+        .deal-name {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+        }
+
+        .deal-price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .countdown {
+            display: flex;
+            justify-content: space-between;
+            background-color: var(--secondary);
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+
+        .countdown-item {
+            text-align: center;
+        }
+
+        .countdown-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .countdown-label {
+            font-size: 0.7rem;
+            color: var(--gray-medium);
+        }
+
+        /* NEW: Top Blogs Section */
+        .top-blogs {
+            padding: 100px 0;
+            background-color: var(--gray-light);
+        }
+
+        .blogs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .blog-card {
+            background-color: var(--secondary);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .blog-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .blog-image {
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .blog-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .blog-card:hover .blog-image img {
+            transform: scale(1.05);
+        }
+
+        .blog-content {
+            padding: 20px;
+        }
+
+        .blog-date {
+            font-size: 0.8rem;
+            color: var(--gray-medium);
+            margin-bottom: 10px;
+        }
+
+        .blog-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+        }
+
+        .blog-excerpt {
+            margin-bottom: 15px;
+            color: var(--gray-medium);
+        }
+
+        .blog-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .blog-link i {
+            margin-left: 5px;
+            transition: var(--transition);
+        }
+
+        .blog-link:hover i {
+            transform: translateX(5px);
+        }
+
+        .blog-link:hover {
+            color: var(--accent);
+        }
+
+        /* About Section */
+        .about {
+            padding: 100px 0;
+            background-color: var(--secondary);
+        }
+
+        .about-container {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+        }
+
+        .about-content {
+            flex: 1;
+        }
+
+        .about-image {
+            flex: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: var(--transition);
+        }
+
+        .about-image:hover img {
+            transform: scale(1.05);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--gray-medium);
+            margin-bottom: 30px;
+        }
+
+        /* Services Section */
+        .services {
+            padding: 100px 0;
+            background-color: var(--gray-light);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .service-card {
+            background-color: var(--secondary);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .service-card:hover::before {
+            left: 100%;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .service-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+
+        .service-card:hover .service-icon {
+            transform: scale(1.2);
+            color: var(--accent);
+        }
+
+        .service-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+
+        /* How It Works Section */
+        .how-it-works {
+            padding: 100px 0;
+            background-color: var(--secondary);
+        }
+
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 50px;
+            position: relative;
+        }
+
+        .steps::before {
+            content: '';
+            position: absolute;
+            top: 60px;
+            left: 10%;
+            width: 80%;
+            height: 2px;
+            background-color: var(--primary);
+            z-index: 0;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            flex: 1;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background-color: var(--primary);
+            color: var(--text-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto 20px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .step-number::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(0);
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        .step:hover .step-number::after {
+            transform: scale(1);
+        }
+
+        .step:hover .step-number {
+            background-color: var(--accent);
+            transform: scale(1.1);
+        }
+
+        .step-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+        }
+
+        /* Testimonials Section */
+        .testimonials {
+            padding: 100px 0;
+            background-color: var(--secondary);
+        }
+
+        .testimonial-container {
+            max-width: 800px;
+            margin: 50px auto 0;
+            position: relative;
+        }
+
+        .testimonial {
+            background-color: var(--gray-light);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .testimonial.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            position: relative;
+        }
+
+        .testimonial-text::before, .testimonial-text::after {
+            content: '"';
+            font-size: 3rem;
+            color: var(--primary);
+            opacity: 0.3;
+            position: absolute;
+        }
+
+        .testimonial-text::before {
+            top: -20px;
+            left: -10px;
+        }
+
+        .testimonial-text::after {
+            bottom: -40px;
+            right: -10px;
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .testimonial-role {
+            color: var(--gray-medium);
+            font-size: 0.9rem;
+        }
+
+        .testimonial-nav {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .testimonial-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--gray-medium);
+            margin: 0 5px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .testimonial-dot.active {
+            background-color: var(--primary);
+            transform: scale(1.2);
+        }
+
+        .partners {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-top: 60px;
+            opacity: 0.7;
+        }
+
+        .partner-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gray-medium);
+            transition: var(--transition);
+        }
+
+        .partner-logo:hover {
+            color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        /* CTA Banner */
+        .cta-banner {
+            padding: 80px 0;
+            background: linear-gradient(135deg, var(--primary) 0%, #00a8e8 100%);
+            color: var(--text-light);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.1" d="M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,213.3C672,192,768,128,864,128C960,128,1056,192,1152,192C1248,192,1344,128,1392,96L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .cta-banner h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-banner .btn {
+            margin-top: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--gray-light);
+            padding: 70px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            color: var(--gray-medium);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .footer-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .footer-links a:hover::after {
+            width: 100%;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-icons a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: var(--gray-medium);
+            color: var(--secondary);
+            border-radius: 50%;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .social-icons a:hover {
+            background-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid var(--gray-medium);
+            color: var(--gray-medium);
+            font-size: 0.9rem;
+        }
+
+        /* Progress Scroll Indicator */
+        .scroll-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            z-index: 1001;
+            transition: width 0.3s ease;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .about-container {
+                flex-direction: column;
+            }
+            
+            .steps::before {
+                display: none;
+            }
+            
+            .steps {
+                flex-direction: column;
+                gap: 40px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                background-color: var(--secondary);
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: var(--shadow);
+                z-index: 1000;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links li {
+                margin: 10px 0;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 200px;
+            }
+        }
+
+        .contact{
+            background-color: var(--primary);
+            color: var(--text-light) !important;
+            padding: 8px 15px;
+            border-radius: 20px;
+        }
+        .contact:hover{
+            background-color: var(--accent);
+            color: var(--text-light) !important;
+        }
+       .logo>a {text-decoration: none;
+            color: var(--primary);
+    }
+    </style>
+</head>
+<body>
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator" id="scrollIndicator"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="container nav-container">
+
+           <div class="logo">
+            <a href="./index.html">
+                <i class="fas fa-microscope"></i>
+                <span>Digital Diagnostics Lab</span>
+                </a>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="./index.html">Home</a></li>
+                <li><a href="./aboutus.html">About us</a></li>
+                <li><a href="#">Competencies</a></li>
+                <li><a href="./shop.html">Shop Tests</a></li>
+                <li><a href="#">Resources</a></li>
+                <li><a href="#">Career</a></li>
+                <li><a class="contact" href="#">Contact Us</a></li>
+                <li>
+                    <button class="theme-toggle" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </li>
+            </ul>
+
+            <div class="mobile-menu" id="mobileMenu">
+                <i class="fas fa-bars"></i>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="floating-elements">
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+        </div>
+        <div class="container hero-content">
+            <h1 class="fade-in">Revolutionizing Diagnostics with cutting-edge Technology</h1>
+            <p class="fade-in">Fast, reliable, and data-driven diagnostic solutions for modern healthcare.</p>
+            <div class="cta-buttons stagger-animation">
+                <a href="./shop.html" class="btn btn-primary">Order Tests Now!</a>
+                <a href="#about" class="btn btn-secondary">Learn More</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW: Scrolling Images Section -->
+    <section class="scrolling-images">
+        <div class="scrolling-container">
+            <div class="scrolling-item">
+                <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Lab Equipment">
+            </div>
+            <div class="scrolling-item">
+                <img src="https://images.unsplash.com/photo-1582719471384-894fbb16e074?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Medical Research">
+            </div>
+            <div class="scrolling-item">
+                <img src="https://images.unsplash.com/photo-1559757175-0eb30cd8c063?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Laboratory">
+            </div>
+            <div class="scrolling-item">
+                <img src="https://images.unsplash.com/photo-1576086213369-97a306d36557?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Testing">
+            </div>
+            <div class="scrolling-item">
+                <img src="https://images.unsplash.com/photo-1585435557343-3b092031d5ad?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Diagnostics">
+            </div>
+            <!-- Duplicate for seamless scrolling -->
+            <div class="scrolling-item">
+                <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Lab Equipment">
+            </div>
+            <div class="scrolling-item">
+                <img src="https://images.unsplash.com/photo-1582719471384-894fbb16e074?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Medical Research">
+            </div>
+            <div class="scrolling-item">
+                <img src="https://images.unsplash.com/photo-1559757175-0eb30cd8c063?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Laboratory">
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW: Process Cards Section -->
+    <section class="process-cards">
+        <div class="container-cards">
+            <h2 class="section-title fade-in">Our Process</h2>
+            <p class="section-subtitle fade-in">Simple steps to get your diagnostic results</p>
+
+            <div class="process-grid stagger-animation">
+                <div class="process-card">
+                    <div class="process-icon">
+                        <i class="fas fa-location"></i>
+                    </div>
+                    <h3 class="process-title">Locate a Lab</h3>
+                    <p>Locate tested and trusted labs.</p>
+                </div>
+
+                <div class="process-card">
+                    <div class="process-icon">
+                        <i class="fas fa-vial"></i>
+                    </div>
+                    <h3 class="process-title">Order Test</h3>
+                    <p>Browse our comprehensive test catalog and order the diagnostic tests you need with just a few clicks.</p>
+                </div>
+
+                <div class="process-card">
+                    <div class="process-icon">
+                        <i class="fas fa-file-medical-alt"></i>
+                    </div>
+                    <h3 class="process-title">Get My Result</h3>
+                    <p>Receive accurate, easy-to-understand results through our secure portal within the promised timeframe.</p>
+                </div>
+
+                <div class="process-card">
+                    <div class="process-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <h3 class="process-title">Schedule Appointment</h3>
+                    <p>Book convenient appointments at our state-of-the-art facilities or schedule a home collection.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW: Why Choose Us Section -->
+    <section class="why-choose-us">
+        <div class="container">
+            <h2 class="section-title fade-in">Why People Choose Us</h2>
+            <p class="section-subtitle fade-in">The pillars of our diagnostic excellence</p>
+            <div class="pillars stagger-animation">
+                <div class="pillar">
+                    <div class="pillar-icon">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <h3 class="pillar-title">Accredited Excellence</h3>
+                    <p>Our labs are accredited by leading healthcare authorities ensuring the highest quality standards.</p>
+                </div>
+                <div class="pillar">
+                    <div class="pillar-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3 class="pillar-title">Quick Turnaround</h3>
+                    <p>We deliver most test results within 24-48 hours, faster than industry standards.</p>
+                </div>
+                <div class="pillar">
+                    <div class="pillar-icon">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <h3 class="pillar-title">Expert Consultation</h3>
+                    <p>Free post-test consultation with our medical experts to help you understand your results.</p>
+                </div>
+                <div class="pillar">
+                    <div class="pillar-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="pillar-title">Data Privacy</h3>
+                    <p>Your health information is protected with bank-level encryption and strict privacy protocols.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW: Flash Deals Section -->
+    <section class="flash-deals">
+        <div class="container">
+            <h2 class="section-title fade-in">Our Flash Deals</h2>
+            <p class="section-subtitle fade-in">Special offers on popular diagnostic tests</p>
+            <div class="deals-container stagger-animation" id="dealsContainer">
+                <!-- Deals will be dynamically loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW: Top Blogs Section -->
+    <section class="top-blogs">
+        <div class="container">
+            <h2 class="section-title fade-in">Top Blogs</h2>
+            <p class="section-subtitle fade-in">Latest insights from our health experts</p>
+            <div class="blogs-grid stagger-animation">
+                <div class="blog-card">
+                    <div class="blog-image">
+                        <img src="https://images.unsplash.com/photo-1559757175-0eb30cd8c063?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Understanding Blood Tests">
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-date">June 15, 2023</div>
+                        <h3 class="blog-title">Understanding Your Blood Test Results</h3>
+                        <p class="blog-excerpt">Learn how to interpret common blood test markers and what they mean for your health.</p>
+                        <a href="#" class="blog-link">Read More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="blog-card">
+                    <div class="blog-image">
+                        <img src="https://images.unsplash.com/photo-1576086213369-97a306d36557?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Preventive Health">
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-date">June 8, 2023</div>
+                        <h3 class="blog-title">The Importance of Preventive Health Screening</h3>
+                        <p class="blog-excerpt">Discover why regular health screenings are crucial for early detection and prevention.</p>
+                        <a href="#" class="blog-link">Read More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="blog-card">
+                    <div class="blog-image">
+                        <img src="https://images.unsplash.com/photo-1585435557343-3b092031d5ad?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Nutrition and Diagnostics">
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-date">May 30, 2023</div>
+                        <h3 class="blog-title">How Nutrition Affects Your Diagnostic Results</h3>
+                        <p class="blog-excerpt">Find out how your diet can impact various diagnostic tests and what to do before testing.</p>
+                        <a href="#" class="blog-link">Read More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container about-container">
+            <div class="about-content slide-in-left">
+                <h2 class="section-title">Our Mission</h2>
+                <p class="section-subtitle">At Digital Diagnostics Lab, we leverage advanced digital technologies to deliver accurate, accessible, and affordable diagnostic insights.</p>
+                <p>Our team of medical experts and data scientists work together to create innovative diagnostic solutions that empower healthcare providers and improve patient outcomes. We combine cutting-edge AI algorithms with human expertise to ensure the highest standards of accuracy and reliability.</p>
+            </div>
+            <div class="about-image slide-in-right">
+                <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Digital Diagnostics Lab">
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services" id="services">
+        <div class="container">
+            <h2 class="section-title fade-in">Our Services</h2>
+            <p class="section-subtitle fade-in">Comprehensive diagnostic solutions tailored to modern healthcare needs</p>
+            <div class="services-grid stagger-animation">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3 class="service-title">AI-Powered Analysis</h3>
+                    <p>Rapid test results with our advanced artificial intelligence algorithms that learn and improve over time.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-laptop-medical"></i>
+                    </div>
+                    <h3 class="service-title">Remote Diagnostics</h3>
+                    <p>Access our diagnostic services from anywhere, enabling healthcare in remote and underserved areas.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="service-title">Data Security & Compliance</h3>
+                    <p>Your data is protected with enterprise-grade security and full HIPAA/GDPR compliance.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3 class="service-title">24/7 Support</h3>
+                    <p>Round-the-clock support from our team of healthcare professionals and technical experts.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <h2 class="section-title fade-in">How It Works</h2>
+            <p class="section-subtitle fade-in">Our streamlined process ensures fast and accurate diagnostic results</p>
+            <div class="steps stagger-animation">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Upload or Request Test</h3>
+                    <p>Easily upload medical data or request a diagnostic test through our secure platform.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">AI + Expert Review</h3>
+                    <p>Our AI analyzes the data, which is then reviewed by our team of medical experts.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">Receive Actionable Results</h3>
+                    <p>Get comprehensive, easy-to-understand results with actionable insights for treatment.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials" id="testimonials">
+        <div class="container">
+            <h2 class="section-title fade-in">What Our Clients Say</h2>
+            <p class="section-subtitle fade-in">Trusted by healthcare professionals and patients worldwide</p>
+            
+            <div class="testimonial-container">
+                <div class="testimonial active">
+                    <p class="testimonial-text">"The number one thing that can make me revisit a place after the first visit is the People there. I like the staff of X-Trim Research. They are very friendly and patient. Smiles are always close to their lips even the Boss(Doctor). I just love the way they attend to their patients. Then Secondly the environment. Despite the location being amidst mechanics,they still maintain absolute neatness. Not a sting of any smell can be perceived there. The place is always neat. Then the Patient! Is the patient for me🤣 Often times I have observed. Even when I brought my supper arrogant and then annoying London Cousin. I Know how difficult the boy was but they were able to handle him. Was it when getting my son's urine was taking longer than it should or was it when same lab was retaken because I ended up bringing an overnight urine.."</p>
+                    <p class="testimonial-author">Confidence Onwuchekwa</p>
+                    <p class="testimonial-role">Businesswoman</p>
+                </div>
+                <div class="testimonial">
+                    <p class="testimonial-text">"X-Trim Research is a top-notch research facility with a team of experts who are passionate about their work. Their commitment to scientific advancement and cutting-edge research is commendable.The expertise of their team and the state-of-the-art facilities they provide make them a leader in their field. I would highly recommend X-Trim Research Lab for any scientific needs."</p>
+                    <p class="testimonial-author">Chineyere Robert</p>
+                    <p class="testimonial-role">Student</p>
+                </div>
+                <div class="testimonial">
+                    <p class="testimonial-text">"X-Trim Research is the best lab amongst all I have seen. I was visiting other labs before I came to X-Trim"</p>
+                    <p class="testimonial-author">Mrs Martha Emelike</p>
+                    <p class="testimonial-role">Businesswoman</p>
+                </div>
+                
+                <div class="testimonial-nav">
+                    <div class="testimonial-dot active" data-index="0"></div>
+                    <div class="testimonial-dot" data-index="1"></div>
+                    <div class="testimonial-dot" data-index="2"></div>
+                </div>
+            </div>
+            
+            <div class="partners stagger-animation">
+                <div class="partner-logo">MediTech</div>
+                <div class="partner-logo">HealthFirst</div>
+                <div class="partner-logo">Global Care</div>
+                <div class="partner-logo">BioSolutions</div>
+                <div class="partner-logo">Future Health</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Banner -->
+    <section class="cta-banner">
+        <div class="container">
+            <h2 class="fade-in">Join the future of diagnostics. Start today.</h2>
+            <a href="#contact" class="btn btn-primary fade-in">Order Tests Now!</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content stagger-animation">
+                <div class="footer-column">
+                    <h3>Digital Diagnostics Lab</h3>
+                    <p>Revolutionizing healthcare through precision diagnostics and cutting-edge technology.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="./aboutus.html">About us</a></li>
+                        <li><a href="#">Resources</a></li>
+                        <li><a href="#">Tests</a></li>
+                        <li><a href="#">Testimonials</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Services</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">AI-Powered Analysis</a></li>
+                        <li><a href="#">Remote Diagnostics</a></li>
+                        <li><a href="#">Data Security</a></li>
+                        <li><a href="#">24/7 Support</a></li>
+                        <li><a href="#">Research Partnerships</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> 61 Clifford Road, Aba.</li>
+                        <li><i class="fas fa-phone"></i> +234 812 052 7885</li>
+                        <li><i class="fas fa-envelope"> </i> xtrimresearch@gmail.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Digital Diagnostics Lab. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+            </div>
+        </div>
+    </footer>
+
+<!--End of Body Content -->
+
+
+    <!-- JavaScript -->
+    <script src="jade.js"></script>
+    <script>
+        // Theme Toggle with Session Storage
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        
+        // Check for saved theme preference or default to light
+        const currentTheme = sessionStorage.getItem('theme') || 'light';
+        
+        // Apply the saved theme on page load
+        if (currentTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            
+            // Update icon and save theme preference
+            if (document.body.classList.contains('dark-mode')) {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                sessionStorage.setItem('theme', 'dark');
+            } else {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+                sessionStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Mobile Menu Toggle
+        const mobileMenu = document.getElementById('mobileMenu');
+        const navLinks = document.querySelector('.nav-links');
+        
+        mobileMenu.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            // Toggle menu icon
+            const icon = mobileMenu.querySelector('i');
+            if (navLinks.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        // Testimonial Slider
+        const testimonialDots = document.querySelectorAll('.testimonial-dot');
+        const testimonials = document.querySelectorAll('.testimonial');
+        
+        testimonialDots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                const index = dot.getAttribute('data-index');
+                
+                // Update active testimonial
+                testimonials.forEach(testimonial => {
+                    testimonial.classList.remove('active');
+                });
+                testimonials[index].classList.add('active');
+                
+                // Update active dot
+                testimonialDots.forEach(d => {
+                    d.classList.remove('active');
+                });
+                dot.classList.add('active');
+            });
+        });
+
+        // Auto-rotate testimonials
+        let currentTestimonial = 0;
+        setInterval(() => {
+            currentTestimonial = (currentTestimonial + 1) % testimonials.length;
+            
+            testimonials.forEach(testimonial => {
+                testimonial.classList.remove('active');
+            });
+            testimonials[currentTestimonial].classList.add('active');
+            
+            testimonialDots.forEach(dot => {
+                dot.classList.remove('active');
+            });
+            testimonialDots[currentTestimonial].classList.add('active');
+        }, 5000);
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    navLinks.classList.remove('active');
+                    const icon = mobileMenu.querySelector('i');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+        });
+
+        // Scroll Progress Indicator
+        const scrollIndicator = document.getElementById('scrollIndicator');
+        
+        window.addEventListener('scroll', () => {
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight - windowHeight;
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollPercentage = (scrollTop / documentHeight) * 100;
+            
+            scrollIndicator.style.width = `${scrollPercentage}%`;
+        });
+
+        // Intersection Observer for Animations
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all elements with animation classes
+        document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right, .zoom-in, .stagger-animation').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Add animation delay to staggered elements
+        document.querySelectorAll('.stagger-animation').forEach(container => {
+            const children = container.children;
+            for (let i = 0; i < children.length; i++) {
+                children[i].style.transitionDelay = `${(i + 1) * 0.1}s`;
+            }
+        });
+
+        // Header background on scroll
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.backgroundColor = 'var(--secondary)';
+                header.style.boxShadow = 'var(--shadow)';
+            } else {
+                header.style.backgroundColor = 'var(--secondary)';
+                header.style.boxShadow = 'var(--shadow)';
+            }
+        });
+
+        // NEW: Flash Deals Functionality
+        const dealsContainer = document.getElementById('dealsContainer');
+        let countdownInterval;
+
+        // Sample lab test data (replace with actual JSON fetch)
+        const labTests = [
+            {
+                "category": "Infectious Disease Screening",
+                "name": "Malaria Parasite Detection Test (MP Test)",
+                "price": 4500,
+                "image": "./images/MP-Test.png"
+            },
+            {
+                "category": "Blood Chemistry",
+                "name": "Complete Blood Count (CBC)",
+                "price": 3500,
+                "image": "./images/CBC-Test.png"
+            },
+            {
+                "category": "Hormonal Tests",
+                "name": "Thyroid Function Test",
+                "price": 6000,
+                "image": "./images/Thyroid-Test.png"
+            },
+            {
+                "category": "Cardiac Markers",
+                "name": "Lipid Profile Test",
+                "price": 5000,
+                "image": "./images/Lipid-Test.png"
+            },
+            {
+                "category": "Liver Function",
+                "name": "Liver Function Test (LFT)",
+                "price": 5500,
+                "image": "./images/Liver-Test.png"
+            },
+            {
+                "category": "Diabetes Screening",
+                "name": "HbA1c Test",
+                "price": 4000,
+                "image": "./images/HbA1c-Test.png"
+            }
+        ];
+
+        function getRandomDeals(count) {
+            const shuffled = [...labTests].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        }
+
+        function formatPrice(price) {
+            return `₦${price.toLocaleString()}`;
+        }
+
+        function startCountdown(duration, display) {
+            let timer = duration, hours, minutes, seconds;
+            
+            countdownInterval = setInterval(() => {
+                hours = Math.floor(timer / 3600);
+                minutes = Math.floor((timer % 3600) / 60);
+                seconds = timer % 60;
+                
+                display.querySelector('.hours').textContent = hours.toString().padStart(2, '0');
+                display.querySelector('.minutes').textContent = minutes.toString().padStart(2, '0');
+                display.querySelector('.seconds').textContent = seconds.toString().padStart(2, '0');
+                
+                if (--timer < 0) {
+                    clearInterval(countdownInterval);
+                    loadNewDeals();
+                }
+            }, 1000);
+        }
+
+        function loadNewDeals() {
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+            }
+            
+            const deals = getRandomDeals(3);
+            dealsContainer.innerHTML = '';
+            
+            deals.forEach(deal => {
+                const dealCard = document.createElement('div');
+                dealCard.className = 'deal-card';
+                
+                dealCard.innerHTML = `
+                    <div class="deal-badge">Flash Deal</div>
+                    <div class="deal-image">
+                        <img src="${deal.image}" alt="${deal.name}" onerror="this.src='https://images.unsplash.com/photo-1582719471384-894fbb16e074?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80'">
+                    </div>
+                    <div class="deal-content">
+                        <div class="deal-category">${deal.category}</div>
+                        <h3 class="deal-name">${deal.name}</h3>
+                        <div class="deal-price">${formatPrice(deal.price)}</div>
+                        <div class="countdown">
+                            <div class="countdown-item">
+                                <div class="countdown-value hours">00</div>
+                                <div class="countdown-label">HRS</div>
+                            </div>
+                            <div class="countdown-item">
+                                <div class="countdown-value minutes">00</div>
+                                <div class="countdown-label">MINS</div>
+                            </div>
+                            <div class="countdown-item">
+                                <div class="countdown-value seconds">00</div>
+                                <div class="countdown-label">SECS</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                dealsContainer.appendChild(dealCard);
+            });
+            
+            // Start countdown for all deals (5 minutes)
+            const countdownDisplays = document.querySelectorAll('.countdown');
+            countdownDisplays.forEach(display => {
+                startCountdown(300, display); // 5 minutes = 300 seconds
+            });
+        }
+
+        // Initialize flash deals on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadNewDeals();
+        });
+
+
+
+
+
+        
+    </script>
+</body>
+</html>

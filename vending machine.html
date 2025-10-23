@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #vending-machine {
+            width: 300px;
+            border: 2px solid #000;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .item {
+            margin-bottom: 15px;
+        }
+        button {
+            padding: 5px 10px;
+            border: none;
+            background-color: #28a745;
+            color: white;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div id="vending-machine">
+  <div class="item">
+    <p>🍫 Chocolate - <span id="chocolate-stock">5</span> left</p>
+    <button onclick="buyItem('chocolate')">Buy</button>
+  </div>
+
+  <div class="item">
+    <p>🥤 Soda - <span id="soda-stock">3</span> left</p>
+    <button onclick="buyItem('soda')">Buy</button>
+  </div>
+</div>
+<script>
+  const stock = {
+    chocolate: 5,
+    soda: 3
+  };
+
+  function buyItem(item) {
+    if (stock[item] > 0) {
+      stock[item]--;
+      document.getElementById(`${item}-stock`).innerText = stock[item];
+      alert(`You bought a ${item}!`);
+    } else {
+      alert(`Sorry, ${item} is out of stock!`);
+    }
+  }
+</script>
+</body>
+</html>

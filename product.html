@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    /* 1. Gradient Definition */
+.animated-gradient-bg {
+    /* Define the size of the gradient. Make it larger than the viewport */
+    background-size: 400% 400%; 
+    
+    /* Set the initial gradient colors */
+    background-image: linear-gradient(
+        -45deg,
+        #0000ff,        /* Very Light Gray/Blue */
+        #e6effa,        /* Light Lavender */
+        #c6e2ff,        /* Pale Sky Blue */
+        #f0f8ff         /* Alice Blue */
+    );
+    
+    /* Ensure a smooth transition for the position change */
+    transition: background-position 0.5s ease;
+    
+    /* Set the animation property */
+    animation: subtle-shift 15s ease infinite alternate;
+}
+
+/* 2. Keyframes for the Subtle Shift */
+@keyframes subtle-shift {
+    /* Starting point: top-left corner of the background is visible */
+    0% {
+        background-position: 0% 50%;
+    }
+    
+    /* Midpoint: shift to the bottom-right corner */
+    100% {
+        background-position: 100% 50%;
+    }
+}
+</style>
+<body class="animated-gradient-bg">
+    </body>
+</html>

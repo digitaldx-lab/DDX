@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health AI Chatbot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        
+        /* Main layout */
+        .app-container {
+            display: flex;
+            height: 100vh;
+            width: 100%;
+        }
+        
+        /* Sidebar styles */
+        #sidebar {
+            width: 40%;
+            background-image: url('https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            transition: width 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: white;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        #sidebar.collapsed {
+            width: 0;
+            overflow: hidden;
+        }
+        
+        .sidebar-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5));
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 2rem;
+        }
+        
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .company-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .sidebar-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 2rem 0;
+        }
+        
+        .sidebar-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        
+        .sidebar-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .features-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .features-list li {
+            padding: 0.75rem 0;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .features-list li i {
+            margin-right: 1rem;
+            color: #3B82F6;
+        }
+        
+        .sidebar-footer {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        /* Toggle button */
+        .sidebar-toggle {
+            position: absolute;
+            top: 1rem;
+            right: -2.5rem;
+            width: 2.5rem;
+            height: 2.5rem;
+            background-color: #2563EB;
+            color: white;
+            border: none;
+            border-radius: 0 0.5rem 0.5rem 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-toggle:hover {
+            background-color: #1D4ED8;
+        }
+        
+        /* Chat container styles */
+        #chat-container-wrapper {
+            width: 60%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            transition: width 0.3s ease;
+        }
+        
+        #chat-container-wrapper.expanded {
+            width: 100%;
+        }
+        
+        .chat-bubble-user {
+            background-color: #3B82F6;
+            color: white;
+        }
+        .chat-bubble-bot {
+            background-color: #E5E7EB;
+            color: #1F2937;
+        }
+        .chat-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        .chat-container::-webkit-scrollbar-thumb {
+            background-color: #9CA3AF;
+            border-radius: 3px;
+        }
+        .chat-container::-webkit-scrollbar-track {
+            background-color: #F3F4F6;
+        }
+        .test-card-enter {
+            animation: fadeIn 0.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Registration Modal */
+        #registration-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        #registration-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            padding: 2rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+        
+        #registration-modal.active .modal-content {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1F2937;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #6B7280;
+            cursor: pointer;
+        }
+        
+        .modal-body {
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-text {
+            color: #6B7280;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .modal-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .modal-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            text-decoration: none;
+        }
+        
+        .modal-btn i {
+            margin-right: 0.5rem;
+        }
+        
+        .btn-whatsapp {
+            background-color: #25D366;
+            color: white;
+        }
+        
+        .btn-whatsapp:hover {
+            background-color: #128C7E;
+        }
+        
+        .btn-secondary {
+            background-color: #E5E7EB;
+            color: #374151;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #D1D5DB;
+        }
+        
+        /* Registration Form */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #D1D5DB;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        /* Cart System Styles */
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #4B5563;
+        }
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #EF4444;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        .cart-aside {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 380px;
+            height: 100vh;
+            background-color: white;
+            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+            transition: right 0.3s ease;
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+        }
+        .cart-aside.active {
+            right: 0;
+        }
+        .cart-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #E5E7EB;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+        .cart-header h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        .close-cart {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            color: #6B7280;
+        }
+        .cart-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+        .cart-empty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #9CA3AF;
+        }
+        .cart-empty i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        .cart-item {
+            display: flex;
+            padding: 1rem 0;
+            border-bottom: 1px solid #F3F4F6;
+        }
+        .item-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-right: 1rem;
+        }
+        .item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .item-details {
+            flex: 1;
+        }
+        .item-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        .item-category {
+            color: #6B7280;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+        .item-price {
+            font-weight: 600;
+            color: #059669;
+        }
+        .item-controls {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            border: 1px solid #D1D5DB;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .quantity-btn {
+            background: none;
+            border: none;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .quantity {
+            padding: 0 0.5rem;
+            min-width: 30px;
+            text-align: center;
+        }
+        .remove-btn {
+            background: none;
+            border: none;
+            color: #EF4444;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+        .cart-footer {
+            padding: 1.5rem;
+            border-top: 1px solid #E5E7EB;
+        }
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .checkout-btn {
+            width: 100%;
+            background-color: #059669;
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .checkout-btn i {
+            margin-right: 0.5rem;
+        }
+        .checkout-btn:hover {
+            background-color: #047857;
+        }
+        .cart-notification {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #10B981;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1002;
+        }
+        .cart-notification.show {
+            opacity: 1;
+        }
+        .cart-notification i {
+            margin-right: 0.5rem;
+        }
+
+        /* Chat disabled state */
+        .chat-disabled {
+            position: relative;
+        }
+        
+        .chat-disabled::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+        
+        .chat-disabled-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            z-index: 11;
+            max-width: 400px;
+            width: 80%;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+            }
+            
+            #sidebar {
+                width: 100%;
+                height: 30vh;
+            }
+            
+            #sidebar.collapsed {
+                width: 100%;
+                height: 0;
+            }
+            
+            #chat-container-wrapper {
+                width: 100%;
+                height: 70vh;
+            }
+            
+            #chat-container-wrapper.expanded {
+                height: 100vh;
+            }
+            
+            .sidebar-toggle {
+                top: auto;
+                bottom: -2.5rem;
+                right: 1rem;
+                border-radius: 0.5rem 0.5rem 0 0;
+            }
+            
+            .cart-aside {
+                width: 100%;
+                right: -100%;
+            }
+            
+            .modal-content {
+                width: 95%;
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Registration Modal -->
+    <div id="registration-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Registration Required</h2>
+                <button class="close-modal" id="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-text">To access our Health AI Assistant, you need to be a registered member. Please complete your registration to continue.</p>
+                
+                <div class="form-group">
+                    <label class="form-label" for="full-name">Full Name</label>
+                    <input type="text" id="full-name" class="form-input" placeholder="Enter your full name">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="phone">Phone Number</label>
+                    <input type="tel" id="phone" class="form-input" placeholder="Enter your phone number">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="email">Email Address</label>
+                    <input type="email" id="email" class="form-input" placeholder="Enter your email address">
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn btn-whatsapp" id="register-whatsapp">
+                    <i class="fab fa-whatsapp"></i>
+                    Register via WhatsApp
+                </button>
+                <button class="modal-btn btn-secondary" id="help-registration">
+                    <i class="fas fa-question-circle"></i>
+                    I have issues with registration
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div id="sidebar">
+            <div class="sidebar-overlay">
+                <div class="sidebar-header">
+                    <div class="company-name">X-Trim Research Ltd</div>
+                </div>
+                
+                <div class="sidebar-content">
+                    <h1 class="sidebar-title">Your Health, Our Priority</h1>
+                    <p class="sidebar-subtitle">Sophia AI Assistant is here to help you understand your symptoms and find the right tests</p>
+                    
+                    <ul class="features-list">
+                        <li><i class="fas fa-check-circle"></i> AI-powered symptom analysis</li>
+                        <li><i class="fas fa-check-circle"></i> Professional test recommendations</li>
+                        <li><i class="fas fa-check-circle"></i> Transparent pricing</li>
+                        <li><i class="fas fa-check-circle"></i> Fast results delivery</li>
+                    </ul>
+                </div>
+                
+                <div class="sidebar-footer">
+                    <p>© 2023 X-Trim Research Ltd. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sidebar Toggle Button -->
+        <button class="sidebar-toggle" id="sidebar-toggle">
+            <i class="fas fa-chevron-left" id="toggle-icon"></i>
+        </button>
+        
+        <!-- Chat Container -->
+        <div id="chat-container-wrapper">
+            <!-- Cart Icon -->
+            <div class="fixed top-4 right-4 z-50">
+                <div class="cart-icon" id="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cart-count">0</span>
+                </div>
+            </div>
+
+            <!-- Chat Widget -->
+            <div class="w-full h-full bg-white flex flex-col chat-disabled" id="chat-widget">
+                <!-- Chat disabled overlay -->
+                <div class="chat-disabled-message">
+                    <h3 class="text-xl font-bold mb-2">Registration Required</h3>
+                    <p class="text-gray-600 mb-4">You need to register to access the Health AI Assistant</p>
+                    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition" id="open-registration-modal">
+                        Register Now
+                    </button>
+                </div>
+                
+                <!-- Chatbot Interface -->
+                <div class="w-full flex flex-col h-full">
+                    <header class="bg-gray-800 text-white p-4 flex items-center justify-between shadow-md">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center mr-3">
+                               <svg class="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <div>
+                                <h1 class="text-xl font-bold">Sophia</h1>
+                                <p class="text-sm text-gray-300">Your personal health guide</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <div class="cart-icon" id="cart-icon-header">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span class="cart-count" id="cart-count-header">0</span>
+                            </div>
+                        </div>
+                    </header>
+
+                    <main id="chat-container" class="flex-1 p-6 overflow-y-auto chat-container bg-gray-50">
+                        <!-- Chat messages will be appended here -->
+                    </main>
+
+                    <footer class="p-4 bg-white border-t border-gray-200">
+                        <div id="quick-replies" class="flex flex-wrap gap-2 mb-3">
+                            <!-- Quick replies will be appended here -->
+                        </div>
+                        <div class="flex items-center">
+                            <input type="text" id="user-input" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition" placeholder="Type your symptoms..." disabled>
+                            <button id="send-btn" class="ml-3 bg-blue-400 text-white px-6 py-3 rounded-xl cursor-not-allowed" disabled>
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            </button>
+                        </div>
+                    </footer>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-aside" id="cart-sidebar">
+        <div class="cart-header">
+            <h3>Your Cart</h3>
+            <button class="close-cart" id="close-cart">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="cart-content" id="cart-content">
+            <!-- Cart items will be populated here -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cart-total-price">₦0</span>
+            </div>
+            <button class="checkout-btn" id="checkout-btn">
+                <i class="fab fa-whatsapp"></i>
+                Checkout via WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <!-- Cart Notification -->
+    <div class="cart-notification" id="cart-notification">
+        <i class="fas fa-check"></i>
+        <span>Item added to cart!</span>
+    </div>
+
+    <script>
+        // Registration System
+        class RegistrationSystem {
+            constructor() {
+                this.isRegistered = this.checkRegistrationStatus();
+                this.init();
+            }
+            
+            checkRegistrationStatus() {
+                // Check if user is registered (in a real app, this would check with a backend)
+                return localStorage.getItem('userRegistered') === 'true';
+            }
+            
+            init() {
+                if (!this.isRegistered) {
+                    this.showRegistrationModal();
+                    this.disableChat();
+                } else {
+                    this.enableChat();
+                }
+            }
+            
+            showRegistrationModal() {
+                const modal = document.getElementById('registration-modal');
+                modal.classList.add('active');
+            }
+            
+            hideRegistrationModal() {
+                const modal = document.getElementById('registration-modal');
+                modal.classList.remove('active');
+            }
+            
+            disableChat() {
+                const chatWidget = document.getElementById('chat-widget');
+                chatWidget.classList.add('chat-disabled');
+                
+                const userInput = document.getElementById('user-input');
+                const sendBtn = document.getElementById('send-btn');
+                
+                userInput.disabled = true;
+                sendBtn.disabled = true;
+            }
+            
+            enableChat() {
+                const chatWidget = document.getElementById('chat-widget');
+                chatWidget.classList.remove('chat-disabled');
+                
+                const userInput = document.getElementById('user-input');
+                const sendBtn = document.getElementById('send-btn');
+                
+                userInput.disabled = false;
+                sendBtn.disabled = false;
+                sendBtn.classList.remove('bg-blue-400', 'cursor-not-allowed');
+                sendBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+            }
+            
+            registerUser() {
+                // Get form values
+                const fullName = document.getElementById('full-name').value;
+                const phone = document.getElementById('phone').value;
+                const email = document.getElementById('email').value;
+                
+                // Basic validation
+                if (!fullName || !phone || !email) {
+                    alert('Please fill in all fields');
+                    return;
+                }
+                
+                // In a real app, you would send this data to your backend
+                // For this demo, we'll just simulate registration
+                
+                // Save registration status
+                localStorage.setItem('userRegistered', 'true');
+                localStorage.setItem('userName', fullName);
+                localStorage.setItem('userPhone', phone);
+                localStorage.setItem('userEmail', email);
+                
+                this.isRegistered = true;
+                this.hideRegistrationModal();
+                this.enableChat();
+                
+                // Show welcome message
+                const welcomeMessage = `Welcome, ${fullName}! I'm Sophia, your personal health assistant. How can I help you today?`;
+                addMessage('bot', welcomeMessage);
+                updateQuickReplies(['Headache', 'Fever', 'Stomach Pain', 'Fatigue']);
+            }
+            
+            registerViaWhatsApp() {
+                const fullName = document.getElementById('full-name').value;
+                const phone = document.getElementById('phone').value;
+                const email = document.getElementById('email').value;
+                
+                // Basic validation
+                if (!fullName || !phone || !email) {
+                    alert('Please fill in all fields before registering');
+                    return;
+                }
+                
+                const message = `Hello! I would like to register for X-Trim Research Ltd Health AI Assistant.\n\nName: ${fullName}\nPhone: ${phone}\nEmail: ${email}\n\nPlease complete my registration.`;
+                const phoneNumber = '+2348120527885'; // Replace with your WhatsApp number
+                
+                // Detect device and create appropriate WhatsApp URL
+                const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+                const whatsappUrl = isMobile 
+                    ? `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
+                    : `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
+                
+                // Open WhatsApp
+                window.open(whatsappUrl, '_blank');
+                
+                // In a real app, you might want to track that the user has initiated registration
+                // For this demo, we'll mark them as registered after a delay to simulate the process
+                setTimeout(() => {
+                    this.registerUser();
+                }, 2000);
+            }
+            
+            helpWithRegistration() {
+                const message = `Hello! I need help with registration for X-Trim Research Ltd Health AI Assistant.`;
+                const phoneNumber = '+2348120527885'; // Replace with your WhatsApp number
+                
+                // Detect device and create appropriate WhatsApp URL
+                const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+                const whatsappUrl = isMobile 
+                    ? `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
+                    : `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
+                
+                // Open WhatsApp
+                window.open(whatsappUrl, '_blank');
+            }
+        }
+
+        // Cart System Class
+        class CartSystem {
+            constructor() {
+                this.cart = this.loadCart();
+                this.updateCartUI();
+            }
+
+            loadCart() {
+                try {
+                    const cartData = sessionStorage.getItem('labCart');
+                    return cartData ? JSON.parse(cartData) : {};
+                } catch (error) {
+                    console.error('Error loading cart from sessionStorage:', error);
+                    return {};
+                }
+            }
+
+            saveCart() {
+                try {
+                    sessionStorage.setItem('labCart', JSON.stringify(this.cart));
+                } catch (error) {
+                    console.error('Error saving cart to sessionStorage:', error);
+                }
+            }
+
+            addItem(test) {
+                // Check if item already exists in cart
+                if (this.cart[test.id]) {
+                    this.showNotification('Item already in cart!');
+                    return false;
+                }
+
+                // Add item to cart
+                this.cart[test.id] = {
+                    ...test,
+                    quantity: 1
+                };
+
+                this.saveCart();
+                this.updateCartUI();
+                this.showNotification('Test added to cart!');
+                return true;
+            }
+
+            removeItem(testId) {
+                if (this.cart[testId]) {
+                    delete this.cart[testId];
+                    this.saveCart();
+                    this.updateCartUI();
+                    this.showNotification('Item removed from cart');
+                }
+            }
+
+            updateQuantity(testId, newQuantity) {
+                if (this.cart[testId]) {
+                    if (newQuantity <= 0) {
+                        this.removeItem(testId);
+                    } else {
+                        this.cart[testId].quantity = newQuantity;
+                        this.saveCart();
+                        this.updateCartUI();
+                    }
+                }
+            }
+
+            getCartCount() {
+                return Object.keys(this.cart).length;
+            }
+
+            getCartTotal() {
+                return Object.values(this.cart).reduce((total, item) => {
+                    return total + (item.price * item.quantity);
+                }, 0);
+            }
+
+            updateCartUI() {
+                // Update cart count
+                const cartCount = this.getCartCount();
+                const cartCountElement = document.getElementById('cart-count');
+                const cartCountHeaderElement = document.getElementById('cart-count-header');
+                
+                if (cartCountElement) {
+                    cartCountElement.textContent = cartCount;
+                }
+                if (cartCountHeaderElement) {
+                    cartCountHeaderElement.textContent = cartCount;
+                }
+
+                // Update cart content
+                this.updateCartContent();
+            }
+
+            updateCartContent() {
+                const cartContent = document.getElementById('cart-content');
+                if (!cartContent) return;
+
+                if (this.getCartCount() === 0) {
+                    cartContent.innerHTML = `
+                        <div class="cart-empty">
+                            <i class="fas fa-shopping-cart"></i>
+                            <p>Your cart is empty</p>
+                        </div>
+                    `;
+                } else {
+                    let itemsHTML = '';
+                    Object.values(this.cart).forEach(item => {
+                        itemsHTML += `
+                            <div class="cart-item">
+                                <div class="item-image">
+                                    <img src="${item.image}" alt="${item.name}">
+                                </div>
+                                <div class="item-details">
+                                    <div class="item-name">${item.name}</div>
+                                    <div class="item-category">${item.category}</div>
+                                    <div class="item-price">₦${item.price.toLocaleString()}</div>
+                                </div>
+                                <div class="item-controls">
+                                    <div class="quantity-controls">
+                                        <button class="quantity-btn decrease" data-id="${item.id}">-</button>
+                                        <span class="quantity">${item.quantity}</span>
+                                        <button class="quantity-btn increase" data-id="${item.id}">+</button>
+                                    </div>
+                                    <button class="remove-btn" data-id="${item.id}">Remove</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    cartContent.innerHTML = itemsHTML;
+
+                    // Add event listeners
+                    cartContent.querySelectorAll('.decrease').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            const id = e.target.dataset.id;
+                            const currentQuantity = this.cart[id].quantity;
+                            this.updateQuantity(id, currentQuantity - 1);
+                        });
+                    });
+
+                    cartContent.querySelectorAll('.increase').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            const id = e.target.dataset.id;
+                            const currentQuantity = this.cart[id].quantity;
+                            this.updateQuantity(id, currentQuantity + 1);
+                        });
+                    });
+
+                    cartContent.querySelectorAll('.remove-btn').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            const id = e.target.dataset.id;
+                            this.removeItem(id);
+                        });
+                    });
+                }
+
+                // Update total price
+                const totalPriceElement = document.getElementById('cart-total-price');
+                if (totalPriceElement) {
+                    totalPriceElement.textContent = `₦${this.getCartTotal().toLocaleString()}`;
+                }
+            }
+
+            showNotification(message) {
+                const notification = document.getElementById('cart-notification');
+                if (notification) {
+                    notification.querySelector('span').textContent = message;
+                    notification.classList.add('show');
+                    setTimeout(() => {
+                        notification.classList.remove('show');
+                    }, 2000);
+                }
+            }
+
+            clearCart() {
+                this.cart = {};
+                this.saveCart();
+                this.updateCartUI();
+            }
+
+            // WhatsApp Integration
+            checkout() {
+                if (this.getCartCount() === 0) {
+                    alert('Your cart is empty!');
+                    return;
+                }
+
+                const message = this.formatWhatsAppMessage();
+                const phoneNumber = '+2348120527885'; // Replace with your WhatsApp number
+                
+                // Detect device and create appropriate WhatsApp URL
+                const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+                const whatsappUrl = isMobile 
+                    ? `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
+                    : `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
+
+                // Open WhatsApp
+                window.open(whatsappUrl, '_blank');
+                
+                // Optional: Clear cart after checkout
+                // this.clearCart();
+            }
+
+            formatWhatsAppMessage() {
+                const items = Object.values(this.cart);
+                const itemsList = items.map(item => 
+                    `• ${item.name} (${item.quantity} x ₦${item.price.toLocaleString()}) = ₦${(item.quantity * item.price).toLocaleString()}`
+                ).join('\n');
+
+                return `Hello! I would like to order the following lab tests:\n\n${itemsList}\n\nTotal: ₦${this.getCartTotal().toLocaleString()}\n\nPlease provide available time slots for sample collection.`;
+            }
+        }
+
+        // Chatbot functionality
+        const chatContainer = document.getElementById('chat-container');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+        const quickRepliesContainer = document.getElementById('quick-replies');
+        
+        // Sidebar toggle functionality
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        const toggleIcon = document.getElementById('toggle-icon');
+        const chatContainerWrapper = document.getElementById('chat-container-wrapper');
+        
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+            chatContainerWrapper.classList.toggle('expanded');
+            
+            if (sidebar.classList.contains('collapsed')) {
+                toggleIcon.classList.remove('fa-chevron-left');
+                toggleIcon.classList.add('fa-chevron-right');
+            } else {
+                toggleIcon.classList.remove('fa-chevron-right');
+                toggleIcon.classList.add('fa-chevron-left');
+            }
+        });
+
+        // Cart elements
+        const cartIcon = document.getElementById('cart-icon');
+        const cartIconHeader = document.getElementById('cart-icon-header');
+        const cartSidebar = document.getElementById('cart-sidebar');
+        const closeCartBtn = document.getElementById('close-cart');
+        const checkoutBtn = document.getElementById('checkout-btn');
+
+        // Cart toggle functionality
+        cartIcon.addEventListener('click', () => {
+            cartSidebar.classList.add('active');
+        });
+        cartIconHeader.addEventListener('click', () => {
+            cartSidebar.classList.add('active');
+        });
+        closeCartBtn.addEventListener('click', () => {
+            cartSidebar.classList.remove('active');
+        });
+        checkoutBtn.addEventListener('click', () => {
+            window.labCart.checkout();
+        });
+
+        // --- GEMINI API INTEGRATION ---
+        const GEMINI_API_KEY = "AIzaSyDsaKKeDy2yDrFMpWsPvwq989ugr9JYvMk"; // Replace with your actual API key
+        const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${GEMINI_API_KEY}`;
+
+        let conversationHistory = [];
+
+        // Updated test database with Naira prices
+        const testDatabase = {
+            'HGB': { 
+                id: 'HGB',
+                name: 'Haemoglobin Estimation', 
+                price: 3000, 
+                description: 'Measures the amount of haemoglobin in your blood to check for anaemia or other blood conditions.',
+                category: 'Blood Test',
+                image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+            },
+            'PCV': { 
+                id: 'PCV',
+                name: 'Packed Cell Volume', 
+                price: 2500, 
+                description: 'Determines the percentage of red blood cells in your blood.',
+                category: 'Blood Test',
+                image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+            },
+            'MPT': { 
+                id: 'MPT',
+                name: 'Malaria Parasite Test', 
+                price: 4000, 
+                description: 'Detects the presence of malaria parasites in your blood.',
+                category: 'Parasitology',
+                image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+            },
+            'WAT': { 
+                id: 'WAT',
+                name: 'Widal Agglutination Test', 
+                price: 5000, 
+                description: 'Used to diagnose typhoid fever by detecting Salmonella antibodies in blood.',
+                category: 'Serology',
+                image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+            },
+            'UC': { 
+                id: 'UC',
+                name: 'Urine Chemistry', 
+                price: 4000, 
+                description: 'Analyzes the chemical composition of urine to detect abnormalities.',
+                category: 'Urine Test',
+                image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+            },
+            'CAURM': { 
+                id: 'CAURM',
+                name: 'Computer Assisted Urine Microscopy', 
+                price: 2500, 
+                description: 'Provides detailed microscopic analysis of urine using automated systems.',
+                category: 'Urine Test',
+                image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+            },
+            'ERYBAS': { 
+                id: 'ERYBAS',
+                name: 'Erythrocyte Basic', 
+                price: 8500, 
+                description: 'Examines red blood cell structure and count for haematological disorders.',
+                category: 'Blood Test',
+                image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+            }
+        };
+        
+        const systemPrompt = `You are a friendly and helpful Health AI Assistant, called Sophia. Your goal is to understand a user's health symptoms and suggest relevant medical tests from a predefined list.
+
+You MUST follow these rules:
+1.  Your responses MUST be in JSON format.
+2.  Do not use markdown in the JSON response.
+3.  Keep your conversational messages concise and easy to understand.
+4.  Ask clarifying questions one at a time to narrow down the symptoms.
+5.  When you have enough information, suggest relevant tests.
+6.  The available tests are: CBC, HGB, PCV, MPT, WAT, UC, CAURM, ERYBAS, FBC, CBS, SA, SSN, SSC, BG, HGBG, BG-HGBG, ASO-TITRE, RF, HCV, VDRL, HEP-B, ESR, FOB, HPYL, OMT, HVSMCS, URMCS, TDBIL, BCASA, COCASA, URCR, SE, EUC, LFT, LIPRO, TOTCHOL, STP, ETP, HORPRO, RVS, TPSA, CEA, TREX, TROBAS, SPT, ALB, VITD, CORT, KFT, MF, CAL, PRL, PROG, E2, FSH, LH, HCV2, Hbsag, HAV, FT4, CHLAMYD,  RES, FPSA, PSA-PRO, RBG, GONOR, FBG, HPYLANT, HbA1c, FT3, TSH, WOUND-SWAB-CS, hs-CRP, RSS, UR-ACID. Only suggest tests from this list.
+7.  Provide relevant quick reply options to guide the user.
+8.  If the user's query is unrelated to health, politely steer the conversation back to symptoms.
+
+The JSON output must follow this exact schema:
+{
+  "message": "Your conversational response to the user.",
+  "suggestedTests": ["TEST_CODE_1", "TEST_CODE_2", ...],
+  "quickReplies": ["Option 1", "Option 2", ...]
+}
+
+Example interaction:
+User: "I have a bad headache"
+Your JSON response:
+{
+  "message": "I'm sorry to hear that. To understand better, are you feeling any nausea or sensitivity to light?",
+  "suggestedTests": [],
+  "quickReplies": ["Yes, I have nausea", "Yes, sensitivity to light", "Both", "Neither"]
+}`;
+
+        const addMessage = (sender, message) => {
+            const messageWrapper = document.createElement('div');
+            messageWrapper.classList.add('flex', 'mb-4', sender === 'user' ? 'justify-end' : 'justify-start');
+            
+            const messageBubble = document.createElement('div');
+            messageBubble.classList.add('rounded-xl', 'py-2', 'px-4', 'max-w-xs', 'lg:max-w-md', sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-bot');
+            messageBubble.innerText = message;
+            
+            messageWrapper.appendChild(messageBubble);
+            chatContainer.appendChild(messageWrapper);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        };
+
+        const showTypingIndicator = () => {
+             const typingWrapper = document.createElement('div');
+             typingWrapper.id = 'typing-indicator';
+             typingWrapper.classList.add('flex', 'mb-4', 'justify-start');
+             typingWrapper.innerHTML = `
+                <div class="chat-bubble-bot rounded-xl py-2 px-4">
+                    <div class="flex items-center space-x-1">
+                        <div class="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style="animation-delay: -0.3s;"></div>
+                        <div class="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style="animation-delay: -0.15s;"></div>
+                        <div class="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
+                    </div>
+                </div>
+             `;
+             chatContainer.appendChild(typingWrapper);
+             chatContainer.scrollTop = chatContainer.scrollHeight;
+        };
+
+        const removeTypingIndicator = () => {
+            const indicator = document.getElementById('typing-indicator');
+            if (indicator) {
+                indicator.remove();
+            }
+        };
+
+        const updateQuickReplies = (replies = []) => {
+            quickRepliesContainer.innerHTML = '';
+            if (replies.length > 0) {
+                replies.forEach(reply => {
+                    const button = document.createElement('button');
+                    button.textContent = reply;
+                    button.classList.add('px-3', 'py-1', 'border', 'border-blue-500', 'text-blue-500', 'rounded-full', 'text-sm', 'hover:bg-blue-500', 'hover:text-white', 'transition');
+                    button.onclick = () => handleUserInput(reply);
+                    quickRepliesContainer.appendChild(button);
+                });
+            }
+        };
+
+        const processBotResponse = async (userInputText) => {
+            conversationHistory.push({ role: "user", parts: [{ text: userInputText }] });
+
+            try {
+                const payload = {
+                    contents: conversationHistory,
+                    systemInstruction: {
+                        parts: [{ text: systemPrompt }]
+                    },
+                };
+
+                const response = await fetch(GEMINI_API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.statusText}`);
+                }
+
+                const result = await response.json();
+                const botResponseText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                if (!botResponseText) {
+                     throw new Error("Received an empty response from the API.");
+                }
+
+                const cleanedJsonString = botResponseText.replace(/```json|```/g, '').trim();
+                const botResponseJson = JSON.parse(cleanedJsonString);
+                
+                conversationHistory.push({ role: "model", parts: [{ text: JSON.stringify(botResponseJson) }] });
+                
+                removeTypingIndicator();
+
+                if (botResponseJson.message) {
+                    addMessage('bot', botResponseJson.message);
+                }
+                if (botResponseJson.quickReplies) {
+                    updateQuickReplies(botResponseJson.quickReplies);
+                }
+                if (botResponseJson.suggestedTests && botResponseJson.suggestedTests.length > 0) {
+                    suggestTests(botResponseJson.suggestedTests);
+                }
+
+            } catch (error) {
+                console.error("Error calling Gemini API:", error);
+                removeTypingIndicator();
+                addMessage('bot', "I'm having a little trouble connecting right now. Please try again in a moment.");
+            }
+        };
+        
+        const handleUserInput = (inputText) => {
+            const trimmedInput = inputText.trim();
+            if (trimmedInput === '') return;
+
+            addMessage('user', trimmedInput);
+            userInput.value = '';
+            updateQuickReplies(); 
+            showTypingIndicator();
+            
+            processBotResponse(trimmedInput);
+        };
+        
+        sendBtn.addEventListener('click', () => handleUserInput(userInput.value));
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleUserInput(userInput.value);
+            }
+        });
+
+        const suggestTests = (testCodes) => {
+            const suggestedTestsContainer = document.createElement('div');
+            suggestedTestsContainer.id = 'suggested-tests-container';
+            suggestedTestsContainer.className = 'mt-4 p-4 bg-white rounded-lg border border-gray-200';
+            suggestedTestsContainer.innerHTML = '<h3 class="font-bold text-lg mb-3">Suggested Tests</h3>';
+            
+            testCodes.forEach(code => {
+                const test = testDatabase[code];
+                if (!test) return;
+
+                const card = document.createElement('div');
+                card.classList.add('p-4', 'bg-white', 'rounded-lg', 'shadow-md', 'border', 'border-gray-200', 'test-card-enter', 'mb-3');
+                card.innerHTML = `
+                    <h3 class="font-bold text-md text-gray-800">${test.name}</h3>
+                    <p class="text-sm text-gray-600 my-1">${test.description}</p>
+                    <div class="flex justify-between items-center mt-3">
+                        <span class="text-lg font-semibold text-blue-600">₦${test.price.toLocaleString()}</span>
+                        <button class="add-to-cart-btn bg-blue-100 text-blue-700 px-4 py-1 rounded-md text-sm font-semibold hover:bg-blue-200 transition" data-code="${code}">Add to Cart</button>
+                    </div>
+                `;
+                suggestedTestsContainer.appendChild(card);
+            });
+
+            chatContainer.appendChild(suggestedTestsContainer);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            // Add event listeners to the add to cart buttons
+            document.querySelectorAll('#suggested-tests-container .add-to-cart-btn').forEach(button => {
+                button.onclick = (e) => {
+                    const code = e.target.dataset.code;
+                    const test = testDatabase[code];
+                    if (test && window.labCart) {
+                        const added = window.labCart.addItem(test);
+                        if (added) {
+                            e.target.textContent = 'Added!';
+                            e.target.disabled = true;
+                            e.target.classList.remove('bg-blue-100', 'hover:bg-blue-200');
+                            e.target.classList.add('bg-green-100', 'text-green-700');
+                        }
+                    } else {
+                        console.error("Could not add item to cart. Test or labCart is missing.", { test, labCart: window.labCart });
+                    }
+                };
+            });
+        };
+
+        // Initialize systems when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize registration system
+            window.registrationSystem = new RegistrationSystem();
+            
+            // Initialize cart system
+            window.labCart = new CartSystem();
+            
+            // Set up registration modal event listeners
+            document.getElementById('open-registration-modal').addEventListener('click', () => {
+                window.registrationSystem.showRegistrationModal();
+            });
+            
+            document.getElementById('close-modal').addEventListener('click', () => {
+                window.registrationSystem.hideRegistrationModal();
+            });
+            
+            document.getElementById('register-whatsapp').addEventListener('click', () => {
+                window.registrationSystem.registerViaWhatsApp();
+            });
+            
+            document.getElementById('help-registration').addEventListener('click', () => {
+                window.registrationSystem.helpWithRegistration();
+            });
+            
+            // If user is already registered, show initial message
+            if (window.registrationSystem.isRegistered) {
+                const userName = localStorage.getItem('userName') || 'there';
+                const initialMessage = `Welcome back, ${userName}! I'm Sophia, your personal health assistant. How can I help you today?`;
+                const initialReplies = ['Headache', 'Fever', 'Stomach Pain', 'Fatigue'];
+                
+                conversationHistory.push({
+                    role: "model",
+                    parts: [{ text: JSON.stringify({ message: initialMessage, suggestedTests: [], quickReplies: initialReplies }) }]
+                });
+                addMessage('bot', initialMessage);
+                updateQuickReplies(initialReplies);
+            }
+        });
+    </script>
+</body>
+</html>

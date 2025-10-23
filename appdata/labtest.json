@@ -1,0 +1,217 @@
+[{
+                "id": 0,
+                "category": "Infectious Disease Screening",
+                "name": "Malaria Parasite Detection Test (MP Test)",
+                "price": 4500,
+                "image": "./images/MP-Test.png",
+                "duration": "Same-Day Analysis (Typically 3-4 Hours)",
+                "who_its_for": "Patients exhibiting fever, chills, fatigue, or recent travel to endemic areas.",
+                "description": "This test is a **Rapid Diagnostic Test (RDT)** and/or a **Microscopic Smear Analysis** performed on a blood sample. Its purpose is to definitively detect the presence of *Plasmodium* parasites, the organism responsible for malaria, and identify the species causing the infection.",
+                "symptoms_related_to_test": "Fever (often cyclical), Shaking Chills, Headache, Nausea, Vomiting, Muscle/Joint Pain, and Severe Fatigue.",
+                "result_interpretation": {
+                    "positive": "Parasites detected. **Malaria is confirmed**. Immediate treatment is required to prevent complications.",
+                    "negative": "No parasites detected. **Malaria is unlikely** to be the cause of your current symptoms. Further testing may be necessary if symptoms persist."
+                },
+                "features": [
+                    "Identifies the specific *Plasmodium* species (e.g., *P. falciparum* or *P. vivax*)",
+                    "Quantifies the parasite density (Parasitemia) for severity assessment",
+                    "Essential for prompt, life-saving treatment",
+                    "Used for both initial diagnosis and monitoring treatment effectiveness"
+                ],
+                "insight_and_action_plan": {
+                    "next_steps": "If positive, consult with a doctor immediately for prescription of appropriate antimalarial medication (e.g., ACTs). If negative, discuss other potential causes for fever with your healthcare provider (e.g., Typhoid, Viral Illness).",
+                    "prevention_tip": "Use insecticide-treated nets (ITNs), apply repellent, and eliminate standing water around your home."
+                }
+            },
+            {
+                "category": "Infectious Disease Screening",
+                "name": "Typhoid Fever Test (Widal Test)",
+                "price": 3500,
+                "image": "./images/Widal-Test.png",
+                "duration": "Same-Day Analysis",
+                "who_its_for": "Individuals with prolonged fever, abdominal pain, headache, or recent consumption of contaminated food/water.",
+                "description": "The Widal test detects antibodies against *Salmonella typhi* and *Salmonella paratyphi* in the blood, which are the bacteria responsible for typhoid fever.",
+                "symptoms_related_to_test": "Sustained High Fever, Abdominal Pain, Headache, Weakness, Loss of Appetite, Rose Spots on the trunk.",
+                "result_interpretation": {
+                    "positive": "Antibodies detected. **Suggests current or recent infection** with typhoid bacteria. Clinical correlation is required.",
+                    "negative": "No significant antibody levels detected. **Typhoid fever is unlikely** but not completely ruled out, especially in early infection."
+                },
+                "features": [
+                    "Detects both O and H antigens for improved accuracy",
+                    "Helps differentiate between current infection and past exposure",
+                    "Cost-effective screening method",
+                    "Widely available and reliable when interpreted correctly"
+                ],
+                "insight_and_action_plan": {
+                    "next_steps": "If positive, consult a physician for confirmation and antibiotic treatment. If negative but symptoms persist, consider blood culture for definitive diagnosis.",
+                    "prevention_tip": "Practice good hygiene, drink safe water, and ensure proper food handling and preparation."
+                }
+            },
+            {
+                "category": "Hematology",
+                "name": "Complete Blood Count (CBC)",
+                "price": 5000,
+                "image": "./images/CBC.png",
+                "duration": "Same-Day Analysis",
+                "who_its_for": "Routine health screening, evaluation of anemia, infection, bleeding disorders, or monitoring of ongoing treatments.",
+                "description": "A CBC is a comprehensive assessment of the cellular components of blood, including red blood cells, white blood cells, and platelets. It provides crucial information about overall health and can detect a wide range of disorders.",
+                "symptoms_related_to_test": "Fatigue, Weakness, Frequent Infections, Unexplained Bruising or Bleeding, Pale Skin, Shortness of Breath.",
+                "result_interpretation": {
+                    "positive": "Abnormal values in one or more components may indicate conditions such as anemia, infection, inflammation, or blood disorders. Further investigation is needed.",
+                    "negative": "All values within normal ranges. **Suggests no major abnormalities** in the blood cell components tested."
+                },
+                "features": [
+                    "Evaluates multiple blood components in a single test",
+                    "Helps diagnose anemia, infection, and many other conditions",
+                    "Provides baseline health assessment",
+                    "Useful for monitoring treatment responses"
+                ],
+                "insight_and_action_plan": {
+                    "next_steps": "Abnormal results should be discussed with a healthcare provider for proper interpretation and potential further testing. Normal results provide reassurance about basic blood health.",
+                    "prevention_tip": "Maintain a balanced diet rich in iron, vitamins, and minerals to support healthy blood cell production."
+                }
+            },
+            {
+                "category": "Hematology",
+                "name": "Blood Group and Rh Typing",
+                "price": 2500,
+                "image": "./images/Blood-Group.png",
+                "duration": "Same-Day Analysis",
+                "who_its_for": "All individuals, especially pregnant women, surgical candidates, blood donors, and those requiring transfusion.",
+                "description": "This test determines your ABO blood group (A, B, AB, or O) and Rh factor (positive or negative), which is critical for blood transfusions and pregnancy management.",
+                "symptoms_related_to_test": "Not applicable - this is a routine test not based on symptoms.",
+                "result_interpretation": {
+                    "positive": "Specific blood group identified (e.g., A+, B-, O+, AB-). This is your permanent blood type.",
+                    "negative": "Not applicable - all individuals have a specific blood type."
+                },
+                "features": [
+                    "Determines ABO and Rh blood groups",
+                    "Essential for safe blood transfusions",
+                    "Critical information for pregnancy care",
+                    "Permanent result - does not change over time"
+                ],
+                "insight_and_action_plan": {
+                    "next_steps": "Keep a record of your blood type for medical emergencies. If Rh-negative and pregnant, discuss Rh immunoglobulin with your doctor.",
+                    "prevention_tip": "Consider blood donation if eligible, as knowing your blood type can help in emergency situations."
+                }
+            },
+            {
+                "category": "Clinical Chemistry",
+                "name": "Liver Function Test (LFT)",
+                "price": 8000,
+                "image": "./images/LFT.png",
+                "duration": "Same-Day Analysis",
+                "who_its_for": "Individuals with symptoms of liver disease, those on medications affecting the liver, alcohol consumers, or routine health screening.",
+                "description": "A panel of tests that assess the health and function of the liver by measuring enzymes, proteins, and substances produced or processed by the liver.",
+                "symptoms_related_to_test": "Jaundice (yellowing of skin/eyes), Dark Urine, Abdominal Pain, Nausea, Fatigue, Unexplained Weight Loss.",
+                "result_interpretation": {
+                    "positive": "Elevated liver enzymes or abnormal protein levels may indicate liver inflammation, damage, or disease. Further evaluation is needed.",
+                    "negative": "All values within normal ranges. **Suggests normal liver function** at the time of testing."
+                },
+                "features": [
+                    "Comprehensive assessment of liver health",
+                    "Measures multiple enzymes and proteins",
+                    "Helps diagnose hepatitis, cirrhosis, and other liver conditions",
+                    "Monitors liver function during medication use"
+                ],
+                "insight_and_action_plan": {
+                    "next_steps": "Abnormal results should be discussed with a healthcare provider. Further tests like ultrasound or viral hepatitis screening may be recommended.",
+                    "prevention_tip": "Limit alcohol consumption, maintain healthy weight, avoid unnecessary medications, and get vaccinated against hepatitis."
+                }
+            },
+            {
+                "category": "Clinical Chemistry",
+                "name": "Kidney Function Test (KFT)",
+                "price": 6000,
+                "image": "./images/KFT.webp",
+                "duration": "Same-Day Analysis",
+                "who_its_for": "Individuals with diabetes, hypertension, family history of kidney disease, or symptoms suggesting kidney problems.",
+                "description": "A series of tests that evaluate how well your kidneys are working by measuring waste products, electrolytes, and other substances in the blood.",
+                "symptoms_related_to_test": "Swelling in legs/face, Fatigue, Changes in Urination Frequency/Color, High Blood Pressure, Nausea, Shortness of Breath.",
+                "result_interpretation": {
+                    "positive": "Elevated creatinine, urea, or abnormal electrolyte levels may indicate impaired kidney function. Further evaluation is needed.",
+                    "negative": "All values within normal ranges. **Suggests normal kidney function** at the time of testing."
+                },
+                "features": [
+                    "Assesses filtration capacity of kidneys",
+                    "Measures waste products and electrolytes",
+                    "Helps detect early kidney damage",
+                    "Monitors progression of kidney disease"
+                ],
+                "insight_and_action_plan": {
+                    "next_steps": "Abnormal results should be discussed with a healthcare provider. Further tests like urine analysis or ultrasound may be recommended.",
+                    "prevention_tip": "Control blood pressure and diabetes, stay hydrated, avoid excessive painkiller use, and maintain a balanced diet low in salt."
+                }
+            },
+            {
+                "category": "Endocrinology",
+                "name": "Thyroid Function Test (TFT)",
+                "price": 7000,
+                "image": "./images/TFT.png",
+                "duration": "Same-Day Analysis",
+                "who_its_for": "Individuals with symptoms of thyroid disorders, women over 35, those with family history of thyroid disease, or routine screening.",
+                "description": "Measures levels of thyroid hormones (T3, T4) and thyroid-stimulating hormone (TSH) to assess thyroid gland function and detect disorders like hypothyroidism or hyperthyroidism.",
+                "symptoms_related_to_test": "Fatigue, Weight Changes, Temperature Sensitivity, Mood Swings, Hair Loss, Irregular Heartbeat, Menstrual Irregularities.",
+                "result_interpretation": {
+                    "positive": "Abnormal hormone levels may indicate underactive (hypothyroidism) or overactive (hyperthyroidism) thyroid. Further evaluation is needed.",
+                    "negative": "All values within normal ranges. **Suggests normal thyroid function** at the time of testing."
+                },
+                "features": [
+                    "Comprehensive assessment of thyroid health",
+                    "Differentiates between various thyroid disorders",
+                    "Guides appropriate treatment decisions",
+                    "Monitors response to thyroid medication"
+                ],
+                "insight_and_action_plan": {
+                    "next_steps": "Abnormal results should be discussed with an endocrinologist. Treatment may include medication, lifestyle changes, or further testing.",
+                    "prevention_tip": "Ensure adequate iodine intake through diet, manage stress levels, and get regular check-ups if you have risk factors."
+                }
+            },
+            {
+                "category": "Diabetes Screening",
+                "name": "Fasting Blood Sugar Test",
+                "price": 2000,
+                "image": "./images/FBS.png",
+                "duration": "Same-Day Analysis",
+                "who_its_for": "Individuals with risk factors for diabetes, those with symptoms of high blood sugar, or routine health screening.",
+                "description": "Measures the level of glucose in your blood after an overnight fast. This test helps diagnose diabetes and prediabetes.",
+                "symptoms_related_to_test": "Increased Thirst, Frequent Urination, Unexplained Weight Loss, Fatigue, Blurred Vision, Slow-Healing Sores.",
+                "result_interpretation": {
+                    "positive": "Elevated glucose levels may indicate diabetes or prediabetes. Further testing may be required for confirmation.",
+                    "negative": "Normal glucose levels. **Suggests normal blood sugar regulation** at the time of testing."
+                },
+                "features": [
+                    "Simple and widely available test",
+                    "Helps diagnose diabetes and prediabetes",
+                    "Useful for monitoring blood sugar control",
+                    "Can be part of a comprehensive metabolic panel"
+                ],
+                "insight_and_action_plan": {
+                    "next_steps": "Abnormal results should be discussed with a healthcare provider. Additional tests like HbA1c or oral glucose tolerance test may be recommended.",
+                    "prevention_tip": "Maintain a healthy weight, exercise regularly, eat a balanced diet, and limit sugar intake to reduce diabetes risk."
+                }
+            },
+            {
+                "category": "Cardiac Health",
+                "name": "Lipid Profile Test",
+                "price": 5000,
+                "image": "./images/Lipid-Profile.png",
+                "duration": "Same-Day Analysis",
+                "who_its_for": "Adults for routine cholesterol screening, individuals with risk factors for heart disease, or those on cholesterol-lowering medication.",
+                "description": "Measures the levels of different types of cholesterol and triglycerides in your blood to assess cardiovascular health and risk of heart disease.",
+                "symptoms_related_to_test": "Typically no symptoms - this is a screening test for asymptomatic individuals with risk factors.",
+                "result_interpretation": {
+                    "positive": "Abnormal cholesterol levels may indicate increased risk of heart disease. Lifestyle changes or medication may be recommended.",
+                    "negative": "All values within normal ranges. **Suggests healthy cholesterol levels** and lower cardiovascular risk."
+                },
+                "features": [
+                    "Measures total cholesterol, HDL, LDL, and triglycerides",
+                    "Assesses cardiovascular disease risk",
+                    "Helps guide cholesterol management",
+                    "Useful for monitoring treatment effectiveness"
+                ],
+                "insight_and_action_plan": {
+                    "next_steps": "Abnormal results should be discussed with a healthcare provider. Lifestyle modifications like diet and exercise may be recommended, and in some cases, medication.",
+                    "prevention_tip": "Eat a heart-healthy diet low in saturated fats, exercise regularly, maintain a healthy weight, and avoid smoking."
+                }
+            }]

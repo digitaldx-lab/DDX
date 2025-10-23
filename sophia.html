@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Diagnostics Lab | Sophia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        
+        /* Main layout */
+        .app-container {
+            display: flex;
+            height: 100vh;
+            width: 100%;
+        }
+        
+        /* Sidebar styles */
+        #sidebar {
+            width: 17%;
+            background-image: url('./images/Sophia.png');
+            background-size: cover;
+            background-position: center;
+            transition: width 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: white;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        #sidebar.collapsed {
+            width: 0;
+            overflow: hidden;
+        }
+        
+        .sidebar-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5));
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 2rem;
+        }
+        
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .company-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .sidebar-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 2rem 0;
+        }
+        
+        .sidebar-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        
+        .sidebar-subtitle {
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .features-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .features-list li {
+            padding: 0.75rem 0;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .features-list li i {
+            margin-right: 1rem;
+            color: #3B82F6;
+        }
+        
+        .sidebar-footer {
+            color: rgb(175, 172, 172);
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+        
+        /* Toggle button */
+        .sidebar-toggle {
+            position: absolute;
+            top: 1rem;
+            right: -2.5rem;
+            width: 2.5rem;
+            height: 2.5rem;
+            background-color: #2563EB;
+            color: white;
+            border: none;
+            border-radius: 0 0.5rem 0.5rem 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-toggle:hover {
+            background-color: #1D4ED8;
+        }
+        
+        /* Chat container styles */
+        footer{
+            background-color: #0f0f0f !important;
+
+        }
+        .chat-container {
+            background-color: rgb(2, 2, 2) !important;
+        }
+        #chat-container-wrapper {
+            width: 85%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            transition: width 0.3s ease;
+        }
+        
+        #chat-container-wrapper.expanded {
+            width: 100%;
+        }
+        
+        .chat-bubble-user {
+            background-color: #3B82F6;
+            color: white;
+        }
+        .chat-bubble-bot {
+            background-color: #0f0f0f;
+            color: #ffffff;
+        }
+        .chat-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        .chat-container::-webkit-scrollbar-thumb {
+            background-color: #575b63;
+            border-radius: 3px;
+        }
+        .chat-container::-webkit-scrollbar-track {
+            background-color: #F3F4F6;
+        }
+        .test-card-enter {
+            animation: fadeIn 0.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cart System Styles */
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #4B5563;
+        }
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #EF4444;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        .cart-aside {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 380px;
+            height: 100vh;
+            background-image: url('./images/Jade.jpeg');
+            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+            transition: right 0.3s ease;
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+        }
+        .cart-aside::before {
+            content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.897); /* 50% opacity black */
+    z-index: 1;
+        }
+        .cart-aside > * {
+            position: relative;
+    z-index: 2;
+        }
+        .cart-aside.active {
+            right: 0;
+        }
+        .cart-header {
+            color: whitesmoke;
+            padding: 1.5rem;
+            border-bottom: 1px solid #E5E7EB;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+        .cart-header h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        .close-cart {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            color: #6B7280;
+        }
+        .cart-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+        .cart-empty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #9CA3AF;
+        }
+        .cart-empty i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        .cart-item {
+            display: flex;
+            padding: 1rem 0;
+            border-bottom: 1px solid #F3F4F6;
+        }
+        .item-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-right: 1rem;
+        }
+        .item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .item-details {
+            flex: 1;
+        }
+        .item-name {
+            color: whitesmoke;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        .item-category {
+            color: #6B7280;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+        .item-price {
+            font-weight: 600;
+            color: #00ffae;
+        }
+        .item-controls {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            border: 1px solid #D1D5DB;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .quantity-btn {
+            color: whitesmoke;
+            background: none;
+            border: none;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .quantity {
+            color: whitesmoke;
+            padding: 0 0.5rem;
+            min-width: 30px;
+            text-align: center;
+        }
+        .remove-btn {
+            background: none;
+            border: none;
+            color: #EF4444;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+        .cart-footer {
+            padding: 1.5rem;
+            border-top: 1px solid #E5E7EB;
+        }
+        .cart-total {
+            color: whitesmoke;
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .checkout-btn {
+            width: 100%;
+            background-color: #059669;
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .checkout-btn i {
+            margin-right: 0.5rem;
+        }
+        .checkout-btn:hover {
+            background-color: #047857;
+        }
+        .cart-notification {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #10B981;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1002;
+        }
+        .cart-notification.show {
+            opacity: 1;
+        }
+        .cart-notification i {
+            margin-right: 0.5rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+            }
+            
+            #sidebar {
+                width: 100%;
+                height: 30vh;
+            }
+            
+            #sidebar.collapsed {
+                width: 100%;
+                height: 0;
+            }
+            
+            #chat-container-wrapper {
+                width: 100%;
+                height: 70vh;
+            }
+            
+            #chat-container-wrapper.expanded {
+                height: 100vh;
+            }
+            
+            .sidebar-toggle {
+                top: auto;
+                bottom: -2.5rem;
+                right: 1rem;
+                border-radius: 0.5rem 0.5rem 0 0;
+            }
+            
+            .cart-aside {
+                width: 100%;
+                right: -100%;
+            }
+        }
+        .loader {
+      transform: rotateZ(45deg);
+      perspective: 1000px;
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      color: rgb(255, 13, 0);
+    }
+    .loader:before,
+    .loader:after {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: inherit;
+      height: inherit;
+      border-radius: 50%;
+      transform: rotateX(70deg);
+      animation: 1s spin linear infinite;
+    }
+    .loader:after {
+      color: rgb(0, 225, 255);
+      transform: rotateY(70deg);
+      animation-delay: .4s;
+    }
+    @keyframes spin {
+      0%, 100% { box-shadow: .2em 0px 0 0px currentcolor; }
+      12% { box-shadow: .2em .2em 0 0 currentcolor; }
+      25% { box-shadow: 0 .2em 0 0px currentcolor; }
+      37% { box-shadow: -.2em .2em 0 0 currentcolor; }
+      50% { box-shadow: -.2em 0 0 0 currentcolor; }
+      62% { box-shadow: -.2em -.2em 0 0 currentcolor; }
+      75% { box-shadow: 0px -.2em 0 0 currentcolor; }
+      87% { box-shadow: .2em -.2em 0 0 currentcolor; }
+    }
+.hidden {display: hidden;}
+.suggestion {background-color: #fffdd0;}
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div id="sidebar">
+            <div class="sidebar-overlay">
+                <div style="display: flex; justify-content: center;">
+                <img src="./images/XT_Logo_removebg.png" alt="" width="150" >
+                </div>
+                <br><br><br><br><br><br><br><br>
+                <div class="sidebar-content">
+                    <h1 class="sidebar-title">Your Health, Our Priority</h1>
+                    
+                    <br><br>
+
+                    <p class="sidebar-subtitle">Sophia AI Assistant is here to help you understand your symptoms and find the right tests</p>
+                    
+                    <br><br>
+
+                    <ul class="features-list">
+                        <li><i class="fas fa-check-circle"></i> AI-powered symptom analysis</li>
+                        <li><i class="fas fa-check-circle"></i> Professional test recommendations</li>
+                        <li><i class="fas fa-check-circle"></i> Transparent pricing</li>
+                        <li><i class="fas fa-check-circle"></i> Fast results delivery</li>
+                    </ul>
+                </div>
+                
+                <div class="sidebar-footer">
+                    <p>© 2025 X-Trim Research Ltd. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sidebar Toggle Button -->
+        <button class="sidebar-toggle" id="sidebar-toggle">
+            <i class="fas fa-chevron-left" id="toggle-icon"></i>
+        </button>
+        
+        <!-- Chat Container -->
+        <div id="chat-container-wrapper">
+            <!-- Cart Icon -->
+            <div class="fixed top-4 right-4 z-50">
+                <div class="cart-icon" id="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cart-count">0</span>
+                </div>
+            </div>
+
+            <!-- Chat Widget -->
+            <div class="w-full h-full bg-white flex flex-col">
+                <!-- Chatbot Interface -->
+                <div class="w-full flex flex-col h-full">
+                    <header class="bg-gray-800 text-white p-4 flex items-center justify-between shadow-md">
+                        <div class="flex items-center">
+    <div class="w-12 h-12 rounded-full overflow-hidden mr-4">
+       <img src="./images/Sophia.png" alt="Sophia" class="w-full h-full object-cover">
+    </div>
+    
+    <div>
+        <h1 class="text-xl font-bold">Sophia</h1>
+        <p class="text-sm text-gray-300">Your Personal Health Guide</p>
+    </div>
+</div>
+                        <div class="flex items-center space-x-4">
+                            <div class="cart-icon hidden" id="cart-icon-header">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span class="cart-count" id="cart-count-header">0</span>
+                            </div>
+                        </div>
+                    </header>
+
+                    <main id="chat-container" class="flex-1 p-6 overflow-y-auto chat-container bg-gray-50">
+                        <!-- Chat messages will be appended here -->
+                    </main>
+
+                    <footer class="p-4 bg-white border-t border-gray-200">
+                        <div id="quick-replies" class="flex flex-wrap gap-2 mb-3">
+                            <!-- Quick replies will be appended here -->
+                        </div>
+                        <div class="flex items-center keypad">
+                            <input type="text" id="user-input" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition" placeholder="Type your symptoms...">
+                            <button id="send-btn" class="ml-3 bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition shadow-lg">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            </button>
+                        </div>
+                    </footer>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-aside" id="cart-sidebar">
+        <div class="cart-header">
+            <h3>Your Cart</h3>
+            <button class="close-cart" id="close-cart">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="cart-content" id="cart-content">
+            <!-- Cart items will be populated here -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cart-total-price">₦0</span>
+            </div>
+            <button class="checkout-btn" id="checkout-btn">
+                <i class="fab fa-whatsapp"></i>
+                Checkout via WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <!-- Cart Notification -->
+    <div class="cart-notification" id="cart-notification">
+        <i class="fas fa-check"></i>
+        <span>Item added to cart!</span>
+    </div>
+<script src="./config.js"></script>
+    <script>
+        // Cart System Class
+        class CartSystem {
+            constructor() {
+                this.cart = this.loadCart();
+                this.updateCartUI();
+            }
+
+            loadCart() {
+                try {
+                    const cartData = sessionStorage.getItem('suggestCart');
+                    return cartData ? JSON.parse(cartData) : {};
+                } catch (error) {
+                    console.error('Error loading cart from sessionStorage:', error);
+                    return {};
+                }
+            }
+
+            saveCart() {
+                try {
+                    sessionStorage.setItem('suggestCart', JSON.stringify(this.cart));
+                } catch (error) {
+                    console.error('Error saving cart to sessionStorage:', error);
+                }
+            }
+
+            addItem(test) {
+                // Check if item already exists in cart
+                if (this.cart[test.id]) {
+                    this.showNotification('Item already in cart!');
+                    return false;
+                }
+
+                // Add item to cart
+                this.cart[test.id] = {
+                    ...test,
+                    quantity: 1
+                };
+
+                this.saveCart();
+                this.updateCartUI();
+                this.showNotification('Test added to cart!');
+                return true;
+            }
+
+            removeItem(testId) {
+                if (this.cart[testId]) {
+                    delete this.cart[testId];
+                    this.saveCart();
+                    this.updateCartUI();
+                    this.showNotification('Item removed from cart');
+                }
+            }
+
+            updateQuantity(testId, newQuantity) {
+                if (this.cart[testId]) {
+                    if (newQuantity <= 0) {
+                        this.removeItem(testId);
+                    } else {
+                        this.cart[testId].quantity = newQuantity;
+                        this.saveCart();
+                        this.updateCartUI();
+                    }
+                }
+            }
+
+            getCartCount() {
+                return Object.keys(this.cart).length;
+            }
+
+            getCartTotal() {
+                return Object.values(this.cart).reduce((total, item) => {
+                    return total + (item.price * item.quantity);
+                }, 0);
+            }
+
+            updateCartUI() {
+                // Update cart count
+                const cartCount = this.getCartCount();
+                const cartCountElement = document.getElementById('cart-count');
+                const cartCountHeaderElement = document.getElementById('cart-count-header');
+                
+                if (cartCountElement) {
+                    cartCountElement.textContent = cartCount;
+                }
+                if (cartCountHeaderElement) {
+                    cartCountHeaderElement.textContent = cartCount;
+                }
+
+                // Update cart content
+                this.updateCartContent();
+            }
+
+            updateCartContent() {
+                const cartContent = document.getElementById('cart-content');
+                if (!cartContent) return;
+
+                if (this.getCartCount() === 0) {
+                    cartContent.innerHTML = `
+                        <div class="cart-empty">
+                            <i class="fas fa-shopping-cart"></i>
+                            <p>Your cart is empty</p>
+                        </div>
+                    `;
+                } else {
+                    let itemsHTML = '';
+                    Object.values(this.cart).forEach(item => {
+                        itemsHTML += `
+                            <div class="cart-item">
+                                <div class="item-image">
+                                    <img src="${item.image}" alt="${item.name}">
+                                </div>
+                                <div class="item-details">
+                                    <div class="item-name">${item.name}</div>
+                                    <div class="item-category">${item.category}</div>
+                                    <div class="item-price">₦${item.price.toLocaleString()}</div>
+                                </div>
+                                <div class="item-controls">
+                                    <div class="quantity-controls">
+                                        <button class="quantity-btn decrease" data-id="${item.id}">-</button>
+                                        <span class="quantity">${item.quantity}</span>
+                                        <button class="quantity-btn increase" data-id="${item.id}">+</button>
+                                    </div>
+                                    <button class="remove-btn" data-id="${item.id}">Remove</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    cartContent.innerHTML = itemsHTML;
+
+                    // Add event listeners
+                    cartContent.querySelectorAll('.decrease').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            const id = e.target.dataset.id;
+                            const currentQuantity = this.cart[id].quantity;
+                            this.updateQuantity(id, currentQuantity - 1);
+                        });
+                    });
+
+                    cartContent.querySelectorAll('.increase').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            const id = e.target.dataset.id;
+                            const currentQuantity = this.cart[id].quantity;
+                            this.updateQuantity(id, currentQuantity + 1);
+                        });
+                    });
+
+                    cartContent.querySelectorAll('.remove-btn').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            const id = e.target.dataset.id;
+                            this.removeItem(id);
+                        });
+                    });
+                }
+
+                // Update total price
+                const totalPriceElement = document.getElementById('cart-total-price');
+                if (totalPriceElement) {
+                    totalPriceElement.textContent = `₦${this.getCartTotal().toLocaleString()}`;
+                }
+            }
+
+            showNotification(message) {
+                const notification = document.getElementById('cart-notification');
+                if (notification) {
+                    notification.querySelector('span').textContent = message;
+                    notification.classList.add('show');
+                    setTimeout(() => {
+                        notification.classList.remove('show');
+                    }, 2000);
+                }
+            }
+
+            clearCart() {
+                this.cart = {};
+                this.saveCart();
+                this.updateCartUI();
+            }
+
+            // WhatsApp Integration
+            checkout() {
+                if (this.getCartCount() === 0) {
+                    alert('Your cart is empty!');
+                    return;
+                }
+
+                const message = this.formatWhatsAppMessage();
+                const phoneNumber = '+2348120527885'; // Replace with your WhatsApp number
+                
+                // Detect device and create appropriate WhatsApp URL
+                const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+                const whatsappUrl = isMobile 
+                    ? `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
+                    : `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
+
+                // Open WhatsApp
+                window.open(whatsappUrl, '_blank');
+                
+                // Optional: Clear cart after checkout
+                // this.clearCart();
+            }
+
+            formatWhatsAppMessage() {
+                const items = Object.values(this.cart);
+                const itemsList = items.map(item => 
+                    `• ${item.name} (${item.quantity} x ₦${item.price.toLocaleString()}) = ₦${(item.quantity * item.price).toLocaleString()}`
+                ).join('\n');
+
+                return `Hello! I would like to order the following lab tests:\n\n${itemsList}\n\nTotal: ₦${this.getCartTotal().toLocaleString()}\n\nPlease provide available time slots for sample collection.`;
+            }
+        }
+
+        // Chatbot functionality
+        const chatContainer = document.getElementById('chat-container');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+        const quickRepliesContainer = document.getElementById('quick-replies');
+        
+        // Sidebar toggle functionality
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        const toggleIcon = document.getElementById('toggle-icon');
+        const chatContainerWrapper = document.getElementById('chat-container-wrapper');
+        
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+            chatContainerWrapper.classList.toggle('expanded');
+            
+            if (sidebar.classList.contains('collapsed')) {
+                toggleIcon.classList.remove('fa-chevron-left');
+                toggleIcon.classList.add('fa-chevron-right');
+            } else {
+                toggleIcon.classList.remove('fa-chevron-right');
+                toggleIcon.classList.add('fa-chevron-left');
+            }
+        });
+
+        // Cart elements
+        const cartIcon = document.getElementById('cart-icon');
+        const cartIconHeader = document.getElementById('cart-icon-header');
+        const cartSidebar = document.getElementById('cart-sidebar');
+        const closeCartBtn = document.getElementById('close-cart');
+        const checkoutBtn = document.getElementById('checkout-btn');
+
+        // Cart toggle functionality
+        cartIcon.addEventListener('click', () => {
+            cartSidebar.classList.add('active');
+        });
+        cartIconHeader.addEventListener('click', () => {
+            cartSidebar.classList.add('active');
+        });
+        closeCartBtn.addEventListener('click', () => {
+            cartSidebar.classList.remove('active');
+        });
+        checkoutBtn.addEventListener('click', () => {
+            window.suggestCart.checkout();
+        });
+
+        // --- GEMINI API INTEGRATION ---
+        const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${GEMINI_API_KEY}`;
+
+        let conversationHistory = [];
+
+        // Updated test database with Naira prices
+        const testDatabase = {
+            'HGB': { 
+                id: 'HGB',
+                name: 'Haemoglobin Estimation', 
+                price: 3000, 
+                description: 'Measures the amount of haemoglobin in your blood to check for anaemia or other blood conditions.',
+                category: 'Blood Test',
+                image: './images/Jade.jpeg'
+            },
+            'PCV': { 
+                id: 'PCV',
+                name: 'Packed Cell Volume', 
+                price: 2500, 
+                description: 'Determines the percentage of red blood cells in your blood.',
+                category: 'Blood Test',
+                image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+            },
+            'MPT': { 
+                id: 'MPT',
+                name: 'Malaria Parasite Test', 
+                price: 4000, 
+                description: 'Detects the presence of malaria parasites in your blood.',
+                category: 'Parasitology',
+                image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+            },
+            'WAT': { 
+                id: 'WAT',
+                name: 'Widal Agglutination Test', 
+                price: 5000, 
+                description: 'Used to diagnose typhoid fever by detecting Salmonella antibodies in blood.',
+                category: 'Serology',
+                image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+            },
+            'UC': { 
+                id: 'UC',
+                name: 'Urine Chemistry', 
+                price: 4000, 
+                description: 'Analyzes the chemical composition of urine to detect abnormalities.',
+                category: 'Urine Test',
+                image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+            },
+            'CAURM': { 
+                id: 'CAURM',
+                name: 'Computer Assisted Urine Microscopy', 
+                price: 2500, 
+                description: 'Provides detailed microscopic analysis of urine using automated systems.',
+                category: 'Urine Test',
+                image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+            },
+            'ERYBAS': { 
+                id: 'ERYBAS',
+                name: 'Erythrocyte Basic', 
+                price: 8500, 
+                description: 'Examines red blood cell structure and count for haematological disorders.',
+                category: 'Blood Test',
+                image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+            }
+            // Remaining tests Would be added here...
+            //removed for brevity
+        };
+        
+        const systemPrompt = `You are a friendly and helpful Health AI Assistant, called Sophia. Your goal is to understand a user's health symptoms and suggest relevant medical tests from a predefined list.
+
+You MUST follow these rules:
+1.  Your responses MUST be in JSON format.
+2.  Do not use markdown in the JSON response.
+3.  Keep your conversational messages concise and easy to understand.
+4.  Ask clarifying questions one at a time to narrow down the symptoms.
+5.  When you have enough information, suggest relevant tests.
+6.  The available tests are: CBC, HGB, PCV, MPT, WAT, UC, CAURM, ERYBAS, FBC, CBS, SA, SSN, SSC, BG, HGBG, BG-HGBG, ASO-TITRE, RF, HCV, VDRL, HEP-B, ESR, FOB, HPYL, OMT, HVSMCS, URMCS, TDBIL, BCASA, COCASA, URCR, SE, EUC, LFT, LIPRO, TOTCHOL, STP, ETP, HORPRO, RVS, TPSA, CEA, TREX, TROBAS, SPT, ALB, VITD, CORT, KFT, MF, CAL, PRL, PROG, E2, FSH, LH, HCV2, Hbsag, HAV, FT4, CHLAMYD,  RES, FPSA, PSA-PRO, RBG, GONOR, FBG, HPYLANT, HbA1c, FT3, TSH, WOUND-SWAB-CS, hs-CRP, RSS, UR-ACID. Only suggest tests from this list.
+7.  Provide relevant quick reply options to guide the user.
+8.  If the user's query is unrelated to health, politely steer the conversation back to symptoms.
+9.  ALWAYS Verify Age and Gender befor recommending tests.
+10. You work for
+
+The JSON output must follow this exact schema:
+{
+  "message": "Your conversational response to the user.",
+  "suggestedTests": ["TEST_CODE_1", "TEST_CODE_2", ...],
+  "quickReplies": ["Option 1", "Option 2", ...]
+}
+
+Example interaction:
+User: "I have a bad headache"
+Your JSON response:
+{
+  "message": "I'm sorry to hear that. To understand better, are you feeling any nausea or sensitivity to light?",
+  "suggestedTests": [],
+  "quickReplies": ["Yes, I have nausea", "Yes, sensitivity to light", "Both", "Neither"]
+}`;
+
+        const addMessage = (sender, message) => {
+            const messageWrapper = document.createElement('div');
+            messageWrapper.classList.add('flex', 'mb-4', sender === 'user' ? 'justify-end' : 'justify-start');
+            
+            const messageBubble = document.createElement('div');
+            messageBubble.classList.add('rounded-xl', 'py-2', 'px-4', 'max-w-xs', 'lg:max-w-md', sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-bot');
+            messageBubble.innerText = message;
+            
+            messageWrapper.appendChild(messageBubble);
+            chatContainer.appendChild(messageWrapper);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        };
+
+        const showTypingIndicator = () => {
+             const typingWrapper = document.createElement('div');
+             typingWrapper.id = 'typing-indicator';
+             typingWrapper.classList.add('flex', 'mb-4', 'justify-start');
+             typingWrapper.innerHTML = `<div class="loader"></div>`;
+             chatContainer.appendChild(typingWrapper);
+             chatContainer.scrollTop = chatContainer.scrollHeight;
+        };
+
+        const removeTypingIndicator = () => {
+            const indicator = document.getElementById('typing-indicator');
+            if (indicator) {
+                indicator.remove();
+            }
+        };
+
+        const updateQuickReplies = (replies = []) => {
+            quickRepliesContainer.innerHTML = '';
+            if (replies.length > 0) {
+                replies.forEach(reply => {
+                    const button = document.createElement('button');
+                    button.textContent = reply;
+                    button.classList.add('px-3', 'py-1', 'border', 'border-blue-500', 'text-blue-500', 'rounded-full', 'text-sm', 'hover:bg-blue-500', 'hover:text-white', 'transition');
+                    button.onclick = () => handleUserInput(reply);
+                    quickRepliesContainer.appendChild(button);
+                });
+            }
+        };
+
+        const processBotResponse = async (userInputText) => {
+            conversationHistory.push({ role: "user", parts: [{ text: userInputText }] });
+
+            try {
+                const payload = {
+                    contents: conversationHistory,
+                    systemInstruction: {
+                        parts: [{ text: systemPrompt }]
+                    },
+                };
+
+                const response = await fetch(GEMINI_API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.statusText}`);
+                }
+
+                const result = await response.json();
+                const botResponseText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                if (!botResponseText) {
+                     throw new Error("Received an empty response from the API.");
+                }
+
+                const cleanedJsonString = botResponseText.replace(/```json|```/g, '').trim();
+                const botResponseJson = JSON.parse(cleanedJsonString);
+                
+                conversationHistory.push({ role: "model", parts: [{ text: JSON.stringify(botResponseJson) }] });
+                
+                removeTypingIndicator();
+
+                if (botResponseJson.message) {
+                    addMessage('bot', botResponseJson.message);
+                }
+                if (botResponseJson.quickReplies) {
+                    updateQuickReplies(botResponseJson.quickReplies);
+                }
+                if (botResponseJson.suggestedTests && botResponseJson.suggestedTests.length > 0) {
+                    suggestTests(botResponseJson.suggestedTests);
+                }
+
+            } catch (error) {
+                console.error("Error calling Gemini API:", error);
+                removeTypingIndicator();
+                addMessage('bot', "I'm having a little trouble connecting right now. Please try again in a moment.");
+            }
+        };
+        
+        const handleUserInput = (inputText) => {
+            const trimmedInput = inputText.trim();
+            if (trimmedInput === '') return;
+
+            addMessage('user', trimmedInput);
+            userInput.value = '';
+            updateQuickReplies(); 
+            showTypingIndicator();
+            
+            processBotResponse(trimmedInput);
+        };
+        
+        sendBtn.addEventListener('click', () => handleUserInput(userInput.value));
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleUserInput(userInput.value);
+            }
+        });
+
+        const suggestTests = (testCodes) => {
+            const suggestedTestsContainer = document.createElement('div');
+            suggestedTestsContainer.id = 'suggested-tests-container';
+            suggestedTestsContainer.className = 'mt-4 p-4 bg-gray rounded-lg border border-gray-200';
+            suggestedTestsContainer.innerHTML = '<h3 class="font-bold text-lg mb-3 text-white">Suggested Tests</h3>';
+            
+            testCodes.forEach(code => {
+                const test = testDatabase[code];
+                if (!test) return;
+
+                const card = document.createElement('div');
+                card.classList.add('p-4', 'rounded-lg', 'shadow-md', 'border', 'border-gray-200', 'test-card-enter', 'mb-3', 'suggestion');
+                card.innerHTML = `
+                    <h3 class="font-bold text-md text-gray-800">${test.name}</h3>
+                    <p class="text-sm text-gray-600 my-1">${test.description}</p>
+                    <div class="flex justify-between items-center mt-3">
+                        <span class="text-lg font-semibold text-blue-600">₦${test.price.toLocaleString()}</span>
+                        <button class="add-to-cart-btn bg-blue-100 text-blue-700 px-4 py-1 rounded-md text-sm font-semibold hover:bg-blue-200 transition" data-code="${code}">Add to Cart</button>
+                    </div>
+                `;
+                suggestedTestsContainer.appendChild(card);
+            });
+
+            chatContainer.appendChild(suggestedTestsContainer);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            // Add event listeners to the add to cart buttons
+            document.querySelectorAll('#suggested-tests-container .add-to-cart-btn').forEach(button => {
+                button.onclick = (e) => {
+                    const code = e.target.dataset.code;
+                    const test = testDatabase[code];
+                    if (test && window.suggestCart) {
+                        const added = window.suggestCart.addItem(test);
+                        if (added) {
+                            e.target.textContent = 'Added!';
+                            e.target.disabled = true;
+                            e.target.classList.remove('bg-blue-100', 'hover:bg-blue-200');
+                            e.target.classList.add('bg-green-100', 'text-green-700');
+                        }
+                    } else {
+                        console.error("Could not add item to cart. Test or suggestCart is missing.", { test, suggestCart: window.suggestCart });
+                    }
+                };
+            });
+        };
+
+        // Initialize cart system when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            window.suggestCart = new CartSystem();
+            
+            // Initial bot message
+            const initialMessage = "Hello! I'm Sophia, your personal health assistant. I can help you understand your symptoms and suggest relevant lab tests. What's your main symptom today?";
+            const initialReplies = ['Headache', 'Fever', 'Stomach Pain', 'Fatigue'];
+            
+            conversationHistory.push({
+                role: "model",
+                parts: [{ text: JSON.stringify({ message: initialMessage, suggestedTests: [], quickReplies: initialReplies }) }]
+            });
+            addMessage('bot', initialMessage);
+            updateQuickReplies(initialReplies);
+        });
+    </script>
+</body>
+</html>
