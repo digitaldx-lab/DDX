@@ -1,5 +1,4 @@
 # .gitignore file
 
-# Ignore the file containing the sensitive API key
-config.js
+# Ignore the file containing my sensitive API key
 .env
