@@ -1,4 +1,0 @@
-# .gitignore file
-
-# Ignore the file containing my sensitive API key
-.env

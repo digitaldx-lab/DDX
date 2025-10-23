@@ -1,338 +1,185 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Floating Chat Icon with External Page</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-       
-        
-        /* Floating Chat Icon */
-        .floating-chat-icon {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, #4a6ee0, #6a11cb);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 4px 20px rgba(74, 110, 224, 0.5);
-            cursor: pointer;
-            z-index: 999;
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-            transform: scale(1);
-            opacity: 1;
-        }
-        
-        .floating-chat-icon:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 25px rgba(74, 110, 224, 0.7);
-        }
-        
-        .floating-chat-icon.hidden {
-            transform: scale(0);
-            opacity: 0;
-            pointer-events: none;
-        }
-        
-        .floating-chat-icon i {
-            color: white;
-            font-size: 28px;
-        }
-        
-        /* Modal Styles */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.4s ease;
-        }
-        
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        .modal-content {
-            background-color: white;
-            border-radius: 15px;
-            width: 90%;
-            max-width: 1000px;
-            height: 80vh;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            transform: translateY(20px) scale(0.95);
-            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-        
-        .modal-overlay.active .modal-content {
-            transform: translateY(0) scale(1);
-        }
-        
-        .modal-header {
-            padding: 20px 25px;
-            background: linear-gradient(135deg, #4a6ee0, #6a11cb);
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .modal-header h2 {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .close-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            color: white;
-            transition: all 0.3s ease;
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-        }
-        
-        .close-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: rotate(90deg);
-        }
-        
-        .modal-body {
-            flex: 1;
-            overflow: auto;
-            padding: 0;
-        }
-        
-        #modal-frame {
-            width: 100%;
-            height: 100%;
-            border: none;
-            border-radius: 0 0 15px 15px;
-        }
-        
-        .loading-message {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            color: #666;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        .spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-left-color: #4a6ee0;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin-bottom: 15px;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        .instructions {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 30px;
-            text-align: left;
-        }
-        
-        .instructions h3 {
-            margin-bottom: 10px;
-            color: #333;
-        }
-        
-        .instructions ul {
-            padding-left: 20px;
-        }
-        
-        .instructions li {
-            margin-bottom: 8px;
-            color: #555;
-        }
-        
-        @media (max-width: 768px) {
-            .floating-chat-icon {
-                bottom: 20px;
-                right: 20px;
-                width: 60px;
-                height: 60px;
-            }
-            
-            .floating-chat-icon i {
-                font-size: 24px;
-            }
-            
-            .modal-content {
-                width: 95%;
-                height: 85vh;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Us — Z Edition</title>
+  <style>
+    :root {
+      --z-blue: #007bff;
+      --z-dark: #0d1117;
+      --z-glow: #4da3ff;
+    }
+
+    .button {
+      padding: 12px 28px;
+      background: var(--z-blue);
+      border: none;
+      color: white;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      box-shadow: 0 0 10px var(--z-glow);
+      transition: all 0.25s ease;
+    }
+
+    .button:hover {
+      background: var(--z-glow);
+      box-shadow: 0 0 20px var(--z-glow);
+      transform: translateY(-2px);
+    }
+
+    /* Overlay */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      backdrop-filter: blur(10px);
+      background-color: rgba(0, 0, 0, 0.6);
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 0.3s ease forwards;
+    }
+
+    /* Modal Box */
+    .modal-content {
+      background: #11161c;
+      padding: 25px 30px;
+      border-radius: 14px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 0 25px rgba(77, 163, 255, 0.3);
+      transform: scale(0.8) translateY(30px);
+      opacity: 0;
+      animation: popIn 0.35s ease forwards;
+    }
+
+    .modal-content h3 {
+      margin: 0 0 15px 0;
+      text-align: center;
+      font-size: 22px;
+      color: var(--z-glow);
+    }
+
+    .modal-content label {
+      font-size: 14px;
+      color: #c9d1d9;
+      margin-top: 10px;
+      display: block;
+    }
+
+    .modal-content input,
+    .modal-content textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      background: #0b0f14;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      transition: border 0.2s ease;
+    }
+
+    .modal-content input:focus,
+    .modal-content textarea:focus {
+      border-color: var(--z-glow);
+    }
+
+    .modal-content .actions {
+      text-align: right;
+      margin-top: 15px;
+    }
+
+    .close-btn {
+      background-color: #555;
+      margin-right: 8px;
+    }
+
+    .close-btn:hover {
+      background-color: #777;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes popIn {
+      to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+      }
+    }
+  </style>
 </head>
 <body>
 
-    
-    <!-- Floating Chat Icon -->
-    <div class="floating-chat-icon" id="chatIcon">
-        <i class="fas fa-comments"></i>
-    </div>
-    
-    <!-- Modal -->
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2><i class="fas fa-brain"></i> Sophia</h2>
-                <button class="close-btn" id="closeModal">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <iframe id="modal-frame" src="about:blank"></iframe>
-            </div>
-        </div>
-    </div>
+  <button id="contactBtn">Contact Us</button>
 
-    <script>
-        // Get DOM elements
-        const chatIcon = document.getElementById('chatIcon');
-        const modalOverlay = document.getElementById('modalOverlay');
-        const closeModal = document.getElementById('closeModal');
-        const modalFrame = document.getElementById('modal-frame');
-        
-        // Open modal when chat icon is clicked
-        chatIcon.addEventListener('click', function() {
-            // Hide the chat icon with smooth animation
-            chatIcon.classList.add('hidden');
-            
-            // Show the modal after a short delay
-            setTimeout(() => {
-                modalOverlay.classList.add('active');
-                
-                // Show loading state
-                modalFrame.style.display = 'none';
-                const loadingDiv = document.createElement('div');
-                loadingDiv.className = 'loading-message';
-                loadingDiv.innerHTML = `
-                    <div class="spinner"></div>
-                    <p>Loading page.html...</p>
-                `;
-                
-                // Remove any existing loading message
-                const existingLoading = modalFrame.parentElement.querySelector('.loading-message');
-                if (existingLoading) {
-                    existingLoading.remove();
-                }
-                
-                modalFrame.parentElement.appendChild(loadingDiv);
-                
-                // Set iframe source after a brief delay to show loading state
-                setTimeout(() => {
-                    modalFrame.src = 'sophia2.html';
-                    
-                    // When iframe loads, remove loading message and show iframe
-                    modalFrame.onload = function() {
-                        loadingDiv.remove();
-                        modalFrame.style.display = 'block';
-                    };
-                    
-                    // Handle iframe loading errors
-                    modalFrame.onerror = function() {
-                        loadingDiv.innerHTML = `
-                            <div style="color: #e74c3c; font-size: 48px; margin-bottom: 15px;">
-                                <i class="fas fa-exclamation-triangle"></i>
-                            </div>
-                            <h3>Page Not Found</h3>
-                            <p>Could not load page.html</p>
-                            <p style="margin-top: 15px; font-size: 14px;">
-                                Create a page.html file in the same directory to see the content here.
-                            </p>
-                        `;
-                    };
-                }, 500);
-            }, 300);
-        });
-        
-        // Close modal when close button is clicked
-        closeModal.addEventListener('click', function() {
-            // Hide the modal
-            modalOverlay.classList.remove('active');
-            
-            // Reset iframe source when closing modal
-            setTimeout(() => {
-                modalFrame.src = 'about:blank';
-            }, 300);
-            
-            // Show the chat icon after modal closes
-            setTimeout(() => {
-                chatIcon.classList.remove('hidden');
-            }, 400);
-        });
-        
-        // Close modal when clicking outside the content
-        modalOverlay.addEventListener('click', function(e) {
-            if (e.target === modalOverlay) {
-                // Hide the modal
-                modalOverlay.classList.remove('active');
-                
-                // Reset iframe source when closing modal
-                setTimeout(() => {
-                    modalFrame.src = 'about:blank';
-                }, 300);
-                
-                // Show the chat icon after modal closes
-                setTimeout(() => {
-                    chatIcon.classList.remove('hidden');
-                }, 400);
-            }
-        });
-        
-        // Close modal with Escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
-                // Hide the modal
-                modalOverlay.classList.remove('active');
-                
-                // Reset iframe source when closing modal
-                setTimeout(() => {
-                    modalFrame.src = 'about:blank';
-                }, 300);
-                
-                // Show the chat icon after modal closes
-                setTimeout(() => {
-                    chatIcon.classList.remove('hidden');
-                }, 400);
-            }
-        });
-    </script>
+  <!-- Modal -->
+  <div id="contactModal" class="modal">
+    <div class="modal-content">
+      <h3>Contact Us</h3>
+      <label for="name">Name *</label>
+      <input type="text" id="name" placeholder="Enter your name" required />
+
+      <label for="msg">Message *</label>
+      <textarea id="msg" rows="4" placeholder="Enter your message" required></textarea>
+
+      <div class="actions">
+        <button class="button close-btn" id="closeModal">Cancel</button>
+        <button class="button" id="sendBtn">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const modal = document.getElementById('contactModal');
+    const openBtn = document.getElementById('contactBtn');
+    const closeBtn = document.getElementById('closeModal');
+    const sendBtn = document.getElementById('sendBtn');
+
+    // Open modal
+    openBtn.addEventListener('click', () => {
+      modal.style.display = 'flex';
+    });
+
+    // Close modal
+    closeBtn.addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+
+    // Close when clicking outside
+    window.addEventListener('click', (e) => {
+      if (e.target === modal) modal.style.display = 'none';
+    });
+
+    // WhatsApp send
+    sendBtn.addEventListener('click', () => {
+      const name = document.getElementById('name').value.trim();
+      const msg = document.getElementById('msg').value.trim();
+
+      if (!name || !msg) {
+        alert('Please fill in all required fields.');
+        return;
+      }
+
+      const message = `Hello Digital Diagnostic Lab,\n\nMy name is ${name}.\nMessage: ${msg}`;
+      const phoneNumber = '+2348120527885';
+
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      const whatsappUrl = isMobile
+        ? `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
+        : `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
+
+      modal.style.display = 'none';
+      window.open(whatsappUrl, '_blank');
+    });
+  </script>
+
 </body>
 </html>

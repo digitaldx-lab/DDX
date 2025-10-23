@@ -324,8 +324,8 @@ class CartSystem {
         // Open WhatsApp
         window.open(whatsappUrl, '_blank');
         
-        // Optional: Clear cart after checkout
-        // this.clearCart();
+        // Clear cart after checkout
+        this.clearCart();
     }
 
     formatWhatsAppMessage() {

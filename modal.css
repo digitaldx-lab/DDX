@@ -1,0 +1,90 @@
+
+.button {
+      padding: 12px 28px;
+      background: #9200b6;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    /* Overlay */
+    .contactmodal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      backdrop-filter: blur(10px);
+      background-color: rgba(0, 0, 0, 0.6);
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 0.3s ease forwards;
+    }
+
+    /* Modal Box */
+    .contact-modal-content {
+      background: #11161c;
+      padding: 25px 30px;
+      border-radius: 14px;
+      width: 90%;
+      height: auto;
+      max-width: 400px;
+      box-shadow: 0 0 25px rgba(77, 163, 255, 0.3);
+      transform: scale(0.8) translateY(30px);
+      opacity: 0;
+      animation: popIn 0.35s ease forwards;
+    }
+
+    .contact-modal-content h3 {
+      margin: 0 0 15px 0;
+      text-align: center;
+      font-size: 22px;
+      color: var(--z-glow);
+    }
+
+    .contact-modal-content label {
+      font-size: 14px;
+      color: #c9d1d9;
+      margin-top: 10px;
+      display: block;
+    }
+
+    .contact-modal-content input,
+    .contact-modal-content textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      background: #0b0f14;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      transition: border 0.2s ease;
+    }
+
+    .contact-modal-content input:focus,
+    .contact-modal-content textarea:focus {
+      border-color: var(--z-glow);
+    }
+
+    .contact-modal-content .actions {
+        justify-content: space-around;
+        display: flex;
+        gap: 50px;
+      text-align: right;
+      margin-top: 15px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes popIn {
+      to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+      }
+    }

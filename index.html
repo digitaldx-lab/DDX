@@ -7,6 +7,7 @@
     <title>Digital Diagnostics Lab | Precision Diagnostic Solutions</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="modal.css" rel="stylesheet">
     <link href="sophia.css" rel="stylesheet">
   
     <!-- In your HTML files -->
@@ -1258,6 +1259,7 @@
             border-radius: 20px;
         }
         .contact:hover{
+            cursor: pointer;
             background-color: var(--accent);
             color: var(--text-light) !important;
         }
@@ -1581,7 +1583,7 @@ a{text-decoration: none; color: (var(--secondary));}
                 <li><a href="./shop.html">Shop Tests</a></li>
                 <li><a href="#">Resources</a></li>
                 <li><a href="#">Career</a></li>
-                <li><a class="contact" href="#">Contact Us</a></li>
+                <li><a class="contact" id="contactBtn">Contact Us</a></li>
                 <li>
                     <button class="theme-toggle" id="themeToggle">
                         <i class="fas fa-moon"></i>
@@ -1595,6 +1597,25 @@ a{text-decoration: none; color: (var(--secondary));}
 
         </div>
     </header>
+
+
+  <!-- Modal Pop Up -->
+
+    <div id="contactModal" class="contactmodal">
+    <div class="contact-modal-content">
+      <h3>Contact Us</h3>
+      <label for="name">Name *</label>
+      <input type="text" id="name" placeholder="Enter your name" required />
+
+      <label for="msg">Message *</label>
+      <textarea id="msg" rows="4" placeholder="Enter your message" required></textarea>
+
+      <div class="actions">
+        <button class="button" id="sendBtn">Send</button>
+      </div>
+    </div>
+  </div>
+
 
     <!-- Hero Section -->
     <section class="hero">
@@ -1952,7 +1973,6 @@ a{text-decoration: none; color: (var(--secondary));}
         </div>
     </footer>
 
-  <script src="script.js"></script>
   <script src="sophia.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
@@ -2860,6 +2880,52 @@ document.addEventListener('DOMContentLoaded', () => {
     typingElement.innerHTML = '';
     type();
 });
+
+
+
+
+        // Contact Modal Functionality
+    const modal = document.getElementById('contactModal');
+    const openBtn = document.getElementById('contactBtn');
+    const closeBtn = document.getElementById('closeModal');
+    const sendBtn = document.getElementById('sendBtn');
+
+    // Open modal
+    openBtn.addEventListener('click', () => {
+      modal.style.display = 'flex';
+    });
+
+    // Close modal
+    closeBtn.addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+
+    // Close when clicking outside
+    window.addEventListener('click', (e) => {
+      if (e.target === modal) modal.style.display = 'none';
+    });
+
+    // WhatsApp send
+    sendBtn.addEventListener('click', () => {
+      const name = document.getElementById('name').value.trim();
+      const msg = document.getElementById('msg').value.trim();
+
+      if (!name || !msg) {
+        alert('Please fill in all required fields.');
+        return;
+      }
+
+      const message = `Hello Digital Diagnostic Lab,\n\nMy name is ${name}.\nMessage: ${msg}`;
+      const phoneNumber = '+2348120527885';
+
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      const whatsappUrl = isMobile
+        ? `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
+        : `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
+
+      modal.style.display = 'none';
+      window.open(whatsappUrl, '_blank');
+    });
 
 
     </script>
