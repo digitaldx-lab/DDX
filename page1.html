@@ -3,183 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contact Us — Z Edition</title>
+  <title>Z Chat Widget — Edge Style</title>
+<link rel="stylesheet" href="edgechat.css">
   <style>
-    :root {
-      --z-blue: #007bff;
-      --z-dark: #0d1117;
-      --z-glow: #4da3ff;
-    }
-
-    .button {
-      padding: 12px 28px;
-      background: var(--z-blue);
-      border: none;
-      color: white;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: 500;
-      cursor: pointer;
-      box-shadow: 0 0 10px var(--z-glow);
-      transition: all 0.25s ease;
-    }
-
-    .button:hover {
-      background: var(--z-glow);
-      box-shadow: 0 0 20px var(--z-glow);
-      transform: translateY(-2px);
-    }
-
-    /* Overlay */
-    .modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 999;
-      backdrop-filter: blur(10px);
-      background-color: rgba(0, 0, 0, 0.6);
-      justify-content: center;
-      align-items: center;
-      animation: fadeIn 0.3s ease forwards;
-    }
-
-    /* Modal Box */
-    .modal-content {
-      background: #11161c;
-      padding: 25px 30px;
-      border-radius: 14px;
-      width: 90%;
-      max-width: 400px;
-      box-shadow: 0 0 25px rgba(77, 163, 255, 0.3);
-      transform: scale(0.8) translateY(30px);
-      opacity: 0;
-      animation: popIn 0.35s ease forwards;
-    }
-
-    .modal-content h3 {
-      margin: 0 0 15px 0;
-      text-align: center;
-      font-size: 22px;
-      color: var(--z-glow);
-    }
-
-    .modal-content label {
-      font-size: 14px;
-      color: #c9d1d9;
-      margin-top: 10px;
-      display: block;
-    }
-
-    .modal-content input,
-    .modal-content textarea {
-      width: 100%;
-      padding: 10px;
-      margin-top: 6px;
-      border-radius: 8px;
-      border: 1px solid #333;
-      background: #0b0f14;
-      color: #fff;
-      font-size: 14px;
-      outline: none;
-      transition: border 0.2s ease;
-    }
-
-    .modal-content input:focus,
-    .modal-content textarea:focus {
-      border-color: var(--z-glow);
-    }
-
-    .modal-content .actions {
-      text-align: right;
-      margin-top: 15px;
-    }
-
-    .close-btn {
-      background-color: #555;
-      margin-right: 8px;
-    }
-
-    .close-btn:hover {
-      background-color: #777;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    @keyframes popIn {
-      to {
-        transform: scale(1) translateY(0);
-        opacity: 1;
-      }
-    }
+    
   </style>
 </head>
+
 <body>
-
-  <button id="contactBtn">Contact Us</button>
-
-  <!-- Modal -->
-  <div id="contactModal" class="modal">
-    <div class="modal-content">
-      <h3>Contact Us</h3>
-      <label for="name">Name *</label>
-      <input type="text" id="name" placeholder="Enter your name" required />
-
-      <label for="msg">Message *</label>
-      <textarea id="msg" rows="4" placeholder="Enter your message" required></textarea>
-
-      <div class="actions">
-        <button class="button close-btn" id="closeModal">Cancel</button>
-        <button class="button" id="sendBtn">Send</button>
+  <!-- === Z Edge Chat Widget === -->
+  <div class="edge-chat-widget">
+    <div class="chat-bubbles-container">
+      <div class="chat-bubble">
+        <p class="typing-animation">Need help? 💬</p>
       </div>
     </div>
+
+    <!-- replace image src below -->
+    <a href="sophia2.html" class="chat-link pulse-attention">
+      <img src="./images/Sophia.png" alt="Chat Icon" />
+    </a>
   </div>
 
-  <script>
-    const modal = document.getElementById('contactModal');
-    const openBtn = document.getElementById('contactBtn');
-    const closeBtn = document.getElementById('closeModal');
-    const sendBtn = document.getElementById('sendBtn');
-
-    // Open modal
-    openBtn.addEventListener('click', () => {
-      modal.style.display = 'flex';
-    });
-
-    // Close modal
-    closeBtn.addEventListener('click', () => {
-      modal.style.display = 'none';
-    });
-
-    // Close when clicking outside
-    window.addEventListener('click', (e) => {
-      if (e.target === modal) modal.style.display = 'none';
-    });
-
-    // WhatsApp send
-    sendBtn.addEventListener('click', () => {
-      const name = document.getElementById('name').value.trim();
-      const msg = document.getElementById('msg').value.trim();
-
-      if (!name || !msg) {
-        alert('Please fill in all required fields.');
-        return;
-      }
-
-      const message = `Hello Digital Diagnostic Lab,\n\nMy name is ${name}.\nMessage: ${msg}`;
-      const phoneNumber = '+2348120527885';
-
-      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-      const whatsappUrl = isMobile
-        ? `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
-        : `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
-
-      modal.style.display = 'none';
-      window.open(whatsappUrl, '_blank');
-    });
-  </script>
-
+  <script src="edgechat.js"></script>
 </body>
 </html>

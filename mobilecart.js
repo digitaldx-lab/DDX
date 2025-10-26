@@ -1,21 +1,19 @@
-// cart.js - Reusable Cart System with Mobile Support
+// cart.js - Reusable Cart System
 class CartSystem {
     constructor() {
         this.cart = [];
-        this.cartIcon = null;
-        this.mobileCartIcon = null;
+        this.cartIconM = null;
         this.cartAside = null;
         this.init();
     }
 
     init() {
         this.loadCart();
-        this.createDesktopCartIcon();
-        this.createMobileCartIcon();
+        this.createCartIconM();
         this.createCartAside();
         this.attachEventListeners();
-        this.updateCartIcons();
         this.updateCartAside();
+        this.updateCartIconM();
     }
 
     // Cart Storage Management
@@ -26,7 +24,7 @@ class CartSystem {
 
     saveCart() {
         localStorage.setItem('labCart', JSON.stringify(this.cart));
-        this.updateCartIcons();
+        this.updateCartIconM();
         this.updateCartAside();
     }
 
@@ -78,58 +76,40 @@ class CartSystem {
         this.saveCart();
     }
 
-    // UI Creation - Desktop Cart Icon
-    createDesktopCartIcon() {
+    // UI Creation
+    createCartIconM() {
         // Remove existing cart icon if any
-        const existingIcon = document.getElementById('cartIcon');
+        const existingIcon = document.getElementById('cartIconM');
         if (existingIcon) {
             existingIcon.remove();
         }
 
-        // Create desktop cart icon
-        this.cartIcon = document.createElement('div');
-        this.cartIcon.id = 'cartIcon';
-        this.cartIcon.className = 'cart-icon desktop-cart';
-        this.cartIcon.innerHTML = `
+        // Create cart icon
+        this.cartIconM = document.createElement('div');
+        this.cartIconM.id = 'cartIconM';
+        this.cartIconM.className = 'cart-icon';
+        this.cartIconM.innerHTML = `
             <i class="fas fa-shopping-cart"></i>
             <span class="cart-count">0</span>
         `;
 
-        // Add to header navigation
-        const navLinks = document.querySelector('.nav-links');
-        if (navLinks) {
-            const cartListItem = document.createElement('li');
-            cartListItem.appendChild(this.cartIcon);
-            
-            // Insert before the contact button or at the end
-            const contactLi = navLinks.querySelector('.contact');
+
+        // Add to header
+        const header = document.querySelector('header .nav-container .mobile-menu').parentElement;
+        if (header) {
+            const contactLi = header.querySelector('.fa-bars')?.closest('li');
             if (contactLi && contactLi.parentElement) {
-                navLinks.insertBefore(cartListItem, contactLi.parentElement);
+                contactLi.parentElement.parentElement.insertBefore(
+                    document.createElement('li'),
+                    contactLi.parentElement
+                ).outerHTML = `<li>${this.cartIconM.outerHTML}</li>`;
             } else {
-                navLinks.appendChild(cartListItem);
+                header.querySelector('.nav-links').innerHTML += `<li>${this.cartIconM.outerHTML}</li>`;
             }
         }
-    }
 
-    // NEW: Mobile Cart Icon
-    createMobileCartIcon() {
-        // Remove existing mobile cart icon if any
-        const existingMobileIcon = document.getElementById('mobileCartIcon');
-        if (existingMobileIcon) {
-            existingMobileIcon.remove();
-        }
-
-        // Create mobile cart icon
-        this.mobileCartIcon = document.createElement('div');
-        this.mobileCartIcon.id = 'mobileCartIcon';
-        this.mobileCartIcon.className = 'mobile-cart-icon';
-        this.mobileCartIcon.innerHTML = `
-            <i class="fas fa-shopping-cart"></i>
-            <span class="cart-count">0</span>
-        `;
-
-        // Add to mobile menu area or create a fixed position element
-        document.body.appendChild(this.mobileCartIcon);
+        // Re-select the cart icon after adding to DOM
+        this.cartIconM = document.getElementById('cartIconM');
     }
 
     createCartAside() {
@@ -175,15 +155,14 @@ class CartSystem {
         document.body.appendChild(this.cartAside);
     }
 
-    // UI Updates - Updated for both icons
-    updateCartIcons() {
-        const cartCounts = document.querySelectorAll('.cart-count');
-        const totalItems = this.getTotalItems();
-        
-        cartCounts.forEach(count => {
-            count.textContent = totalItems;
-            count.style.display = totalItems > 0 ? 'flex' : 'none';
-        });
+    // UI Updates
+    updateCartIconM() {
+        const cartCount = document.querySelector('.cart-count');
+        if (cartCount) {
+            const totalItems = this.getTotalItems();
+            cartCount.textContent = totalItems;
+            cartCount.style.display = totalItems > 0 ? 'flex' : 'none';
+        }
     }
 
     updateCartAside() {
@@ -230,11 +209,11 @@ class CartSystem {
         totalPrice.textContent = `₦${this.getTotalPrice().toLocaleString()}`;
     }
 
-    // Event Handlers - Updated for mobile icon
+    // Event Handlers
     attachEventListeners() {
-        // Desktop and Mobile cart icon clicks
+        // Cart icon click
         document.addEventListener('click', (e) => {
-            if (e.target.closest('#cartIcon') || e.target.closest('#mobileCartIcon')) {
+            if (e.target.closest('#cartIconM')) {
                 this.toggleCartAside();
             }
         });

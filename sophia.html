@@ -801,7 +801,7 @@
                     `• ${item.name} (${item.quantity} x ₦${item.price.toLocaleString()}) = ₦${(item.quantity * item.price).toLocaleString()}`
                 ).join('\n');
 
-                return `Hello! I would like to order the following lab tests:\n\n${itemsList}\n\nTotal: ₦${this.getCartTotal().toLocaleString()}\n\nPlease provide available time slots for sample collection.`;
+                return `Hello! I would like to order the following lab tests:\n\n${itemsList}\n\nTotal: ₦${this.getCartTotal().toLocaleString()}\n\nPlease let me know how i can proceed with payment`;
             }
         }
 
