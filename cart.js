@@ -208,7 +208,6 @@ class CartSystem {
                 <div class="item-details">
                     <h4 class="item-name">${item.name}</h4>
                     <p class="item-category">${item.category}</p>
-                    <div class="item-price">₦${item.price.toLocaleString()}</div>
                 </div>
                 <div class="item-controls">
                     <div class="quantity-controls">
@@ -352,10 +351,10 @@ class CartSystem {
 
     formatWhatsAppMessage() {
         const itemsList = this.cart.map(item => 
-            `• ${item.name} (${item.quantity} x ₦${item.price.toLocaleString()}) = ₦${(item.quantity * item.price).toLocaleString()}`
+            `• ${item.name} (${item.quantity})`
         ).join('\n');
 
-        return `Hello! I would like to order the following lab tests:\n\n${itemsList}\n\nTotal: ₦${this.getTotalPrice().toLocaleString()}\n\nPlease let me know how i can proceed with payment`;
+        return `Hello! I would like to order the following lab tests:\n\n${itemsList}\n\nPlease provide total and payment details. Thank you!`;
     }
 
     // Public method to add items from outside

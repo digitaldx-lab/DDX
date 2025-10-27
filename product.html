@@ -3,43 +3,902 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<style>
-    /* 1. Gradient Definition */
-.animated-gradient-bg {
-    /* Define the size of the gradient. Make it larger than the viewport */
-    background-size: 400% 400%; 
-    
-    /* Set the initial gradient colors */
-    background-image: linear-gradient(
-        -45deg,
-        #0000ff,        /* Very Light Gray/Blue */
-        #e6effa,        /* Light Lavender */
-        #c6e2ff,        /* Pale Sky Blue */
-        #f0f8ff         /* Alice Blue */
-    );
-    
-    /* Ensure a smooth transition for the position change */
-    transition: background-position 0.5s ease;
-    
-    /* Set the animation property */
-    animation: subtle-shift 15s ease infinite alternate;
-}
+    <title>DDX Labs - Career & Partnership Opportunities</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
 
-/* 2. Keyframes for the Subtle Shift */
-@keyframes subtle-shift {
-    /* Starting point: top-left corner of the background is visible */
-    0% {
-        background-position: 0% 50%;
-    }
-    
-    /* Midpoint: shift to the bottom-right corner */
-    100% {
-        background-position: 100% 50%;
-    }
-}
-</style>
-<body class="animated-gradient-bg">
-    </body>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background-color: white;
+            box-shadow: var(--shadow);
+            padding: 20px 0;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+
+        .logo i {
+            margin-right: 10px;
+            color: var(--secondary);
+            font-size: 2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 100px 0;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 50px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            opacity: 0.9;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #c0392b;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background-color: white;
+            color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            margin-bottom: 50px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background-color: var(--light);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            transition: var(--transition);
+            border-left: 4px solid var(--secondary);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--secondary);
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--primary);
+            color: white;
+            padding: 50px 0 20px;
+            margin-top: 50px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--light);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            color: #bdc3c7;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-icons a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .social-icons a:hover {
+            background-color: var(--secondary);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #bdc3c7;
+            font-size: 0.9rem;
+        }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background-color: white;
+            max-width: 600px;
+            margin: 40px auto;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--dark);
+            cursor: pointer;
+            z-index: 10;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            background-color: var(--light);
+        }
+
+        .modal-header {
+            padding: 25px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+        }
+
+        .modal-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: 'Poppins', sans-serif;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 16px;
+        }
+
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-upload-input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-upload-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 15px;
+            border: 1px dashed #ddd;
+            border-radius: 5px;
+            background-color: var(--light);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .file-upload-label:hover {
+            border-color: var(--secondary);
+        }
+
+        .file-upload-text {
+            color: #7f8c8d;
+        }
+
+        .file-upload-icon {
+            color: var(--secondary);
+        }
+
+        .form-submit-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .form-submit-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .form-submit-btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 200px;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-flask"></i>
+                <span>DDX Labs</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Services</a></li>
+                <li><a href="#">Research</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Join the Future of Diagnostics</h1>
+            <p>At DDX Labs, we're revolutionizing healthcare through cutting-edge diagnostic solutions. Join our team or partner with us to make a difference.</p>
+            <div class="cta-buttons">
+                <button class="btn btn-primary" id="joinTeamBtn">Join Our Team</button>
+                <button class="btn btn-secondary" id="partnerWithUsBtn">Partner With Us</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Why Choose DDX Labs</h2>
+            <p class="section-subtitle">We're building the future of diagnostics with innovative technology and a passionate team.</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-microscope"></i>
+                    </div>
+                    <h3 class="feature-title">Advanced Technology</h3>
+                    <p>Work with state-of-the-art diagnostic equipment and cutting-edge research tools.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="feature-title">Collaborative Environment</h3>
+                    <p>Join a diverse team of experts who value knowledge sharing and mutual growth.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <h3 class="feature-title">Impactful Work</h3>
+                    <p>Make a real difference in healthcare by developing solutions that improve patient outcomes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Join Our Team Modal -->
+    <div class="modal" id="joinTeamModal">
+        <div class="modal-content">
+            <button class="modal-close" id="closeJoinTeamModal">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-header">
+                <h2>Join Our Team</h2>
+                <p>Apply for a position at DDX Labs</p>
+            </div>
+            <div class="modal-body">
+                <form id="joinTeamForm">
+                    <div class="form-group">
+                        <label for="fullName" class="form-label">Full Name *</label>
+                        <input type="text" id="fullName" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email *</label>
+                        <input type="email" id="email" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone" class="form-label">Phone Number *</label>
+                        <input type="tel" id="phone" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="position" class="form-label">Position / Role Applying For *</label>
+                        <input type="text" id="position" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Upload Resume (PDF/DOC) *</label>
+                        <div class="file-upload">
+                            <input type="file" id="resume" class="file-upload-input" accept=".pdf,.doc,.docx" required>
+                            <label for="resume" class="file-upload-label">
+                                <span class="file-upload-text" id="resumeText">Choose file</span>
+                                <span class="file-upload-icon"><i class="fas fa-upload"></i></span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message" class="form-label">Message / Cover Letter</label>
+                        <textarea id="message" class="form-control" placeholder="Tell us why you're interested in joining our team..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="form-submit-btn">
+                        <i class="fab fa-whatsapp"></i>
+                        Submit via WhatsApp
+                    </button>
+                    
+                    <div class="form-footer">
+                        <p>We'll contact you within 3-5 business days</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Partner With Us Modal -->
+    <div class="modal" id="partnerWithUsModal">
+        <div class="modal-content">
+            <button class="modal-close" id="closePartnerWithUsModal">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-header">
+                <h2>Partner With Us</h2>
+                <p>Let's explore collaboration opportunities</p>
+            </div>
+            <div class="modal-body">
+                <form id="partnerWithUsForm">
+                    <div class="form-group">
+                        <label for="institutionName" class="form-label">Institution / Organization Name *</label>
+                        <input type="text" id="institutionName" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="orgContact" class="form-label">Organization Contact *</label>
+                        <input type="text" id="orgContact" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="orgEmail" class="form-label">Organization Email *</label>
+                        <input type="email" id="orgEmail" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contactPerson" class="form-label">Contact Person Name *</label>
+                        <input type="text" id="contactPerson" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contactPersonPhone" class="form-label">Contact Person's Phone *</label>
+                        <input type="tel" id="contactPersonPhone" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contactPersonEmail" class="form-label">Contact Person's Email *</label>
+                        <input type="email" id="contactPersonEmail" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="collaborationType" class="form-label">Type of Collaboration *</label>
+                        <select id="collaborationType" class="form-control" required>
+                            <option value="">Select collaboration type</option>
+                            <option value="Sample Processing">Sample Processing</option>
+                            <option value="Research Collaboration">Research Collaboration</option>
+                            <option value="Referral Partnership">Referral Partnership</option>
+                            <option value="Corporate / Institutional Partnership">Corporate / Institutional Partnership</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="partnerMessage" class="form-label">Message *</label>
+                        <textarea id="partnerMessage" class="form-control" placeholder="Tell us about your organization and proposed collaboration..." required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="form-submit-btn">
+                        <i class="fab fa-whatsapp"></i>
+                        Submit via WhatsApp
+                    </button>
+                    
+                    <div class="form-footer">
+                        <p>Our partnership team will reach out to discuss opportunities</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>DDX Labs</h3>
+                    <p>Revolutionizing healthcare through precision diagnostics and cutting-edge technology.</p>
+                    <div class="social-icons">
+                        <a class="facebook" href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a class="x" href="#"><i class="fab fa-x"></i></a>
+                        <a class="linkedin" href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a class="instagram" href="#"><i class="fab fa-instagram"></i></a>
+                        <a class="tiktok" href="#"><i class="fab fa-tiktok"></i></a>                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Services</a></li>
+                        <li><a href="#">Career</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Innovation Drive, Tech City</li>
+                        <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                        <li><i class="fas fa-envelope"></i> info@ddxlabs.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 DDX Labs. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // DOM Elements
+        const joinTeamBtn = document.getElementById('joinTeamBtn');
+        const partnerWithUsBtn = document.getElementById('partnerWithUsBtn');
+        const joinTeamModal = document.getElementById('joinTeamModal');
+        const partnerWithUsModal = document.getElementById('partnerWithUsModal');
+        const closeJoinTeamModal = document.getElementById('closeJoinTeamModal');
+        const closePartnerWithUsModal = document.getElementById('closePartnerWithUsModal');
+        const joinTeamForm = document.getElementById('joinTeamForm');
+        const partnerWithUsForm = document.getElementById('partnerWithUsForm');
+        const resumeInput = document.getElementById('resume');
+        const resumeText = document.getElementById('resumeText');
+
+        // Open Modals
+        joinTeamBtn.addEventListener('click', () => {
+            joinTeamModal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        });
+
+        partnerWithUsBtn.addEventListener('click', () => {
+            partnerWithUsModal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        });
+
+        // Close Modals
+        closeJoinTeamModal.addEventListener('click', () => {
+            joinTeamModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+
+        closePartnerWithUsModal.addEventListener('click', () => {
+            partnerWithUsModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+
+        // Close modals when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === joinTeamModal) {
+                joinTeamModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+            if (e.target === partnerWithUsModal) {
+                partnerWithUsModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // File upload display
+        resumeInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                resumeText.textContent = this.files[0].name;
+            } else {
+                resumeText.textContent = 'Choose file';
+            }
+        });
+
+        // Form Submissions (WhatsApp Integration)
+        joinTeamForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                fullName: document.getElementById('fullName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                position: document.getElementById('position').value,
+                message: document.getElementById('message').value,
+                resume: resumeInput.files[0] ? resumeInput.files[0].name : 'Not provided'
+            };
+            
+            sendToWhatsApp('job_application', formData);
+            joinTeamModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            this.reset();
+            resumeText.textContent = 'Choose file';
+            showNotification('Application submitted successfully! We will contact you soon.');
+        });
+
+        partnerWithUsForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                institutionName: document.getElementById('institutionName').value,
+                orgContact: document.getElementById('orgContact').value,
+                orgEmail: document.getElementById('orgEmail').value,
+                contactPerson: document.getElementById('contactPerson').value,
+                contactPersonPhone: document.getElementById('contactPersonPhone').value,
+                contactPersonEmail: document.getElementById('contactPersonEmail').value,
+                collaborationType: document.getElementById('collaborationType').value,
+                message: document.getElementById('partnerMessage').value
+            };
+            
+            sendToWhatsApp('partnership', formData);
+            partnerWithUsModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            this.reset();
+            showNotification('Partnership proposal submitted successfully! Our team will contact you soon.');
+        });
+
+        // WhatsApp Integration
+        function sendToWhatsApp(type, data) {
+            const phoneNumber = '+2348120527885';
+            
+            let message = '';
+            
+            if (type === 'job_application') {
+                message = `🔬 *Digital Diagnostics Labs - Job Application*\n\n` +
+                         `*Full Name:* ${data.fullName}\n` +
+                         `*Email:* ${data.email}\n` +
+                         `*Phone:* ${data.phone}\n` +
+                         `*Position Applied For:* ${data.position}\n` +
+                         `*Resume:* ${data.resume}\n` +
+                         `*Cover Letter:* ${data.message || 'Not provided'}\n\n` +
+                         `_Application submitted via DDX Labs website_`;
+            } else if (type === 'partnership') {
+                message = `🤝 *Digital Diagnostics Labs - Partnership Proposal*\n\n` +
+                         `*Institution/Organization:* ${data.institutionName}\n` +
+                         `*Organization Contact:* ${data.orgContact}\n` +
+                         `*Organization Email:* ${data.orgEmail}\n` +
+                         `*Contact Person:* ${data.contactPerson}\n` +
+                         `*Contact Phone:* ${data.contactPersonPhone}\n` +
+                         `*Contact Email:* ${data.contactPersonEmail}\n` +
+                         `*Collaboration Type:* ${data.collaborationType}\n` +
+                         `*Proposal Details:* ${data.message}\n\n` +
+                         `_Partnership proposal submitted via DDX Labs website_`;
+            }
+            
+            // Detect device and create appropriate WhatsApp URL
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            const whatsappUrl = isMobile 
+                ? `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
+                : `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
+            
+            // Open WhatsApp in a new tab
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // Notification System
+        function showNotification(message) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background-color: var(--success);
+                color: white;
+                padding: 15px 20px;
+                border-radius: 5px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                z-index: 3000;
+                transform: translateX(400px);
+                transition: transform 0.3s ease;
+                max-width: 300px;
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // Show notification
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            // Remove notification after 5 seconds
+            setTimeout(() => {
+                notification.style.transform = 'translateX(400px)';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 5000);
+        }
+    </script>
+</body>
 </html>

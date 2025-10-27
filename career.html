@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="./images/digilogo.png">
     <title>Career Opportunities | Digital Diagnostics Lab</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <link href="sophia.css" rel="stylesheet">
+    <link rel="stylesheet" href="edgechat.css">
     <link href="modal.css" rel="stylesheet">
 
-
-     <!-- In your HTML files -->
-<link rel="stylesheet" href="cart.css">
-  <link rel="stylesheet" href="style.css">
-<script src="cart.js"></script>
-
+      <!-- In your HTML files -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="cart.css">
     <style>
-         :root {
+        :root {
             --primary: #9200b6;
-            --secondary: #f8f9fa;
+            --secondary: #f8fafa;
             --accent: #f12004;
             --text-dark: #333;
             --text-light: #fff;
@@ -45,18 +45,6 @@
             box-sizing: border-box;
         }
 
-        .mobile-menu {
-            display: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--text-dark);
-            transition: var(--transition);
-        }
-
-        .mobile-menu:hover {
-            color: var(--primary);
-        }
-
         body {
             font-family: 'Poppins', sans-serif;
             line-height: 1.6;
@@ -65,22 +53,22 @@
             overflow-x: hidden;
         }
 
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Header */
+        /* Header Fixes */
         header {
             background-color: var(--secondary);
             box-shadow: var(--shadow);
             position: fixed;
             width: 100%;
             top: 0;
-            z-index: 1000;
+            z-index: 100;
             transition: var(--transition);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
         .nav-container {
@@ -88,6 +76,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 20px 0;
+            position: relative; /* Added for proper positioning */
         }
 
         .logo {
@@ -96,20 +85,25 @@
             font-weight: 700;
             font-size: 1.5rem;
             color: var(--primary);
+            z-index: 1001; /* Ensures logo stays on top */
         }
 
-        .logo i {
-            margin-right: 10px;
-            font-size: 1.8rem;
+        .logo img {
+            height: 40px;
+            vertical-align: middle;
+            margin-left: 8px;
+            padding-right: 20px;
         }
 
         .nav-links {
             display: flex;
             list-style: none;
+            align-items: center;
         }
 
         .nav-links li {
             margin-left: 30px;
+            position: relative;
         }
 
         .nav-links a {
@@ -117,32 +111,238 @@
             color: var(--text-dark);
             font-weight: 500;
             transition: var(--transition);
-        }
-
-        .nav-links a.active {
-            color: var(--primary);
             position: relative;
+            display: inline-block;
         }
 
-        .nav-links a.active::after {
+        .nav-links a::after {
             content: '';
             position: absolute;
             bottom: -5px;
             left: 0;
-            width: 100%;
+            width: 0;
             height: 2px;
             background-color: var(--primary);
+            transition: width 0.3s ease;
         }
 
-        .contact{
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a.active {
+            color: var(--primary);
+        }
+
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .contact {
             background-color: var(--primary);
             color: var(--text-light) !important;
             padding: 8px 15px;
             border-radius: 20px;
         }
-        .contact:hover{
+
+        .contact:hover {
             background-color: var(--accent);
             color: var(--text-light) !important;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-dark);
+            transition: var(--transition);
+            z-index: 1001; /* Ensures menu icon stays on top */
+        }
+
+        .mobile-menu:hover {
+            color: var(--primary);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--text-dark);
+            margin-left: 20px;
+            transition: var(--transition);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--gray-light);
+            transform: rotate(360deg);
+        }
+
+        /* MEGA DROPDOWN STYLES - FIXED */
+        .nav-links > li {
+            position: relative;
+        }
+
+        .mega-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100vw; /* Full viewport width */
+            background-color: var(--secondary);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            padding: 30px 0;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            border-top: 3px solid var(--primary);
+            /* Ensure dropdown spans full width */
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+        }
+
+        .mega-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .mega-container {
+            width: 90%;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 30px;
+        }
+
+        .mega-column {
+            padding: 0 15px;
+        }
+
+        .mega-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--gray-light);
+            position: relative;
+        }
+
+        .mega-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--accent);
+        }
+
+        .mega-links {
+            list-style: none;
+        }
+
+        .mega-links li {
+            margin-bottom: 12px;
+        }
+
+        .mega-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            position: relative;
+        }
+
+        .mega-links a::before {
+            content: '';
+            position: absolute;
+            left: -10px;
+            width: 3px;
+            height: 0;
+            background-color: var(--accent);
+            transition: height 0.3s ease;
+        }
+
+        .mega-links a:hover::before {
+            height: 100%;
+        }
+
+        .mega-links a:hover {
+            color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .mega-links i {
+            margin-right: 10px;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .mega-column.featured {
+            grid-column: span 2;
+            gap: 50px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        .mega-feature {
+            background: linear-gradient(135deg, var(--primary) 0%, #00a8e8 100%);
+            border-radius: 10px;
+            padding: 25px;
+            color: var(--text-light);
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .mega-feature h4 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .mega-feature h4 i {
+            margin-right: 10px;
+        }
+
+        .mega-feature p {
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .mega-btn {
+            display: inline-block;
+            background-color: var(--accent);
+            color: var(--text-light);
+            padding: 10px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .mega-btn:hover {
+            background-color: #27ae60;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
 
         /* Career Hero Section */
@@ -372,6 +572,200 @@
             background-color: var(--accent);
         }
 
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .mega-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .mega-column.featured {
+                grid-column: span 3;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100vh;
+                background-color: var(--secondary);
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: flex-start;
+                padding: 80px 20px 20px;
+                box-shadow: var(--shadow);
+                z-index: 999;
+                overflow-y: auto;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links li {
+                margin: 15px 0;
+                width: 100%;
+            }
+
+            .nav-links a {
+                display: block;
+                padding: 10px 0;
+                font-size: 1.1rem;
+            }
+
+            .mega-dropdown {
+                display: none; /* Hide mega dropdown on mobile */
+            }
+
+            .career-hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .career-cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 200px;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .nav-container {
+                padding: 15px 0;
+            }
+        }
+
+        /* Additional responsive adjustments for very small screens */
+        @media (max-width: 480px) {
+            .logo span {
+                font-size: 1.2rem;
+            }
+            
+            .career-hero {
+                padding: 60px 0;
+                margin-top: 80px;
+            }
+            
+            .career-hero h1 {
+                font-size: 1.8rem;
+            }
+        }
+.logo a {text-decoration: none; color: (var(--secondary));}
+
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #c0392b;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background-color: white;
+            color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            margin-bottom: 50px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background-color: var(--light);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            transition: var(--transition);
+            border-left: 4px solid var(--secondary);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--secondary);
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
         /* Modals */
         .modal {
             display: none;
@@ -387,13 +781,25 @@
         }
 
         .modal-content {
-            background-color: var(--secondary);
+            background-color: white;
             max-width: 600px;
             margin: 40px auto;
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             position: relative;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .modal-close {
@@ -403,7 +809,7 @@
             background: none;
             border: none;
             font-size: 1.5rem;
-            color: var(--text-dark);
+            color: var(--dark);
             cursor: pointer;
             z-index: 10;
             width: 40px;
@@ -416,13 +822,13 @@
         }
 
         .modal-close:hover {
-            background-color: var(--gray-light);
+            background-color: var(--light);
         }
 
         .modal-header {
             padding: 25px;
-            background: linear-gradient(135deg, var(--primary) 0%, #00a8e8 100%);
-            color: var(--text-light);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
         }
 
         .modal-header h2 {
@@ -443,13 +849,13 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
-            color: var(--text-dark);
+            color: var(--dark);
         }
 
         .form-control {
             width: 100%;
             padding: 12px 15px;
-            border: 1px solid var(--gray-medium);
+            border: 1px solid #ddd;
             border-radius: 5px;
             font-family: 'Poppins', sans-serif;
             transition: var(--transition);
@@ -457,13 +863,21 @@
 
         .form-control:focus {
             outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(0, 119, 182, 0.2);
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
         }
 
         textarea.form-control {
             min-height: 120px;
             resize: vertical;
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 16px;
         }
 
         .file-upload {
@@ -487,9 +901,9 @@
             align-items: center;
             justify-content: space-between;
             padding: 12px 15px;
-            border: 1px dashed var(--gray-medium);
+            border: 1px dashed #ddd;
             border-radius: 5px;
-            background-color: var(--gray-light);
+            background-color: var(--light);
             cursor: pointer;
             transition: var(--transition);
         }
@@ -499,7 +913,7 @@
         }
 
         .file-upload-text {
-            color: var(--gray-medium);
+            color: #7f8c8d;
         }
 
         .file-upload-icon {
@@ -508,9 +922,9 @@
 
         .form-submit-btn {
             width: 100%;
-            padding: 12px;
+            padding: 15px;
             background-color: var(--primary);
-            color: var(--text-light);
+            color: white;
             border: none;
             border-radius: 5px;
             font-family: 'Poppins', sans-serif;
@@ -518,14 +932,18 @@
             cursor: pointer;
             transition: var(--transition);
             margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         .form-submit-btn:hover {
-            background-color: var(--accent);
+            background-color: #2980b9;
         }
 
         .form-submit-btn:disabled {
-            background-color: var(--gray-medium);
+            background-color: #bdc3c7;
             cursor: not-allowed;
         }
 
@@ -533,8 +951,9 @@
             text-align: center;
             margin-top: 20px;
             font-size: 0.9rem;
-            color: var(--gray-medium);
+            color: #7f8c8d;
         }
+
 
         /* Footer */
         footer {
@@ -593,7 +1012,6 @@
         }
 
         .social-icons a:hover {
-            background-color: var(--primary);
             transform: translateY(-3px);
         }
 
@@ -605,290 +1023,42 @@
             font-size: 0.9rem;
         }
 
-
-        /* MEGA DROPDOWN STYLES */
-        .nav-links > li {
-            position: relative;
+        .social-icons .facebook:hover {
+            background-color: #3b5998;
         }
 
-        .mega-dropdown {
-            position: absolute;
-            top: 100%;
-            width: 100vw;
-            left: -56rem;
-            background-color: var(--secondary);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            z-index: 1000;
-            padding: 30px 0;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(10px);
-            transition: all 0.3s ease;
-            border-top: 3px solid var(--primary);
+        .social-icons .instagram:hover {
+            background-image: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
         }
 
-        .mega-dropdown.active {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
+        .social-icons .linkedin:hover {
+            background-color: #0077b5;
         }
 
-        .mega-container {
-            width: 90%;
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 30px;
+        .social-icons .x:hover {
+            background-color: #000000;
         }
-
-        .mega-column {
-            padding: 0 15px;
+        .social-icons .tiktok:hover {
+            background-color: #010101;
         }
-
-        .mega-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--primary);
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--gray-light);
-            position: relative;
-        }
-
-        .mega-title::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 50px;
-            height: 2px;
-            background-color: var(--accent);
-        }
-
-        .mega-links {
-            list-style: none;
-        }
-
-        .mega-links li {
-            margin-bottom: 12px;
-        }
-
-        .mega-links a {
-            text-decoration: none;
-            color: var(--text-dark);
-            font-weight: 500;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            padding: 8px 0;
-            position: relative;
-        }
-
-        .mega-links a::before {
-            content: '';
-            position: absolute;
-            left: -10px;
-            width: 3px;
-            height: 0;
-            background-color: var(--accent);
-            transition: height 0.3s ease;
-        }
-
-        .mega-links a:hover::before {
-            height: 100%;
-        }
-
-        .mega-links a:hover {
-            color: var(--primary);
-            transform: translateX(5px);
-        }
-
-        .mega-links i {
-            margin-right: 10px;
-            color: var(--primary);
-            font-size: 0.9rem;
-        }
-
-        .mega-column.featured {
-            grid-column: span 2;
-            gap: 50px;
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-        }
-
-        .mega-feature {
-            background: linear-gradient(135deg, var(--primary) 0%, #00a8e8 100%);
-            border-radius: 10px;
-            padding: 25px;
-            color: var(--text-light);
-            margin-bottom: 20px;
-            box-shadow: var(--shadow);
-        }
-
-        .mega-feature h4 {
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-        }
-
-        .mega-feature h4 i {
-            margin-right: 10px;
-        }
-
-        .mega-feature p {
-            margin-bottom: 20px;
-            opacity: 0.9;
-        }
-
-        .mega-btn {
-            display: inline-block;
-            background-color: var(--accent);
-            color: var(--text-light);
-            padding: 10px 20px;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: var(--transition);
-            text-align: center;
-        }
-
-        .mega-btn:hover {
-            background-color: #27ae60;
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 1200px) {
-            .mega-container {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            
-            .mega-column.featured {
-                grid-column: span 3;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .mega-dropdown {
-                display: none;
-            }
-        }
-
-
-           @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-                position: absolute;
-                top: 80px;
-                left: 0;
-                width: 100%;
-                background-color: var(--secondary);
-                flex-direction: column;
-                padding: 20px;
-                box-shadow: var(--shadow);
-                z-index: 1000;
-            }
-
-            .nav-links.active {
-                display: flex;
-            }
-
-            .nav-links li {
-                margin: 10px 0;
-            }
-
-            .mobile-menu {
-                display: block;
-            }
-
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .cta-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .btn {
-                width: 200px;
-            }
-        }
-
-          .nav-links {
-            width: 100%;
-            display: flex;
-            list-style: none;
-        }
-
-        .nav-links li {
-            margin-left: 30px;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text-dark);
-            font-weight: 500;
-            transition: var(--transition);
-            position: relative;
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: var(--primary);
-            transition: width 0.3s ease;
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-
-
-        .theme-toggle {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 1.2rem;
-            color: var(--text-dark);
-            margin-left: 20px;
-            transition: var(--transition);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .theme-toggle:hover {
-            background-color: var(--gray-light);
-            transform: rotate(360deg);
-        }
-
-a {text-decoration: none; color: (var(--secondary));}
-
 
     </style>
 </head>
 <body>
 
-      
+
+
+   
 <!--                                                                                                                  -->
 <!--                                                                                                                  -->
 <!--                                              Chat                                                                -->
 <!--                                                                                                                  -->
 <!--                                                                                                                  -->
+
+
+
+
+
     <!-- Floating Chat Icon -->
     <div class="floating-chat-icon" id="chatIcon">
         <i class="fas fa-comments"></i>
@@ -908,14 +1078,38 @@ a {text-decoration: none; color: (var(--secondary));}
             </div>
         </div>
     </div>
-   <!-- Header -->
-    <header>
-        <div  class="container nav-container">
 
-           <div class="logo">
-            <a href="./index.html">
-                <img src="./images/digilogo.png" alt="digilogo" style="height: 40px; vertical-align: middle; margin-left: 8px; padding-right: 20px;">
-                <span>Digital Diagnostics Lab</span>
+
+
+
+
+
+<!--                                                                                                                  -->
+<!--                                                                                                                  -->
+<!-- === Z Edge Chat Widget === -->
+  <div class="edge-chat-widget">
+    <div class="chat-bubbles-container">
+      <div class="chat-bubble">
+        <p class="typing-animation">Need help? 💬</p>
+      </div>
+    </div>
+
+    <!-- replace image src below -->
+    <a href="sophia2.html" class="chat-link pulse-attention">
+      <img src="./images/Sophia.png" alt="Chat Icon" />
+    </a>
+  </div>
+
+
+
+
+    <!-- Header -->
+    <header>
+        <div class="container nav-container">
+            <div class="logo">
+                <a href="./index.html">
+                    <img src="./images/digilogo.png" alt="digilogo">
+                    <span>Digital Diagnostics Lab</span>
                 </a>
             </div>
 
@@ -923,7 +1117,6 @@ a {text-decoration: none; color: (var(--secondary));}
                 <li><a class="selected" href="./index.html">Home</a></li>
                 <li><a href="./aboutus.html">About us</a></li>
                 <li class="has-mega"><a href="#">Competencies <i class="fas fa-chevron-down"></i></a>
-
                     <!-- MEGA DROPDOWN -->
                     <div class="mega-dropdown">
                         <div class="mega-container">
@@ -984,7 +1177,6 @@ a {text-decoration: none; color: (var(--secondary));}
                             </div>
                         </div>
                     </div>
-                
                 </li>
                 <li><a href="./shop.html">Shop Tests</a></li>
                 <li><a href="#">Resources</a></li>
@@ -996,13 +1188,38 @@ a {text-decoration: none; color: (var(--secondary));}
                     </button>
                 </li>
             </ul>
-            
+
             <div class="mobile-menu" id="mobileMenu">
                 <i class="fas fa-bars"></i>
             </div>
-
         </div>
     </header>
+
+
+
+
+     <!-- Modal Pop Up -->
+
+    <div id="contactModal" class="contactmodal">
+    <div class="contact-modal-content">
+      <h3>Contact Us</h3>
+      <label for="name">Name *</label>
+      <input type="text" id="name" placeholder="Enter your name" required />
+
+      <label for="msg">Message *</label>
+      <textarea id="msg" rows="4" placeholder="Enter your message" required></textarea>
+
+      <div class="actions">
+        <button class="button" id="sendBtn">Send</button>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
 
     <!-- Career Hero Section -->
     <section class="career-hero">
@@ -1015,6 +1232,167 @@ a {text-decoration: none; color: (var(--secondary));}
             </div>
         </div>
     </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Join Our Team Modal -->
+    <div class="modal" id="joinTeamModal">
+        <div class="modal-content">
+            <button class="modal-close" id="closeJoinTeamModal">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-header">
+                <h2>Join Our Team</h2>
+                <p>Apply for a position at DDX Labs</p>
+            </div>
+            <div class="modal-body">
+                <form id="joinTeamForm">
+                    <div class="form-group">
+                        <label for="fullName" class="form-label">Full Name *</label>
+                        <input type="text" id="fullName" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email *</label>
+                        <input type="email" id="email" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone" class="form-label">Phone Number *</label>
+                        <input type="tel" id="phone" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="position" class="form-label">Position / Role Applying For *</label>
+                        <input type="text" id="position" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Upload Resume (PDF/DOC) *</label>
+                        <div class="file-upload">
+                            <input type="file" id="resume" class="file-upload-input" accept=".pdf,.doc,.docx" required>
+                            <label for="resume" class="file-upload-label">
+                                <span class="file-upload-text" id="resumeText">Choose file</span>
+                                <span class="file-upload-icon"><i class="fas fa-upload"></i></span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message" class="form-label">Message / Cover Letter</label>
+                        <textarea id="message" class="form-control" placeholder="Tell us why you're interested in joining our team..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="form-submit-btn">
+                        <i class="fab fa-whatsapp"></i>
+                        Submit via WhatsApp
+                    </button>
+                    
+                    <div class="form-footer">
+                        <p>We'll contact you within 3-5 business days</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Partner With Us Modal -->
+    <div class="modal" id="partnerWithUsModal">
+        <div class="modal-content">
+            <button class="modal-close" id="closePartnerWithUsModal">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-header">
+                <h2>Partner With Us</h2>
+                <p>Let's explore collaboration opportunities</p>
+            </div>
+            <div class="modal-body">
+                <form id="partnerWithUsForm">
+                    <div class="form-group">
+                        <label for="institutionName" class="form-label">Institution / Organization Name *</label>
+                        <input type="text" id="institutionName" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="orgContact" class="form-label">Organization Contact *</label>
+                        <input type="text" id="orgContact" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="orgEmail" class="form-label">Organization Email *</label>
+                        <input type="email" id="orgEmail" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contactPerson" class="form-label">Contact Person Name *</label>
+                        <input type="text" id="contactPerson" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contactPersonPhone" class="form-label">Contact Person's Phone *</label>
+                        <input type="tel" id="contactPersonPhone" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contactPersonEmail" class="form-label">Contact Person's Email *</label>
+                        <input type="email" id="contactPersonEmail" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="collaborationType" class="form-label">Type of Collaboration *</label>
+                        <select id="collaborationType" class="form-control" required>
+                            <option value="">Select collaboration type</option>
+                            <option value="Sample Processing">Sample Processing</option>
+                            <option value="Research Collaboration">Research Collaboration</option>
+                            <option value="Referral Partnership">Referral Partnership</option>
+                            <option value="Corporate / Institutional Partnership">Corporate / Institutional Partnership</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="partnerMessage" class="form-label">Message *</label>
+                        <textarea id="partnerMessage" class="form-control" placeholder="Tell us about your organization and proposed collaboration..." required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="form-submit-btn">
+                        <i class="fab fa-whatsapp"></i>
+                        Submit via WhatsApp
+                    </button>
+                    
+                    <div class="form-footer">
+                        <p>Our partnership team will reach out to discuss opportunities</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     <!-- Why Work With Us Section -->
     <section class="why-work-with-us">
@@ -1069,217 +1447,7 @@ a {text-decoration: none; color: (var(--secondary));}
         </div>
     </section>
 
-    <!-- Current Openings Section -->
-    <section class="current-openings">
-        <div class="container">
-            <h2 class="section-title">Current Openings</h2>
-            <p class="section-subtitle">Explore our available positions and find the perfect fit for your skills and career goals.</p>
-            
-            <div class="openings-container">
-                <div class="opening-card">
-                    <div class="opening-department">Laboratory</div>
-                    <h3 class="opening-title">Medical Laboratory Scientist</h3>
-                    <p class="opening-description">Perform complex medical laboratory tests for diagnosis, treatment, and prevention of disease.</p>
-                    <div class="opening-details">
-                        <div class="opening-detail">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Aba, Nigeria</span>
-                        </div>
-                        <div class="opening-detail">
-                            <i class="fas fa-briefcase"></i>
-                            <span>Full-time</span>
-                        </div>
-                        <div class="opening-detail">
-                            <i class="fas fa-clock"></i>
-                            <span>Posted 2 days ago</span>
-                        </div>
-                    </div>
-                    <button class="apply-btn" data-position="Medical Laboratory Scientist">Apply Now</button>
-                </div>
-                
-                <div class="opening-card">
-                    <div class="opening-department">Research & Development</div>
-                    <h3 class="opening-title">Research Scientist</h3>
-                    <p class="opening-description">Conduct research to develop new diagnostic methods and improve existing technologies.</p>
-                    <div class="opening-details">
-                        <div class="opening-detail">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Aba, Nigeria</span>
-                        </div>
-                        <div class="opening-detail">
-                            <i class="fas fa-briefcase"></i>
-                            <span>Full-time</span>
-                        </div>
-                        <div class="opening-detail">
-                            <i class="fas fa-clock"></i>
-                            <span>Posted 5 days ago</span>
-                        </div>
-                    </div>
-                    <button class="apply-btn" data-position="Research Scientist">Apply Now</button>
-                </div>
-                
-                <div class="opening-card">
-                    <div class="opening-department">Customer Service</div>
-                    <h3 class="opening-title">Patient Care Coordinator</h3>
-                    <p class="opening-description">Assist patients with test scheduling, results explanation, and general inquiries.</p>
-                    <div class="opening-details">
-                        <div class="opening-detail">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Aba, Nigeria</span>
-                        </div>
-                        <div class="opening-detail">
-                            <i class="fas fa-briefcase"></i>
-                            <span>Full-time</span>
-                        </div>
-                        <div class="opening-detail">
-                            <i class="fas fa-clock"></i>
-                            <span>Posted 1 week ago</span>
-                        </div>
-                    </div>
-                    <button class="apply-btn" data-position="Patient Care Coordinator">Apply Now</button>
-                </div>
-                
-                <div class="opening-card">
-                    <div class="opening-department">IT & Software</div>
-                    <h3 class="opening-title">Full Stack Developer</h3>
-                    <p class="opening-description">Develop and maintain our digital platforms for test ordering, results delivery, and patient management.</p>
-                    <div class="opening-details">
-                        <div class="opening-detail">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Remote / Aba, Nigeria</span>
-                        </div>
-                        <div class="opening-detail">
-                            <i class="fas fa-briefcase"></i>
-                            <span>Full-time</span>
-                        </div>
-                        <div class="opening-detail">
-                            <i class="fas fa-clock"></i>
-                            <span>Posted 3 days ago</span>
-                        </div>
-                    </div>
-                    <button class="apply-btn" data-position="Full Stack Developer">Apply Now</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Join Our Team Modal -->
-    <div class="modal" id="joinTeamModal">
-        <div class="modal-content">
-            <button class="modal-close" id="closeJoinTeamModal">
-                <i class="fas fa-times"></i>
-            </button>
-            <div class="modal-header">
-                <h2>Join Our Team</h2>
-                <p>Apply for a position at Digital Diagnostics Lab</p>
-            </div>
-            <div class="modal-body">
-                <form id="joinTeamForm">
-                    <div class="form-group">
-                        <label for="fullName" class="form-label">Full Name *</label>
-                        <input type="text" id="fullName" class="form-control" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="email" class="form-label">Email *</label>
-                        <input type="email" id="email" class="form-control" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="phone" class="form-label">Phone Number *</label>
-                        <input type="tel" id="phone" class="form-control" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="position" class="form-label">Position / Role Applying For *</label>
-                        <input type="text" id="position" class="form-control" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Upload Resume (PDF/DOC) *</label>
-                        <div class="file-upload">
-                            <input type="file" id="resume" class="file-upload-input" accept=".pdf,.doc,.docx" required>
-                            <label for="resume" class="file-upload-label">
-                                <span class="file-upload-text" id="resumeText">Choose file</span>
-                                <span class="file-upload-icon"><i class="fas fa-upload"></i></span>
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="message" class="form-label">Message / Cover Letter</label>
-                        <textarea id="message" class="form-control" placeholder="Tell us why you're interested in joining our team..."></textarea>
-                    </div>
-                    
-                    <button type="submit" class="form-submit-btn">Submit Application</button>
-                    
-                    <div class="form-footer">
-                        <p>We'll contact you within 3-5 business days</p>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Partner With Us Modal -->
-    <div class="modal" id="partnerWithUsModal">
-        <div class="modal-content">
-            <button class="modal-close" id="closePartnerWithUsModal">
-                <i class="fas fa-times"></i>
-            </button>
-            <div class="modal-header">
-                <h2>Partner With Us</h2>
-                <p>Let's explore collaboration opportunities</p>
-            </div>
-            <div class="modal-body">
-                <form id="partnerWithUsForm">
-                    <div class="form-group">
-                        <label for="institutionName" class="form-label">Institution / Organization Name *</label>
-                        <input type="text" id="institutionName" class="form-control" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="contactPerson" class="form-label">Contact Person *</label>
-                        <input type="text" id="contactPerson" class="form-control" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="partnerEmail" class="form-label">Email *</label>
-                        <input type="email" id="partnerEmail" class="form-control" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="partnerPhone" class="form-label">Phone Number *</label>
-                        <input type="tel" id="partnerPhone" class="form-control" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="collaborationType" class="form-label">Type of Collaboration *</label>
-                        <select id="collaborationType" class="form-control" required>
-                            <option value="">Select collaboration type</option>
-                            <option value="Sample Processing">Sample Processing</option>
-                            <option value="Outsourcing">Outsourcing</option>
-                            <option value="Research">Research</option>
-                            <option value="Referral Partnership">Referral Partnership</option>
-                            <option value="Other">Other</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="partnerMessage" class="form-label">Message</label>
-                        <textarea id="partnerMessage" class="form-control" placeholder="Tell us about your organization and proposed collaboration..."></textarea>
-                    </div>
-                    
-                    <button type="submit" class="form-submit-btn">Submit Proposal</button>
-                    
-                    <div class="form-footer">
-                        <p>Our partnership team will reach out to discuss opportunities</p>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
+    
     <!-- Footer -->
     <footer>
         <div class="container">
@@ -1288,18 +1456,19 @@ a {text-decoration: none; color: (var(--secondary));}
                     <h3>Digital Diagnostics Lab</h3>
                     <p>Revolutionizing healthcare through precision diagnostics and cutting-edge technology.</p>
                     <div class="social-icons">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a class="facebook" href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a class="x" href="#"><i class="fab fa-x"></i></a>
+                        <a class="linkedin" href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a class="instagram" href="#"><i class="fab fa-instagram"></i></a>
+                        <a class="tiktok" href="#"><i class="fab fa-tiktok"></i></a>
                     </div>
                 </div>
                 <div class="footer-column">
                     <h3>Quick Links</h3>
                     <ul class="footer-links">
                         <li><a href="index.html">Home</a></li>
-                        <li><a href="about.html">About Us</a></li>
-                        <li><a href="services.html">Services</a></li>
+                        <li><a href="aboutus.html">About Us</a></li>
+                        <li><a href="shop.html">Services</a></li>
                         <li><a href="career.html">Career</a></li>
                     </ul>
                 </div>
@@ -1308,24 +1477,111 @@ a {text-decoration: none; color: (var(--secondary));}
                     <ul class="footer-links">
                         <li><i class="fas fa-map-marker-alt"></i> 61 Clifford Road, Aba.</li>
                         <li><i class="fas fa-phone"></i> +234 812 052 7885</li>
-                        <li><i class="fas fa-envelope"></i> xtrimresearch@gmail.com</li>
+                        <li><i class="fas fa-envelope"></i> digidiagnosticlab@gmail.com</li>
                     </ul>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 Digital Diagnostics Lab. All rights reserved.</p>
+                                <p>&copy; 2025 Digital Diagnostics Lab. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+
             </div>
         </div>
     </footer>
 
 
-
-    <!-- JavaScript -->
-  <script src="sophia.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="cart.js"></script>
+    <script src="sophia.js"></script>
+    <script src="edgechat.js"></script>
 
 
     <script>
+        // Mobile Menu Toggle
+        const mobileMenu = document.getElementById('mobileMenu');
+        const navLinks = document.querySelector('.nav-links');
+        
+        mobileMenu.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            // Toggle menu icon
+            const icon = mobileMenu.querySelector('i');
+            if (navLinks.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileMenu.querySelector('i').classList.remove('fa-times');
+                mobileMenu.querySelector('i').classList.add('fa-bars');
+            });
+        });
+
+        // Mega Dropdown Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const competenciesMenuItem = document.querySelector('.has-mega');
+            const megaDropdown = document.querySelector('.mega-dropdown');
+            
+            // Show mega dropdown on hover
+            competenciesMenuItem.addEventListener('mouseenter', function() {
+                megaDropdown.classList.add('active');
+            });
+            
+            // Hide mega dropdown when mouse leaves
+            competenciesMenuItem.addEventListener('mouseleave', function(e) {
+                // Check if mouse is leaving the menu item or the dropdown
+                if (!e.relatedTarget || !e.relatedTarget.closest('.has-mega')) {
+                    megaDropdown.classList.remove('active');
+                }
+            });
+            
+            // Also hide when leaving the dropdown itself
+            megaDropdown.addEventListener('mouseleave', function(e) {
+                if (!e.relatedTarget || !e.relatedTarget.closest('.has-mega')) {
+                    megaDropdown.classList.remove('active');
+                }
+            });
+        });
+
+        // Theme Toggle with Session Storage
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        
+        // Check for saved theme preference or default to light
+        const currentTheme = sessionStorage.getItem('theme') || 'light';
+        
+        // Apply the saved theme on page load
+        if (currentTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            
+            // Update icon and save theme preference
+            if (document.body.classList.contains('dark-mode')) {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+                sessionStorage.setItem('theme', 'dark');
+            } else {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+                sessionStorage.setItem('theme', 'light');
+            }
+        });
+
+
+
+
+
+
+
         // DOM Elements
         const joinTeamBtn = document.getElementById('joinTeamBtn');
         const partnerWithUsBtn = document.getElementById('partnerWithUsBtn');
@@ -1335,7 +1591,6 @@ a {text-decoration: none; color: (var(--secondary));}
         const closePartnerWithUsModal = document.getElementById('closePartnerWithUsModal');
         const joinTeamForm = document.getElementById('joinTeamForm');
         const partnerWithUsForm = document.getElementById('partnerWithUsForm');
-        const applyButtons = document.querySelectorAll('.apply-btn');
         const resumeInput = document.getElementById('resume');
         const resumeText = document.getElementById('resumeText');
 
@@ -1373,16 +1628,6 @@ a {text-decoration: none; color: (var(--secondary));}
             }
         });
 
-        // Apply buttons for job openings
-        applyButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const position = button.getAttribute('data-position');
-                document.getElementById('position').value = position;
-                joinTeamModal.style.display = 'block';
-                document.body.style.overflow = 'hidden';
-            });
-        });
-
         // File upload display
         resumeInput.addEventListener('change', function() {
             if (this.files && this.files[0]) {
@@ -1401,7 +1646,8 @@ a {text-decoration: none; color: (var(--secondary));}
                 email: document.getElementById('email').value,
                 phone: document.getElementById('phone').value,
                 position: document.getElementById('position').value,
-                message: document.getElementById('message').value
+                message: document.getElementById('message').value,
+                resume: resumeInput.files[0] ? resumeInput.files[0].name : 'Not provided'
             };
             
             sendToWhatsApp('job_application', formData);
@@ -1417,9 +1663,11 @@ a {text-decoration: none; color: (var(--secondary));}
             
             const formData = {
                 institutionName: document.getElementById('institutionName').value,
+                orgContact: document.getElementById('orgContact').value,
+                orgEmail: document.getElementById('orgEmail').value,
                 contactPerson: document.getElementById('contactPerson').value,
-                email: document.getElementById('partnerEmail').value,
-                phone: document.getElementById('partnerPhone').value,
+                contactPersonPhone: document.getElementById('contactPersonPhone').value,
+                contactPersonEmail: document.getElementById('contactPersonEmail').value,
                 collaborationType: document.getElementById('collaborationType').value,
                 message: document.getElementById('partnerMessage').value
             };
@@ -1433,25 +1681,30 @@ a {text-decoration: none; color: (var(--secondary));}
 
         // WhatsApp Integration
         function sendToWhatsApp(type, data) {
-            const phoneNumber = '+2348120527885'; // Replace with your WhatsApp number
+            const phoneNumber = '+2348120527885';
             
             let message = '';
             
             if (type === 'job_application') {
-                message = `New Job Application:\n\n` +
-                         `Name: ${data.fullName}\n` +
-                         `Email: ${data.email}\n` +
-                         `Phone: ${data.phone}\n` +
-                         `Position: ${data.position}\n` +
-                         `Message: ${data.message || 'N/A'}`;
+                message = `🔬 *Digital Diagnostics Labs - Job Application*\n\n` +
+                         `*Full Name:* ${data.fullName}\n` +
+                         `*Email:* ${data.email}\n` +
+                         `*Phone:* ${data.phone}\n` +
+                         `*Position Applied For:* ${data.position}\n` +
+                         `*Resume:* ${data.resume}\n` +
+                         `*Cover Letter:* ${data.message || 'Not provided'}\n\n` +
+                         `_Application submitted via DDX Labs website_`;
             } else if (type === 'partnership') {
-                message = `New Partnership Proposal:\n\n` +
-                         `Institution: ${data.institutionName}\n` +
-                         `Contact Person: ${data.contactPerson}\n` +
-                         `Email: ${data.email}\n` +
-                         `Phone: ${data.phone}\n` +
-                         `Collaboration Type: ${data.collaborationType}\n` +
-                         `Message: ${data.message || 'N/A'}`;
+                message = `🤝 *Digital Diagnostics Labs - Partnership Proposal*\n\n` +
+                         `*Institution/Organization:* ${data.institutionName}\n` +
+                         `*Organization Contact:* ${data.orgContact}\n` +
+                         `*Organization Email:* ${data.orgEmail}\n` +
+                         `*Contact Person:* ${data.contactPerson}\n` +
+                         `*Contact Phone:* ${data.contactPersonPhone}\n` +
+                         `*Contact Email:* ${data.contactPersonEmail}\n` +
+                         `*Collaboration Type:* ${data.collaborationType}\n` +
+                         `*Proposal Details:* ${data.message}\n\n` +
+                         `_Partnership proposal submitted via DDX Labs website_`;
             }
             
             // Detect device and create appropriate WhatsApp URL
@@ -1472,7 +1725,7 @@ a {text-decoration: none; color: (var(--secondary));}
                 position: fixed;
                 top: 100px;
                 right: 20px;
-                background-color: var(--primary);
+                background-color: var(--success);
                 color: white;
                 padding: 15px 20px;
                 border-radius: 5px;
@@ -1499,82 +1752,6 @@ a {text-decoration: none; color: (var(--secondary));}
                 }, 300);
             }, 5000);
         }
-
-
-        // Theme Toggle with Session Storage
-        const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = themeToggle.querySelector('i');
-        
-        // Check for saved theme preference or default to light
-        const currentTheme = sessionStorage.getItem('theme') || 'light';
-        
-        // Apply the saved theme on page load
-        if (currentTheme === 'dark') {
-            document.body.classList.add('dark-mode');
-            themeIcon.classList.remove('fa-moon');
-            themeIcon.classList.add('fa-sun');
-        }
-        
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            
-            // Update icon and save theme preference
-            if (document.body.classList.contains('dark-mode')) {
-                themeIcon.classList.remove('fa-moon');
-                themeIcon.classList.add('fa-sun');
-                sessionStorage.setItem('theme', 'dark');
-            } else {
-                themeIcon.classList.remove('fa-sun');
-                themeIcon.classList.add('fa-moon');
-                sessionStorage.setItem('theme', 'light');
-            }
-        });
-
-
-        // Mobile Menu Toggle
-            const mobileMenu = document.getElementById('mobileMenu');
-            const navLinks = document.querySelector('.nav-links');
-            
-            mobileMenu.addEventListener('click', () => {
-                navLinks.classList.toggle('active');
-                // Toggle menu icon
-                const icon = mobileMenu.querySelector('i');
-                if (navLinks.classList.contains('active')) {
-                    icon.classList.remove('fa-bars');
-                    icon.classList.add('fa-times');
-                } else {
-                    icon.classList.remove('fa-times');
-                    icon.classList.add('fa-bars');
-                }
-            });
-
-
-
-        // Mega Dropdown Functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const competenciesMenuItem = document.querySelector('.has-mega');
-            const megaDropdown = document.querySelector('.mega-dropdown');
-            
-            // Show mega dropdown on hover
-            competenciesMenuItem.addEventListener('mouseenter', function() {
-                megaDropdown.classList.add('active');
-            });
-            
-            // Hide mega dropdown when mouse leaves
-            competenciesMenuItem.addEventListener('mouseleave', function(e) {
-                // Check if mouse is leaving the menu item or the dropdown
-                if (!e.relatedTarget || !e.relatedTarget.closest('.has-mega')) {
-                    megaDropdown.classList.remove('active');
-                }
-            });
-            
-            // Also hide when leaving the dropdown itself
-            megaDropdown.addEventListener('mouseleave', function(e) {
-                if (!e.relatedTarget || !e.relatedTarget.closest('.has-mega')) {
-                    megaDropdown.classList.remove('active');
-                }
-            });
-        });
 
 
 
@@ -1621,7 +1798,6 @@ a {text-decoration: none; color: (var(--secondary));}
       modal.style.display = 'none';
       window.open(whatsappUrl, '_blank');
     });
-
 
 
     </script>
