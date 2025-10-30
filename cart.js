@@ -354,7 +354,7 @@ class CartSystem {
             `• ${item.name} (${item.quantity})`
         ).join('\n');
 
-        return `Hello! I would like to order the following lab tests:\n\n${itemsList}\n\nPlease provide total and payment details. Thank you!`;
+        return `Hello! I would like to order the following lab tests:\n\n${itemsList}\n\nPlease provide Total and payment details. Thank you!`;
     }
 
     // Public method to add items from outside
