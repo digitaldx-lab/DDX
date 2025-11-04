@@ -1,0 +1,2278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Diagnostics Lab | Sophia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/png" href="./images/digilogo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Previous styles remain the same */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        
+        .app-container {
+            display: flex;
+            height: 100vh;
+            width: 100%;
+        }
+        
+        #sidebar {
+            width: 17%;
+            background-image: url('./images/Sophia.png');
+            background-size: cover;
+            background-position: center;
+            transition: width 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: white;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        #sidebar.collapsed {
+            width: 0;
+            overflow: hidden;
+        }
+        
+        .sidebar-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5));
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 2rem;
+        }
+        
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .company-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .sidebar-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 2rem 0;
+        }
+        
+        .sidebar-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        
+        .sidebar-subtitle {
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .features-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .features-list li {
+            padding: 0.75rem 0;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .features-list li i {
+            margin-right: 1rem;
+            color: #3B82F6;
+        }
+        
+        .sidebar-footer {
+            color: rgb(175, 172, 172);
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+        
+        .sidebar-toggle {
+            position: absolute;
+            top: 1rem;
+            right: -2.5rem;
+            width: 2.5rem;
+            height: 2.5rem;
+            background-color: #2563EB;
+            color: white;
+            border: none;
+            border-radius: 0 0.5rem 0.5rem 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-toggle:hover {
+            background-color: #1D4ED8;
+        }
+        
+        footer{
+            background-color: #0f0f0f !important;
+        }
+        .chat-container {
+            background-color: rgb(2, 2, 2) !important;
+        }
+        #chat-container-wrapper {
+            width: 85%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            transition: width 0.3s ease;
+        }
+        
+        #chat-container-wrapper.expanded {
+            width: 100%;
+        }
+        
+        .chat-bubble-user {
+            background-color: #3B82F6;
+            color: white;
+        }
+        .chat-bubble-bot {
+            background-color: #0f0f0f;
+            color: #ffffff;
+        }
+        .chat-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        .chat-container::-webkit-scrollbar-thumb {
+            background-color: #575b63;
+            border-radius: 3px;
+        }
+        .chat-container::-webkit-scrollbar-track {
+            background-color: #F3F4F6;
+        }
+        .test-card-enter {
+            animation: fadeIn 0.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cart System Styles */
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #4B5563;
+        }
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #EF4444;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        .cart-aside {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 380px;
+            height: 100vh;
+            background-image: url('./images/Jade.jpeg');
+            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+            transition: right 0.3s ease;
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+        }
+        .cart-aside::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.897);
+            z-index: 1;
+        }
+        .cart-aside > * {
+            position: relative;
+            z-index: 2;
+        }
+        .cart-aside.active {
+            right: 0;
+        }
+        .cart-header {
+            color: whitesmoke;
+            padding: 1.5rem;
+            border-bottom: 1px solid #E5E7EB;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+        .cart-header h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        .close-cart {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            color: #6B7280;
+        }
+        .cart-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+        .cart-empty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #9CA3AF;
+        }
+        .cart-empty i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        .cart-item {
+            display: flex;
+            padding: 1rem 0;
+            border-bottom: 1px solid #F3F4F6;
+        }
+        .item-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-right: 1rem;
+        }
+        .item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .item-details {
+            flex: 1;
+        }
+        .item-name {
+            color: whitesmoke;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        .item-category {
+            color: #6B7280;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+        .item-price {
+            font-weight: 600;
+            color: #00ffae;
+        }
+        .item-controls {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            border: 1px solid #D1D5DB;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .quantity-btn {
+            color: whitesmoke;
+            background: none;
+            border: none;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .quantity {
+            color: whitesmoke;
+            padding: 0 0.5rem;
+            min-width: 30px;
+            text-align: center;
+        }
+        .remove-btn {
+            background: none;
+            border: none;
+            color: #EF4444;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+        .cart-footer {
+            padding: 1.5rem;
+            border-top: 1px solid #E5E7EB;
+        }
+        .cart-total {
+            color: whitesmoke;
+            display: none;
+            justify-content: space-between;
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .checkout-btn {
+            width: 100%;
+            background-color: #059669;
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .checkout-btn i {
+            margin-right: 0.5rem;
+        }
+        .checkout-btn:hover {
+            background-color: #047857;
+        }
+        .cart-notification {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #10B981;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1002;
+        }
+        .cart-notification.show {
+            opacity: 1;
+        }
+        .cart-notification i {
+            margin-right: 0.5rem;
+        }
+
+        /* Authentication Modal Styles */
+        .auth-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        
+        .auth-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .auth-content {
+            background-color: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transform: translateY(-20px);
+            transition: transform 0.3s;
+        }
+        
+        .auth-modal.active .auth-content {
+            transform: translateY(0);
+        }
+        
+        .auth-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .auth-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1F2937;
+            margin-bottom: 0.5rem;
+        }
+        
+        .auth-header p {
+            color: #6B7280;
+            font-size: 0.9rem;
+        }
+        
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #374151;
+        }
+        
+        .form-group input {
+            padding: 0.75rem;
+            border: 1px solid #D1D5DB;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .auth-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+        
+        .auth-btn {
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .auth-btn-primary {
+            background-color: #3B82F6;
+            color: white;
+        }
+        
+        .auth-btn-primary:hover {
+            background-color: #2563EB;
+        }
+        
+        .auth-btn-secondary {
+            background-color: #F3F4F6;
+            color: #374151;
+        }
+        
+        .auth-btn-secondary:hover {
+            background-color: #E5E7EB;
+        }
+        
+        .auth-btn-whatsapp {
+            background-color: #25D366;
+            color: white;
+        }
+        
+        .auth-btn-whatsapp:hover {
+            background-color: #128C7E;
+        }
+        
+        .auth-btn i {
+            margin-right: 0.5rem;
+        }
+        
+        .auth-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #E5E7EB;
+        }
+        
+        .auth-footer p {
+            color: #6B7280;
+            font-size: 0.875rem;
+        }
+        
+        .auth-footer a {
+            color: #3B82F6;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .loader {
+            transform: rotateZ(45deg);
+            perspective: 1000px;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            color: rgb(255, 13, 0);
+        }
+        .loader:before,
+        .loader:after {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: inherit;
+            height: inherit;
+            border-radius: 50%;
+            transform: rotateX(70deg);
+            animation: 1s spin linear infinite;
+        }
+        .loader:after {
+            color: rgb(0, 225, 255);
+            transform: rotateY(70deg);
+            animation-delay: .4s;
+        }
+        @keyframes spin {
+            0%, 100% { box-shadow: .2em 0px 0 0px currentcolor; }
+            12% { box-shadow: .2em .2em 0 0 currentcolor; }
+            25% { box-shadow: 0 .2em 0 0px currentcolor; }
+            37% { box-shadow: -.2em .2em 0 0 currentcolor; }
+            50% { box-shadow: -.2em 0 0 0 currentcolor; }
+            62% { box-shadow: -.2em -.2em 0 0 currentcolor; }
+            75% { box-shadow: 0px -.2em 0 0 currentcolor; }
+            87% { box-shadow: .2em -.2em 0 0 currentcolor; }
+        }
+        .hidden {display: none;}
+        .suggestion {background-color: #fffdd0;}
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+            }
+            
+            #sidebar {
+                
+                width: 100%;
+                height: 30vh;
+            }
+            
+            #sidebar.collapsed {
+                width: 100%;
+                height: 0;
+            }
+            
+            #chat-container-wrapper {
+                width: 100%;
+                height: 70vh;
+            }
+            
+            #chat-container-wrapper.expanded {
+                height: 100vh;
+            }
+            
+            .sidebar-toggle {
+                top: auto;
+                bottom: -2.5rem;
+                right: 1rem;
+                border-radius: 0.5rem 0.5rem 0 0;
+            }
+            
+            .cart-aside {
+                width: 100%;
+                right: -100%;
+            }
+        }
+        /* --- Keypad & Voice --- */
+        .keypad {
+            position: relative;
+        }
+        .voice-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-left: 0.75rem;
+        }
+        .voice-btn {
+            background-color: #f3f4f6;
+            border: 1px solid #d1d5db;
+            color: #4b5563;
+            width: 3rem; /* 48px */
+            height: 3rem; /* 48px */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .voice-btn:hover {
+            background-color: #e5e7eb;
+        }
+        .voice-btn.listen.listening {
+            background-color: #ef4444; /* red-500 */
+            color: white;
+            animation: pulse 1.5s infinite;
+        }
+        .voice-btn.speak.speaking {
+            background-color: #3b82f6; /* blue-500 */
+            color: white;
+        }
+        .voice-status {
+            display: none; /* Hidden for a cleaner UI, but functional */
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Authentication Modal -->
+    <div class="auth-modal" id="auth-modal">
+        <div class="auth-content">
+            <div class="auth-header">
+                <h2>Member Verification</h2>
+                <p>Please verify your membership to continue</p>
+            </div>
+            <form class="auth-form" id="auth-form">
+                <div class="form-group">
+                    <label for="member-id">Member ID</label>
+                    <input type="text" id="member-id" placeholder="Enter your member ID (e.g., XTR-0001)" required>
+                </div>
+                <div class="form-group">
+                    <label for="member-name">Full Name</label>
+                    <input type="text" id="member-name" placeholder="Enter your full name" required>
+                </div>
+                <div class="auth-actions">
+                    <button type="submit" class="auth-btn auth-btn-primary">
+                        <i class="fas fa-check"></i> Verify & Continue
+                    </button>
+                </div>
+            </form>
+            <div class="auth-footer">
+                <p>Not a member? <a href="#" id="register-link">Register now</a></p>
+                <p>Having issues with your registration? <a href="#" id="issues-link">Get help</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Registration Modal -->
+    <div class="auth-modal" id="register-modal">
+        <div class="auth-content">
+            <div class="auth-header">
+                <h2>Registration Required</h2>
+                <p>You need to register to continue using our services</p>
+            </div>
+            <form class="auth-form" id="register-form">
+                <div class="form-group">
+                    <label for="register-name">Your Name</label>
+                    <input type="text" id="register-name" placeholder="Enter your full name" required>
+                </div>
+                <div class="auth-actions">
+                    <button type="button" class="auth-btn auth-btn-whatsapp" id="register-whatsapp">
+                        <i class="fab fa-whatsapp"></i> Register via WhatsApp
+                    </button>
+                    <button type="button" class="auth-btn auth-btn-secondary" id="back-to-auth">
+                        <i class="fas fa-arrow-left"></i> Back to Verification
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Issues Modal -->
+    <div class="auth-modal" id="issues-modal">
+        <div class="auth-content">
+            <div class="auth-header">
+                <h2>Registration Issues</h2>
+                <p>Having problems with your registration code?</p>
+            </div>
+            <form class="auth-form" id="issues-form">
+                <div class="form-group">
+                    <label for="issues-name">Your Name</label>
+                    <input type="text" id="issues-name" placeholder="Enter your full name" required>
+                </div>
+                <div class="auth-actions">
+                    <button type="button" class="auth-btn auth-btn-whatsapp" id="issues-whatsapp">
+                        <i class="fab fa-whatsapp"></i> Get Help via WhatsApp
+                    </button>
+                    <button type="button" class="auth-btn auth-btn-secondary" id="back-to-auth-issues">
+                        <i class="fas fa-arrow-left"></i> Back to Verification
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div id="sidebar">
+            <div class="sidebar-overlay">
+                <div style="display: flex; justify-content: center;">
+                    <img src="./images/XT_Logo_removebg.png" alt="" width="150">
+                </div>
+                <br><br><br><br><br><br><br><br>
+                <div class="sidebar-content">
+                    <h1 class="sidebar-title">Your Health, Our Priority</h1>
+                    
+                    <br><br>
+
+                    <p class="sidebar-subtitle">Sophia AI Assistant is here to help you understand your symptoms and find the right tests</p>
+                    
+                    <br><br>
+
+                    <ul class="features-list">
+                        <li><i class="fas fa-check-circle"></i> AI-powered symptom analysis</li>
+                        <li><i class="fas fa-check-circle"></i> Professional test recommendations</li>
+                        <li><i class="fas fa-check-circle"></i> Transparent pricing</li>
+                        <li><i class="fas fa-check-circle"></i> Fast results delivery</li>
+                    </ul>
+                </div>
+                
+                <div class="sidebar-footer">
+                    <p>© 2025 X-Trim Research Ltd. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sidebar Toggle Button -->
+        <button class="sidebar-toggle" id="sidebar-toggle">
+            <i class="fas fa-chevron-left" id="toggle-icon"></i>
+        </button>
+        
+        <!-- Chat Container -->
+        <div id="chat-container-wrapper">
+            <!-- Cart Icon -->
+            <div class="fixed top-4 right-4 z-50">
+                <div class="cart-icon" id="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cart-count">0</span>
+                </div>
+            </div>
+
+            <!-- Chat Widget -->
+            <div class="w-full h-full bg-white flex flex-col">
+                <!-- Chatbot Interface -->
+                <div class="w-full flex flex-col h-full">
+                    <header class="bg-gray-800 text-white p-4 flex items-center justify-between shadow-md">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 rounded-full overflow-hidden mr-4">
+                                <img src="./images/Sophia.png" alt="Sophia" class="w-full h-full object-cover">
+                            </div>
+                            
+                            <div>
+                                <h1 class="text-xl font-bold">Sophia</h1>
+                                <p class="text-sm text-gray-300">Your Personal Health Guide</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <div class="cart-icon hidden" id="cart-icon-header">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span class="cart-count" id="cart-count-header">0</span>
+                            </div>
+                        </div>
+                    </header>
+
+                    <main id="chat-container" class="flex-1 p-6 overflow-y-auto chat-container bg-gray-50">
+                        <!-- Chat messages will be appended here -->
+                    </main>
+
+                    <footer class="p-4 bg-white border-t border-gray-200">
+                        <div id="quick-replies" class="flex flex-wrap gap-2 mb-3">
+                            <!-- Quick replies will be appended here -->
+                        </div>
+                        <div class="flex items-center keypad">
+                            <input type="text" id="user-input" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition" placeholder="Type your symptoms...">
+                            <button id="send-btn" class="ml-3 bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition shadow-lg">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            </button>
+                            
+                            <div class="voice-controls">
+                                <div class="flex flex-col items-center">
+                                    <button id="listen-btn" class="voice-btn listen" title="Speak to Sophia">
+                                        <i class="fas fa-microphone"></i>
+                                    </button>
+                                    <div id="voice-status" class="voice-status"></div>
+                                </div>
+                                <div class="flex flex-col items-center">
+                                    <button id="speak-btn" class="voice-btn speak" title="Hear Sophia's response">
+                                        <i class="fas fa-volume-up"></i>
+                                    </button>
+                                    <div id="speak-status" class="voice-status"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-aside" id="cart-sidebar">
+        <div class="cart-header">
+            <h3>Your Cart</h3>
+            <button class="close-cart" id="close-cart">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="cart-content" id="cart-content">
+            <!-- Cart items will be populated here -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cart-total-price">₦0</span>
+            </div>
+            <button class="checkout-btn" id="checkout-btn">
+                <i class="fab fa-whatsapp"></i>
+                Checkout via WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <!-- Cart Notification -->
+    <div class="cart-notification" id="cart-notification">
+        <i class="fas fa-check"></i>
+        <span>Item added to cart!</span>
+    </div>
+
+    <script src="./config.js"></script>
+    <script>
+    
+    // Registered users database
+const registeredUsers = {
+    'XTR-0001': {
+        id: 'XTR-0001',
+        name: 'Doc Joseph Ikedi',
+        phone: '+2348037346656'
+    },
+    'XTR-0001': {
+        id: 'XTR-DEMO',
+        name: 'Doc Joseph Ikedi',
+        phone: '+2348037346656'
+    }
+    // Add more users as needed
+};
+
+// Authentication state
+let isAuthenticated = false;
+let userMessageCount = 0;
+const AUTH_TRIGGER_COUNT = 3; // Show auth modal after 3 messages
+
+// Cart System Class
+class CartSystem {
+    constructor() {
+        this.cart = this.loadCart();
+        this.updateCartUI();
+    }
+
+    loadCart() {
+        try {
+            const cartData = sessionStorage.getItem('suggestCart');
+            return cartData ? JSON.parse(cartData) : {};
+        } catch (error) {
+            console.error('Error loading cart from sessionStorage:', error);
+            return {};
+        }
+    }
+
+    saveCart() {
+        try {
+            sessionStorage.setItem('suggestCart', JSON.stringify(this.cart));
+        } catch (error) {
+            console.error('Error saving cart to sessionStorage:', error);
+        }
+    }
+
+    addItem(test) {
+        // Check if item already exists in cart
+        if (this.cart[test.id]) {
+            this.showNotification('Item already in cart!');
+            return false;
+        }
+
+        // Add item to cart
+        this.cart[test.id] = {
+            ...test,
+            quantity: 1
+        };
+
+        this.saveCart();
+        this.updateCartUI();
+        this.showNotification('Test added to cart!');
+        return true;
+    }
+
+    removeItem(testId) {
+        if (this.cart[testId]) {
+            delete this.cart[testId];
+            this.saveCart();
+            this.updateCartUI();
+            this.showNotification('Item removed from cart');
+        }
+    }
+
+    updateQuantity(testId, newQuantity) {
+        if (this.cart[testId]) {
+            if (newQuantity <= 0) {
+                this.removeItem(testId);
+            } else {
+                this.cart[testId].quantity = newQuantity;
+                this.saveCart();
+                this.updateCartUI();
+            }
+        }
+    }
+
+    getCartCount() {
+        return Object.keys(this.cart).length;
+    }
+
+    getCartTotal() {
+        return Object.values(this.cart).reduce((total, item) => {
+            return total + (item.price * item.quantity);
+        }, 0);
+    }
+
+    updateCartUI() {
+        // Update cart count
+        const cartCount = this.getCartCount();
+        const cartCountElement = document.getElementById('cart-count');
+        const cartCountHeaderElement = document.getElementById('cart-count-header');
+
+        if (cartCountElement) {
+            cartCountElement.textContent = cartCount;
+        }
+        if (cartCountHeaderElement) {
+            cartCountHeaderElement.textContent = cartCount;
+        }
+
+        // Update cart content
+        this.updateCartContent();
+    }
+
+    updateCartContent() {
+        const cartContent = document.getElementById('cart-content');
+        if (!cartContent) return;
+
+        if (this.getCartCount() === 0) {
+            cartContent.innerHTML = `
+                <div class="cart-empty">
+                    <i class="fas fa-shopping-cart"></i>
+                    <p>Your cart is empty</p>
+                </div>
+            `;
+        } else {
+            let itemsHTML = '';
+            Object.values(this.cart).forEach(item => {
+                itemsHTML += `
+                    <div class="cart-item">
+                        <div class="item-image">
+                            <img src="${item.image}" alt="${item.name}">
+                        </div>
+                        <div class="item-details">
+                            <div class="item-name">${item.name}</div>
+                            <div class="item-category">${item.category}</div>
+                        </div>
+                        <div class="item-controls">
+                            <div class="quantity-controls">
+                                <button class="quantity-btn decrease" data-id="${item.id}">-</button>
+                                <span class="quantity">${item.quantity}</span>
+                                <button class="quantity-btn increase" data-id="${item.id}">+</button>
+                            </div>
+                            <button class="remove-btn" data-id="${item.id}">Remove</button>
+                        </div>
+                    </div>
+                `;
+            });
+            cartContent.innerHTML = itemsHTML;
+
+            // Add event listeners
+            cartContent.querySelectorAll('.decrease').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = e.target.dataset.id;
+                    const currentQuantity = this.cart[id].quantity;
+                    this.updateQuantity(id, currentQuantity - 1);
+                });
+            });
+
+            cartContent.querySelectorAll('.increase').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = e.target.dataset.id;
+                    const currentQuantity = this.cart[id].quantity;
+                    this.updateQuantity(id, currentQuantity + 1);
+                });
+            });
+
+            cartContent.querySelectorAll('.remove-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = e.target.dataset.id;
+                    this.removeItem(id);
+                });
+            });
+        }
+
+        // Update total price
+        const totalPriceElement = document.getElementById('cart-total-price');
+        if (totalPriceElement) {
+            totalPriceElement.textContent = `₦${this.getCartTotal().toLocaleString()}`;
+        }
+    }
+
+    showNotification(message) {
+        const notification = document.getElementById('cart-notification');
+        if (notification) {
+            notification.querySelector('span').textContent = message;
+            notification.classList.add('show');
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 2000);
+        }
+    }
+
+    clearCart() {
+        this.cart = {};
+        this.saveCart();
+        this.updateCartUI();
+    }
+
+    // WhatsApp Integration
+    checkout() {
+        if (this.getCartCount() === 0) {
+            alert('Your cart is empty!'); // Consider replacing alert with a custom modal
+            return;
+        }
+
+        const message = this.formatWhatsAppMessage();
+        const phoneNumber = '+2348120527885'; // Replace with your WhatsApp number
+        
+        // Detect device and create appropriate WhatsApp URL
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        const whatsappUrl = isMobile
+            ? `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
+            : `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
+
+        // Open WhatsApp
+        window.open(whatsappUrl, '_blank');
+        
+        // Optional: Clear cart after checkout
+        // this.clearCart();
+    }
+
+    formatWhatsAppMessage() {
+        const items = Object.values(this.cart);
+        const itemsList = items.map(item =>
+            `• ${item.name} (${item.quantity})`
+        ).join('\n');
+
+        return `Hello! I would like to order the following lab tests (Specifically Suggested by Sophia):\n\n${itemsList}\n\nPlease provide Total and payment details. Thank you!`;
+    }
+}
+
+// Authentication functions
+function showAuthModal() {
+    document.getElementById('auth-modal').classList.add('active');
+}
+
+function hideAuthModal() {
+    document.getElementById('auth-modal').classList.remove('active');
+}
+
+function showRegisterModal() {
+    document.getElementById('register-modal').classList.add('active');
+    hideAuthModal();
+}
+
+function hideRegisterModal() {
+    document.getElementById('register-modal').classList.remove('active');
+}
+
+function showIssuesModal() {
+    document.getElementById('issues-modal').classList.add('active');
+    hideAuthModal();
+}
+
+function hideIssuesModal() {
+    document.getElementById('issues-modal').classList.remove('active');
+}
+
+function verifyUser(memberId, memberName) {
+    // Normalize inputs
+    const normalizedId = memberId.toUpperCase().trim();
+    const normalizedName = memberName.trim().toLowerCase();
+    
+    // Check if user exists and name matches
+    if (registeredUsers[normalizedId] &&
+        registeredUsers[normalizedId].name.toLowerCase() === normalizedName) {
+        return true;
+    }
+    return false;
+}
+
+function openWhatsApp(message) {
+    const phoneNumber = '+2348120527885'; // Your WhatsApp number
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    const whatsappUrl = isMobile
+        ? `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
+        : `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
+    
+    window.open(whatsappUrl, '_blank');
+}
+
+// Chatbot functionality
+const chatContainer = document.getElementById('chat-container');
+const userInput = document.getElementById('user-input');
+const sendBtn = document.getElementById('send-btn');
+const quickRepliesContainer = document.getElementById('quick-replies');
+
+// Sidebar toggle functionality
+const sidebar = document.getElementById('sidebar');
+const sidebarToggle = document.getElementById('sidebar-toggle');
+const toggleIcon = document.getElementById('toggle-icon');
+const chatContainerWrapper = document.getElementById('chat-container-wrapper');
+
+sidebarToggle.addEventListener('click', () => {
+    sidebar.classList.toggle('collapsed');
+    chatContainerWrapper.classList.toggle('expanded');
+    
+    if (sidebar.classList.contains('collapsed')) {
+        toggleIcon.classList.remove('fa-chevron-left');
+        toggleIcon.classList.add('fa-chevron-right');
+    } else {
+        toggleIcon.classList.remove('fa-chevron-right');
+        toggleIcon.classList.add('fa-chevron-left');
+    }
+});
+
+// Cart elements
+const cartIcon = document.getElementById('cart-icon');
+const cartIconHeader = document.getElementById('cart-icon-header');
+const cartSidebar = document.getElementById('cart-sidebar');
+const closeCartBtn = document.getElementById('close-cart');
+const checkoutBtn = document.getElementById('checkout-btn');
+
+// Cart toggle functionality
+cartIcon.addEventListener('click', () => {
+    cartSidebar.classList.add('active');
+});
+cartIconHeader.addEventListener('click', () => {
+    cartSidebar.classList.add('active');
+});
+closeCartBtn.addEventListener('click', () => {
+    cartSidebar.classList.remove('active');
+});
+checkoutBtn.addEventListener('click', () => {
+    window.suggestCart.checkout();
+});
+
+// Authentication event listeners
+document.getElementById('auth-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const memberId = document.getElementById('member-id').value;
+    const memberName = document.getElementById('member-name').value;
+    
+    if (verifyUser(memberId, memberName)) {
+        isAuthenticated = true;
+        hideAuthModal();
+        const authSuccessMessage = 'Thank you! You have been successfully verified. How can I help you with your symptoms today?';
+        lastBotMessage = authSuccessMessage; // <-- Update last message
+        addMessage('bot', authSuccessMessage);
+        updateQuickReplies(['Headache', 'Fever', 'Stomach Pain', 'Fatigue']);
+    } else {
+        alert('Invalid member ID or name. Please try again or register if you are not a member.'); // Consider replacing alert
+    }
+});
+
+document.getElementById('register-link').addEventListener('click', function(e) {
+    e.preventDefault();
+    showRegisterModal();
+});
+
+document.getElementById('issues-link').addEventListener('click', function(e) {
+    e.preventDefault();
+    showIssuesModal();
+});
+
+document.getElementById('back-to-auth').addEventListener('click', function() {
+    hideRegisterModal();
+    showAuthModal();
+});
+
+document.getElementById('back-to-auth-issues').addEventListener('click', function() {
+    hideIssuesModal();
+    showAuthModal();
+});
+
+document.getElementById('register-whatsapp').addEventListener('click', function() {
+    const name = document.getElementById('register-name').value;
+    if (!name) {
+        alert('Please enter your name'); // Consider replacing alert
+        return;
+    }
+    const message = `Hey, I'm ${name} I'd like to become a register to enjoy Sophia's services.`;
+    openWhatsApp(message);
+});
+
+document.getElementById('issues-whatsapp').addEventListener('click', function() {
+    const name = document.getElementById('issues-name').value;
+    if (!name) {
+        alert('Please enter your name'); // Consider replacing alert
+        return;
+    }
+    const message = `Hello I'm ${name} I have issue with my registration code, can i get help.`;
+    openWhatsApp(message);
+});
+
+// --- GEMINI API INTEGRATION ---
+// IMPORTANT: config.js must be loaded before this script for GEMINI_API_KEY to work
+const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${typeof GEMINI_API_KEY !== 'undefined' ? GEMINI_API_KEY : ''}`;
+
+let conversationHistory = [];
+let lastBotMessage = ""; // <-- ADDED: To store the last bot message for TTS
+
+// Updated test database with Naira prices
+const testDatabase = {
+    'HGB': {
+        id: 'HGB',
+        name: 'Haemoglobin Estimation',
+        price: 3000,
+        description: 'Measures the amount of haemoglobin in your blood to check for anaemia or other blood conditions.',
+        category: 'Blood Test',
+        image: './images/Jade.jpeg'
+    },
+    'PCV': {
+        id: 'PCV',
+        name: 'Packed Cell Volume',
+        price: 2500,
+        description: 'Determines the percentage of red blood cells in your blood.',
+        category: 'Blood Test',
+        image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+    },
+    'MPT': {
+        id: 'MPT',
+        name: 'Malaria Parasite Test',
+        price: 4000,
+        description: 'Detects the presence of malaria parasites in your blood.',
+        category: 'Parasitology',
+        image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+    },
+    'WAT': {
+        id: 'WAT',
+        name: 'Widal Agglutination Test',
+        price: 5000,
+        description: 'Used to diagnose typhoid fever by detecting Salmonella antibodies in blood.',
+        category: 'Serology',
+        image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+    },
+    'UC': {
+        id: 'UC',
+        name: 'Urine Chemistry',
+        price: 4000,
+        description: 'Analyzes the chemical composition of urine to detect abnormalities.',
+        category: 'Urine Test',
+        image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+    },
+    'CAURM': {
+        id: 'CAURM',
+        name: 'Computer Assisted Urine Microscopy',
+        price: 2500,
+        description: 'Provides detailed microscopic analysis of urine using automated systems.',
+        category: 'Urine Test',
+        image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+    },
+    'ERYBAS': {
+        id: 'ERYBAS',
+        name: 'Erythrocyte Basic',
+        price: 8500,
+        description: 'Examines red blood cell structure and count for haematological disorders.',
+        category: 'Blood Test',
+        image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+    },
+    'FBC': {
+        id: 'FBC',
+        name: 'Full Blood Count',
+        price: 10000,
+        description: 'Evaluates overall health by measuring various components of blood.',
+        category: 'Blood Test',
+        image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+    }
+    ,
+    'CBS': { 
+        id: 'CBS',
+        name: 'Complete Blood Study', 
+        price: 20500, 
+        description: 'A detailed evaluation of all blood components for comprehensive diagnosis.',
+        category: 'Blood Test',
+        image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+    },
+    'SA': { 
+        id: 'SA',
+        name: 'Stool Analysis', 
+        price: 4000, 
+        description: 'Examines stool samples for infections, parasites, and digestive issues.',
+        category: 'Parasitology',
+        image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+    },
+    'SSN': { 
+        id: 'SSN',
+        name: 'Skin Snip', 
+        price: 6000, 
+        description: 'Tests for microfilariae and other skin-borne infections using small skin samples.',
+        category: 'Parasitology',
+        image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+    },
+    'SSC': { 
+        id: 'SSC',
+        name: 'Skin Scraping', 
+        price: 6000, 
+        description: 'Used to diagnose fungal or parasitic skin infections.',
+        category: 'Microbiology',
+        image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+    },
+    'BG': { 
+        id: 'BG',
+        name: 'Blood Grouping', 
+        price: 3000, 
+        description: 'Determines your blood type and Rh factor.',
+        category: 'Blood Test',
+        image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+    },
+    'HGBG': { 
+        id: 'HGBG',
+        name: 'Haemoglobin Genotype', 
+        price: 5000, 
+        description: 'Identifies your haemoglobin type to detect sickle cell or thalassemia traits.',
+        category: 'Genetic Test',
+        image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+    },
+    'BG-HGBG': { 
+        id: 'BG-HGBG',
+        name: 'Blood Grouping & Genotype', 
+        price: 7500, 
+        description: 'Combines blood group typing and genotype testing in one package.',
+        category: 'Blood Test',
+        image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+    },
+    'ASO-TITRE': { 
+        id: 'ASO-TITRE',
+        name: 'Antistreptolysin O Titre', 
+        price: 8000, 
+        description: 'Detects antibodies produced in response to Streptococcus infection.',
+        category: 'Serology',
+        image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+    },
+    'RF': { 
+        id: 'RF',
+        name: 'Rheumatoid Factor', 
+        price: 8000, 
+        description: 'Checks for rheumatoid factor antibodies that indicate autoimmune disorders.',
+        category: 'Serology',
+        image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+    },
+    'HCV': { 
+        id: 'HCV',
+        name: 'Hepatitis C Virus', 
+        price: 5000, 
+        description: 'Screens for antibodies against the Hepatitis C virus.',
+        category: 'Virology',
+        image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+    },
+    'VDRL': { 
+        id: 'VDRL',
+        name: 'Venereal Disease Research Lab', 
+        price: 4000, 
+        description: 'Tests for syphilis by detecting antibodies in the blood.',
+        category: 'Serology',
+        image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+    },
+    'HEP-B': { 
+        id: 'HEP-B',
+        name: 'Hepatitis B Virus', 
+        price: 4000, 
+        description: 'Detects infection with the Hepatitis B virus.',
+        category: 'Virology',
+        image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+    },
+    'HIV': { 
+        id: 'HIV',
+        name: 'Human Immunodeficiency Virus', 
+        price: 4000, 
+        description: 'Screens for HIV infection by detecting antibodies or antigens in the blood.',
+        category: 'Virology',
+        image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+    },
+    'ESR': { 
+        id: 'ESR',
+        name: 'Erythrocyte Sedimentation Rate', 
+        price: 10000, 
+        description: 'Measures how quickly red blood cells settle in a test tube to help detect inflammation in the body.',
+        category: 'Blood Test',
+        image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+    },
+    'FOB': { 
+        id: 'FOB',
+        name: 'Faecal Occult Blood', 
+        price: 4000, 
+        description: 'Detects hidden blood in stool, useful in screening for gastrointestinal bleeding or colon cancer.',
+        category: 'Stool Test',
+        image: 'https://images.unsplash.com/photo-1581092795360-6c6f45d2f8f2?auto=format&fit=crop&w=100&q=80'
+    },
+    'HPYL': { 
+        id: 'HPYL',
+        name: 'Helicobacter Pylori Antibody Test', 
+        price: 5000, 
+        description: 'Detects antibodies against Helicobacter pylori, a bacteria associated with stomach ulcers.',
+        category: 'Serology',
+        image: 'https://images.unsplash.com/photo-1606202376960-3e94b245b23d?auto=format&fit=crop&w=100&q=80'
+    },
+    'OMT': { 
+        id: 'OMT',
+        name: 'Ovulation Monitoring Test', 
+        price: 12000, 
+        description: 'Tracks ovulation cycle through hormone levels or ultrasound imaging to assess fertility.',
+        category: 'Fertility Test',
+        image: 'https://images.unsplash.com/photo-1603360946369-dc9debb09a2d?auto=format&fit=crop&w=100&q=80'
+    },
+    'HVSMCS': { 
+        id: 'HVSMCS',
+        name: 'High Vaginal Swab Microscopy, Culture and Sensitivity', 
+        price: 8500, 
+        description: 'Identifies vaginal infections and determines effective treatments through culture and sensitivity testing.',
+        category: 'Microbiology',
+        image: 'https://images.unsplash.com/photo-1628614538535-8a5b8d024d3f?auto=format&fit=crop&w=100&q=80'
+    },
+    'URMCS': { 
+        id: 'URMCS',
+        name: 'Urine Culture And Sensitivity', 
+        price: 6500, 
+        description: 'Detects bacterial infection in urine and identifies the best antibiotic treatment.',
+        category: 'Urine Test',
+        image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+    },
+    'TDBIL': { 
+        id: 'TDBIL',
+        name: 'Total and Direct Bilirubin', 
+        price: 6000, 
+        description: 'Measures bilirubin levels in the blood to assess liver function and detect jaundice or liver disorders.',
+        category: 'Liver Function Test',
+        image: 'https://images.unsplash.com/photo-1581594549595-35f6b8a9c8b7?auto=format&fit=crop&w=100&q=80'
+    },
+    'BCASA': { 
+        id: 'BCASA',
+        name: 'Basic Computer Assisted Semen Analysis (for hospital use)', 
+        price: 4000, 
+        description: 'Evaluates sperm count, motility, and morphology using automated analysis systems.',
+        category: 'Fertility Test',
+        image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+    },
+    'COCASA': { 
+        id: 'COCASA',
+        name: 'Complete Computer Assisted Semen Analysis, Culture & Sensitivity', 
+        price: 18000, 
+        description: 'Comprehensive semen analysis with culture and sensitivity testing for fertility and infection diagnosis.',
+        category: 'Fertility Test',
+        image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+    },
+    'URCR': { 
+        id: 'URCR',
+        name: 'Urea Creatinine', 
+        price: 12000, 
+        description: 'Measures urea and creatinine levels in blood to assess kidney function.',
+        category: 'Renal Function Test',
+        image: 'https://images.unsplash.com/photo-1603791452906-bb1b3f6c9f4e?auto=format&fit=crop&w=100&q=80'
+    },
+    'SE': { 
+        id: 'SE',
+        name: 'Serum Electrolytes', 
+        price: 9000, 
+        description: 'Measures key electrolytes in the blood such as sodium, potassium, and chloride to assess fluid and acid-base balance.',
+        category: 'Electrolyte Test',
+        image: 'https://images.unsplash.com/photo-1581594549595-35f6b8a9c8b7?auto=format&fit=crop&w=100&q=80'
+    },
+    'EUC': { 
+        id: 'EUC',
+        name: 'Electrolyte, Urea, Creatinine', 
+        price: 25000, 
+        description: 'Comprehensive kidney and electrolyte profile to evaluate renal function and fluid balance.',
+        category: 'Renal Function Test',
+        image: 'https://images.unsplash.com/photo-1603791452906-bb1b3f6c9f4e?auto=format&fit=crop&w=100&q=80'
+    },
+    'LFT': { 
+        id: 'LFT',
+        name: 'Liver Function Test', 
+        price: 16000, 
+        description: 'Evaluates enzymes, proteins, and bilirubin levels to assess liver health and performance.',
+        category: 'Liver Function Test',
+        image: 'https://images.unsplash.com/photo-1581594549595-35f6b8a9c8b7?auto=format&fit=crop&w=100&q=80'
+    },
+    'LIPRO': { 
+        id: 'LIPRO',
+        name: 'Lipid Profile', 
+        price: 18000, 
+        description: 'Measures cholesterol and triglyceride levels to assess heart disease risk.',
+        category: 'Cardiac Test',
+        image: 'https://images.unsplash.com/photo-1606202376960-3e94b245b23d?auto=format&fit=crop&w=100&q=80'
+    },
+    'TOTCHOL': { 
+        id: 'TOTCHOL',
+        name: 'Total Cholesterol', 
+        price: 8000, 
+        description: 'Determines total cholesterol levels to monitor cardiovascular health.',
+        category: 'Cardiac Test',
+        image: 'https://images.unsplash.com/photo-1606202376960-3e94b245b23d?auto=format&fit=crop&w=100&q=80'
+    },
+    'STP': { 
+        id: 'STP',
+        name: 'Standard Thyroid Panel (T4 and TSH)', 
+        price: 25000, 
+        description: 'Assesses thyroid gland function by measuring T4 and TSH hormone levels.',
+        category: 'Hormonal Test',
+        image: 'https://images.unsplash.com/photo-1603360946369-dc9debb09a2d?auto=format&fit=crop&w=100&q=80'
+    },
+    'ETP': { 
+        id: 'ETP',
+        name: 'Extended Thyroid Panel (T3, T4 and TSH)', 
+        price: 54000, 
+        description: 'Comprehensive thyroid profile for detailed evaluation of thyroid activity and metabolism.',
+        category: 'Hormonal Test',
+        image: 'https://images.unsplash.com/photo-1603360946369-dc9debb09a2d?auto=format&fit=crop&w=100&q=80'
+    },
+    'HORPRO': { 
+        id: 'HORPRO',
+        name: 'Hormonal Profile', 
+        price: 80000, 
+        description: 'Full hormonal panel assessing reproductive, adrenal, and thyroid hormones for both men and women.',
+        category: 'Hormonal Test',
+        image: 'https://images.unsplash.com/photo-1603360946369-dc9debb09a2d?auto=format&fit=crop&w=100&q=80'
+    },
+    'RVS': { 
+        id: 'RVS',
+        name: 'Retroviral Screening', 
+        price: 4000, 
+        description: 'Screens for retroviral infections including HIV antibodies.',
+        category: 'Virology',
+        image: 'https://images.unsplash.com/photo-1603791452906-bb1b3f6c9f4e?auto=format&fit=crop&w=100&q=80'
+    },
+    'TPSA': { 
+        id: 'TPSA',
+        name: 'Prostate Specific Antigen', 
+        price: 16000, 
+        description: 'Measures PSA levels to screen for prostate abnormalities and cancer.',
+        category: 'Cancer Marker',
+        image: 'https://images.unsplash.com/photo-1606202376960-3e94b245b23d?auto=format&fit=crop&w=100&q=80'
+    },
+    'CEA': { 
+        id: 'CEA',
+        name: 'Carcinoembryonic Antigen', 
+        price: 14000, 
+        description: 'Used to detect and monitor certain types of cancers, especially of the colon and rectum.',
+        category: 'Cancer Marker',
+        image: 'https://images.unsplash.com/photo-1606202376960-3e94b245b23d?auto=format&fit=crop&w=100&q=80'
+    },
+    'TREX': { 
+        id: 'TREX',
+        name: 'Tropical Extended', 
+        price: 22500, 
+        description: 'Comprehensive tropical disease panel covering major infections prevalent in tropical regions.',
+        category: 'Tropical Disease Panel',
+        image: 'https://images.unsplash.com/photo-1628614538535-8a5b8d024d3f?auto=format&fit=crop&w=100&q=80'
+    },
+    'TROBAS': { 
+        id: 'TROBAS',
+        name: 'Tropical Basic', 
+        price: 15500, 
+        description: 'Basic screening for common tropical infections and parasitic diseases.',
+        category: 'Tropical Disease Panel',
+        image: 'https://images.unsplash.com/photo-1628614538535-8a5b8d024d3f?auto=format&fit=crop&w=100&q=80'
+    },
+    'SPT': { 
+        id: 'SPT',
+        name: 'Serum Pregnancy Test', 
+        price: 2500, 
+        description: 'Detects the presence of hCG hormone in the blood to confirm pregnancy.',
+        category: 'Fertility Test',
+        image: 'https://images.unsplash.com/photo-1603360946369-dc9debb09a2d?auto=format&fit=crop&w=100&q=80'
+    },
+    'ALB': { 
+        id: 'ALB',
+        name: 'Albumin', 
+        price: 6000, 
+        description: 'Measures albumin levels in the blood to evaluate liver and kidney health.',
+        category: 'Liver Function Test',
+        image: 'https://images.unsplash.com/photo-1581594549595-35f6b8a9c8b7?auto=format&fit=crop&w=100&q=80'
+    },
+    'VITD': { 
+        id: 'VITD',
+        name: 'Vitamin D', 
+        price: 16000, 
+        description: 'Determines Vitamin D levels to assess bone health and immune function.',
+        category: 'Nutritional Test',
+        image: 'https://images.unsplash.com/photo-1603791452906-bb1b3f6c9f4e?auto=format&fit=crop&w=100&q=80'
+    },
+    'CORT': { 
+        id: 'CORT',
+        name: 'Cortisol', 
+        price: 18000, 
+        description: 'Measures cortisol hormone levels to assess stress response and adrenal gland function.',
+        category: 'Hormonal Test',
+        image: 'https://images.unsplash.com/photo-1603360946369-dc9debb09a2d?auto=format&fit=crop&w=100&q=80'
+    },
+    'KFT': { 
+        id: 'KFT',
+        name: 'Kidney Function Test', 
+        price: 14000, 
+        description: 'Evaluates how well the kidneys are filtering waste and maintaining fluid balance.',
+        category: 'Renal Function Test',
+        image: 'https://images.unsplash.com/photo-1603791452906-bb1b3f6c9f4e?auto=format&fit=crop&w=100&q=80'
+    },
+    'MF': { 
+        id: 'MF',
+        name: 'Micro Filaria', 
+        price: 8000, 
+        description: 'Detects microfilariae in the blood, which cause filariasis and related parasitic diseases.',
+        category: 'Parasitology',
+        image: 'https://images.unsplash.com/photo-1628614538535-8a5b8d024d3f?auto=format&fit=crop&w=100&q=80'
+    },
+    'CAL': { 
+        id: 'CAL',
+        name: 'Calcium', 
+        price: 14000, 
+        description: 'Measures calcium levels in blood to assess bone health and parathyroid function.',
+        category: 'Nutritional Test',
+        image: 'https://images.unsplash.com/photo-1603791452906-bb1b3f6c9f4e?auto=format&fit=crop&w=100&q=80'
+    },
+    'PRL': { 
+        id: 'PRL',
+        name: 'Prolactin', 
+        price: 18000, 
+        description: 'Measures prolactin hormone levels to evaluate pituitary gland function and fertility issues.',
+        category: 'Hormonal Test',
+        image: 'https://images.unsplash.com/photo-1603360946369-dc9debb09a2d?auto=format&fit=crop&w=100&q=80'
+    },
+    'PROG': { 
+        id: 'PROG',
+        name: 'Progesterone', 
+        price: 18000, 
+        description: 'Assesses progesterone levels to monitor ovulation, fertility, and pregnancy health.',
+        category: 'Hormonal Test',
+        image: 'https://images.unsplash.com/photo-1603360946369-dc9debb09a2d?auto=format&fit=crop&w=100&q=80'
+    },
+    'E2': { 
+        id: 'E2',
+        name: 'Estradiol Hormonal Test', 
+        price: 16000, 
+        description: 'Measures estradiol levels to evaluate ovarian function and hormone balance.',
+        category: 'Hormonal Test',
+        image: 'https://images.unsplash.com/photo-1603360946369-dc9debb09a2d?auto=format&fit=crop&w=100&q=80'
+    },
+    'FSH': { 
+        id: 'FSH',
+        name: 'Follicle Stimulating Hormone Test', 
+        price: 12000, 
+        description: 'Measures FSH levels to assess fertility, menstrual cycle, and pituitary function.',
+        category: 'Hormonal Test',
+        image: 'https://images.unsplash.com/photo-1603360946369-dc9debb09a2d?auto=format&fit=crop&w=100&q=80'
+    },
+    'LH': { 
+        id: 'LH',
+        name: 'Luteinizing Hormone', 
+        price: 12000, 
+        description: 'Evaluates LH levels to monitor ovulation and reproductive health.',
+        category: 'Hormonal Test',
+        image: 'https://images.unsplash.com/photo-1603360946369-dc9debb09a2d?auto=format&fit=crop&w=100&q=80'
+    },
+    'HCV': { 
+        id: 'HCV',
+        name: 'Hepatitis C Virus', 
+        price: 4000, 
+        description: 'Screens for Hepatitis C virus antibodies to detect infection.',
+        category: 'Virology',
+        image: 'https://images.unsplash.com/photo-1603791452906-bb1b3f6c9f4e?auto=format&fit=crop&w=100&q=80'
+    },
+    'Hbsag': { 
+        id: 'Hbsag',
+        name: 'Hepatitis B Surface Antigen', 
+        price: 4000, 
+        description: 'Detects the surface antigen of Hepatitis B virus, indicating active infection.',
+        category: 'Virology',
+        image: 'https://images.unsplash.com/photo-1603791452906-bb1b3f6c9f4e?auto=format&fit=crop&w=100&q=80'
+    },
+    'HAV': { 
+        id: 'HAV',
+        name: 'Hepatitis A Virus', 
+        price: 5000, 
+        description: 'Detects antibodies against Hepatitis A virus to determine past or current infection.',
+        category: 'Virology',
+        image: 'https://images.unsplash.com/photo-1603791452906-bb1b3f6c9f4e?auto=format&fit=crop&w=100&q=80'
+    },
+    'FT4': { 
+        id: 'FT4',
+        name: 'Free Tetraiodothyronine', 
+        price: 18000, 
+        description: 'Measures the free T4 hormone level to assess thyroid gland function.',
+        category: 'Hormonal Test',
+        image: 'https://images.unsplash.com/photo-1603360946369-dc9debb09a2d?auto=format&fit=crop&w=100&q=80'
+    },
+    'CHLAMYD': { 
+        id: 'CHLAMYD',
+        name: 'Chlamydia Trachomatis Test', 
+        price: 5500, 
+        description: 'Detects the presence of Chlamydia trachomatis bacteria causing sexually transmitted infections.',
+        category: 'Microbiology',
+        image: 'https://images.unsplash.com/photo-1628614538535-8a5b8d024d3f?auto=format&fit=crop&w=100&q=80'
+    },
+    'RES': { 
+        id: 'RES',
+        name: 'Research', 
+        price: 10000, 
+        description: 'Special diagnostic or experimental tests performed for research and evaluation purposes.',
+        category: 'Special Test',
+        image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+    },
+    'FPSA': { 
+        id: 'FPSA',
+        name: 'Free Prostate Specific Antigen', 
+        price: 16000, 
+        description: 'Measures the unbound PSA in the blood to aid in prostate cancer screening.',
+        category: 'Cancer Marker',
+        image: 'https://images.unsplash.com/photo-1606202376960-3e94b245b23d?auto=format&fit=crop&w=100&q=80'
+    },
+    'PSA_PRO': { 
+        id: 'PSA_PRO',
+        name: 'Complete PSA Profile', 
+        price: 32000, 
+        description: 'Comprehensive prostate-specific antigen profile for advanced screening of prostate health.',
+        category: 'Cancer Marker',
+        image: 'https://images.unsplash.com/photo-1606202376960-3e94b245b23d?auto=format&fit=crop&w=100&q=80'
+    },
+    'RBG': { 
+        id: 'RBG',
+        name: 'Random Blood Glucose', 
+        price: 2500, 
+        description: 'Measures blood glucose levels at any time of the day to screen for diabetes.',
+        category: 'Glucose Test',
+        image: 'https://images.unsplash.com/photo-1603791452906-bb1b3f6c9f4e?auto=format&fit=crop&w=100&q=80'
+    },
+    'GONOR': { 
+        id: 'GONOR',
+        name: 'Gonorrhea Test', 
+        price: 7000, 
+        description: 'Detects Neisseria gonorrhoeae bacteria responsible for gonorrhea infection.',
+        category: 'Microbiology',
+        image: 'https://images.unsplash.com/photo-1628614538535-8a5b8d024d3f?auto=format&fit=crop&w=100&q=80'
+    },
+    'FBG': { 
+        id: 'FBG',
+        name: 'Fasting Blood Glucose', 
+        price: 2500, 
+        description: 'Measures blood sugar levels after fasting to check for diabetes and glucose metabolism.',
+        category: 'Glucose Test',
+        image: 'https://images.unsplash.com/photo-1603791452906-bb1b3f6c9f4e?auto=format&fit=crop&w=100&q=80'
+    },
+    'HPYLANT': { 
+        id: 'HPYLANT',
+        name: 'Helicobacter Pylori Antigen Test', 
+        price: 12000, 
+        description: 'Detects H. pylori antigens in stool for diagnosing stomach infections.',
+        category: 'Serology',
+        image: 'https://images.unsplash.com/photo-1606202376960-3e94b245b23d?auto=format&fit=crop&w=100&q=80'
+    },
+    'HbA1c': { 
+        id: 'HbA1c',
+        name: 'Glycated Haemoglobin', 
+        price: 12000, 
+        description: 'Determines average blood sugar levels over the past 2–3 months for diabetes monitoring.',
+        category: 'Glucose Test',
+        image: 'https://images.unsplash.com/photo-1603791452906-bb1b3f6c9f4e?auto=format&fit=crop&w=100&q=80'
+    },
+    'FT3': { 
+        id: 'FT3',
+        name: 'Free Triiodothyronine', 
+        price: 18000, 
+        description: 'Measures the free T3 thyroid hormone to evaluate thyroid activity and metabolism.',
+        category: 'Hormonal Test',
+        image: 'https://images.unsplash.com/photo-1603360946369-dc9debb09a2d?auto=format&fit=crop&w=100&q=80'
+    },
+    'TSH': { 
+        id: 'TSH',
+        name: 'Thyroid Stimulating Hormone', 
+        price: 18000, 
+        description: 'Measures TSH levels to assess thyroid gland function and detect hypo- or hyperthyroidism.',
+        category: 'Hormonal Test',
+        image: 'https://images.unsplash.com/photo-1603360946369-dc9debb09a2d?auto=format&fit=crop&w=100&q=80'
+    },
+    'WOUND-SWAB-CS': { 
+        id: 'WOUND-SWAB-CS',
+        name: 'Wound Swab Culture and Sensitivity', 
+        price: 10000, 
+        description: 'Detects and identifies bacteria from wound infections and determines the most effective antibiotic treatment.',
+        category: 'Microbiology',
+        image: 'https://images.unsplash.com/photo-1628614538535-8a5b8d024d3f?auto=format&fit=crop&w=100&q=80'
+    },
+    'hs-CRP': { 
+        id: 'hs-CRP',
+        name: 'High Sensitivity C-reactive Protein', 
+        price: 18000, 
+        description: 'Measures C-reactive protein levels to detect low levels of inflammation linked to cardiovascular disease risk.',
+        category: 'Inflammation Marker',
+        image: 'https://images.unsplash.com/photo-1606202376960-3e94b245b23d?auto=format&fit=crop&w=100&q=80'
+    },
+    'RSS': { 
+        id: 'RSS',
+        name: 'Reprocessing Storage and Security', 
+        price: 5000, 
+        description: 'Administrative and processing fee covering safe handling, storage, and documentation of test samples.',
+        category: 'Service Charge',
+        image: 'https://images.unsplash.com/photo-1582719471384-894fbb16e074?auto=format&fit=crop&w=100&q=80'
+    },
+    'UR-ACID': { 
+        id: 'UR-ACID',
+        name: 'Uric Acid', 
+        price: 18000, 
+        description: 'Measures uric acid levels in the blood to help diagnose gout or monitor kidney function.',
+        category: 'Renal Function Test',
+        image: 'https://images.unsplash.com/photo-1603791452906-bb1b3f6c9f4e?auto=format&fit=crop&w=100&q=80'
+    }
+};
+
+const systemPrompt = `You are a friendly and helpful Health AI Assistant, called Sophia. Your goal is to understand a user's health symptoms and suggest relevant medical tests from a predefined list.
+
+You MUST follow these rules:
+1.  Your responses MUST be in JSON format.
+2.  Do not use markdown in the JSON response.
+3.  Keep your conversational messages concise and easy to understand.
+4.  Ask clarifying questions one at a time to narrow down the symptoms.
+5.  When you have enough information, suggest relevant tests.
+6.  The available tests are: CBC, HGB, PCV, MPT, WAT, UC, CAURM, ERYBAS, FBC, CBS, SA, SSN, SSC, BG, HGBG, BG-HGBG, ASO-TITRE, RF, HCV, VDRL, HEP-B, ESR, FOB, HPYL, OMT, HVSMCS, URMCS, TDBIL, BCASA, COCASA, URCR, SE, EUC, LFT, LIPRO, TOTCHOL, STP, ETP, HORPRO, RVS, TPSA, CEA, TREX, TROBAS, SPT, ALB, VITD, CORT, KFT, MF, CAL, PRL, PROG, E2, FSH, LH, HCV2, Hbsag, HAV, FT4, CHLAMYD,  RES, FPSA, PSA-PRO, RBG, GONOR, FBG, HPYLANT, HbA1c, FT3, TSH, WOUND-SWAB-CS, hs-CRP, RSS, UR-ACID. Only suggest tests from this list.
+7.  Provide relevant quick reply options to guide the user.
+8.  If the user's query is unrelated to health, politely steer the conversation back to symptoms.
+9.  ALWAYS Verify Age and Gender befor recommending tests.
+1. You work at X-Trim Research Ltd Located at 61 Clifford Road, Aba, Abia State, Nigeria. Provide this information when asked about your location or company you can go on about telling how wonderful the company is, and politely steer the conversation back to symptoms.
+
+The JSON output must follow this exact schema:
+{
+  "message": "Your conversational response to the user.",
+  "suggestedTests": ["TEST_CODE_1", "TEST_CODE_2", ...],
+  "quickReplies": ["Option 1", "Option 2", ...]
+}`;
+
+const addMessage = (sender, message) => {
+    const messageWrapper = document.createElement('div');
+    messageWrapper.classList.add('flex', 'mb-4', sender === 'user' ? 'justify-end' : 'justify-start');
+    
+    const messageBubble = document.createElement('div');
+    messageBubble.classList.add('rounded-xl', 'py-2', 'px-4', 'max-w-xs', 'lg:max-w-md', sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-bot');
+    messageBubble.innerText = message;
+    
+    messageWrapper.appendChild(messageBubble);
+    chatContainer.appendChild(messageWrapper);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+};
+
+const showTypingIndicator = () => {
+    const typingWrapper = document.createElement('div');
+    typingWrapper.id = 'typing-indicator';
+    typingWrapper.classList.add('flex', 'mb-4', 'justify-start');
+    typingWrapper.innerHTML = `<div class="loader"></div>`;
+    chatContainer.appendChild(typingWrapper);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+};
+
+const removeTypingIndicator = () => {
+    const indicator = document.getElementById('typing-indicator');
+    if (indicator) {
+        indicator.remove();
+    }
+};
+
+const updateQuickReplies = (replies = []) => {
+    quickRepliesContainer.innerHTML = '';
+    if (replies.length > 0) {
+        replies.forEach(reply => {
+            const button = document.createElement('button');
+            button.textContent = reply;
+            button.classList.add('px-3', 'py-1', 'border', 'border-blue-500', 'text-blue-500', 'rounded-full', 'text-sm', 'hover:bg-blue-500', 'hover:text-white', 'transition');
+            button.onclick = () => handleUserInput(reply);
+            quickRepliesContainer.appendChild(button);
+        });
+    }
+};
+
+const processBotResponse = async (userInputText) => {
+    conversationHistory.push({ role: "user", parts: [{ text: userInputText }] });
+
+    try {
+        const payload = {
+            contents: conversationHistory,
+            systemInstruction: {
+                parts: [{ text: systemPrompt }]
+            },
+        };
+
+        const response = await fetch(GEMINI_API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            throw new Error(`API error: ${response.statusText}`);
+        }
+
+        const result = await response.json();
+        const botResponseText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+
+        if (!botResponseText) {
+            throw new Error("Received an empty response from the API.");
+        }
+
+        const cleanedJsonString = botResponseText.replace(/```json|```/g, '').trim();
+        const botResponseJson = JSON.parse(cleanedJsonString);
+        
+        conversationHistory.push({ role: "model", parts: [{ text: JSON.stringify(botResponseJson) }] });
+        
+        removeTypingIndicator();
+
+        if (botResponseJson.message) {
+            lastBotMessage = botResponseJson.message; // <-- Update last message
+            addMessage('bot', botResponseJson.message);
+        }
+        if (botResponseJson.quickReplies) {
+            updateQuickReplies(botResponseJson.quickReplies);
+        }
+        if (botResponseJson.suggestedTests && botResponseJson.suggestedTests.length > 0) {
+            suggestTests(botResponseJson.suggestedTests);
+        }
+
+    } catch (error) {
+        console.error("Error calling Gemini API:", error);
+        removeTypingIndicator();
+        const errorMsg = "I'm having a little trouble connecting right now. Please try again in a moment.";
+        lastBotMessage = errorMsg; // <-- Update last message
+        addMessage('bot', errorMsg);
+    }
+};
+
+const handleUserInput = (inputText) => {
+    const trimmedInput = inputText.trim();
+    if (trimmedInput === '') return;
+
+    // Count user messages
+    userMessageCount++;
+    
+    // Check if authentication is required
+    if (userMessageCount >= AUTH_TRIGGER_COUNT && !isAuthenticated) {
+        showAuthModal();
+        return;
+    }
+
+    addMessage('user', trimmedInput);
+    userInput.value = '';
+    updateQuickReplies();
+    showTypingIndicator();
+    
+    processBotResponse(trimmedInput);
+};
+
+sendBtn.addEventListener('click', () => handleUserInput(userInput.value));
+userInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        handleUserInput(userInput.value);
+    }
+});
+
+const suggestTests = (testCodes) => {
+    const suggestedTestsContainer = document.createElement('div');
+    suggestedTestsContainer.id = 'suggested-tests-container';
+    suggestedTestsContainer.className = 'mt-4 p-4 bg-gray rounded-lg border border-gray-200';
+    suggestedTestsContainer.innerHTML = '<h3 class="font-bold text-lg mb-3 text-white">Suggested Tests</h3>';
+    
+    testCodes.forEach(code => {
+        const test = testDatabase[code];
+        if (!test) return;
+
+        const card = document.createElement('div');
+        card.classList.add('p-4', 'rounded-lg', 'shadow-md', 'border', 'border-gray-200', 'test-card-enter', 'mb-3', 'suggestion');
+        card.innerHTML = `
+            <h3 class="font-bold text-md text-gray-800">${test.name}</h3>
+            <p class="text-sm text-gray-600 my-1">${test.description}</p>
+            <div class="flex justify-between items-center mt-3">
+                <button class="add-to-cart-btn bg-blue-100 text-blue-700 px-4 py-1 rounded-md text-sm font-semibold hover:bg-blue-200 transition" data-code="${code}">Add to Cart</button>
+            </div>
+        `;
+        suggestedTestsContainer.appendChild(card);
+    });
+
+    chatContainer.appendChild(suggestedTestsContainer);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+
+    // Add event listeners to the add to cart buttons
+    document.querySelectorAll('#suggested-tests-container .add-to-cart-btn').forEach(button => {
+        button.onclick = (e) => {
+            const code = e.target.dataset.code;
+            const test = testDatabase[code];
+            if (test && window.suggestCart) {
+                const added = window.suggestCart.addItem(test);
+                if (added) {
+                    e.target.textContent = 'Added!';
+                    e.target.disabled = true;
+                    e.target.classList.remove('bg-blue-100', 'hover:bg-blue-200');
+                    e.target.classList.add('bg-green-100', 'text-green-700');
+                }
+            } else {
+                console.error("Could not add item to cart. Test or suggestCart is missing.", { test, suggestCart: window.suggestCart });
+            }
+        };
+    });
+};
+
+// --- ADDED: Text-to-Speech (TTS) Functionality ---
+const speakBtn = document.getElementById('speak-btn');
+const speakStatus = document.getElementById('speak-status');
+let isSpeaking = false;
+
+/**
+ * Speaks the provided text using the Web Speech API.
+ * @param {string} text The text to speak.
+ */
+function speakText(text) {
+    if (!('speechSynthesis' in window)) {
+        if(speakStatus) speakStatus.textContent = 'TTS not supported';
+        console.error('Speech Synthesis not supported in this browser.');
+        return;
+    }
+
+    // If currently speaking, stop
+    if (isSpeaking) {
+        window.speechSynthesis.cancel();
+        return; // onend will handle cleanup
+    }
+    
+    if (!text) {
+        if(speakStatus) {
+            speakStatus.textContent = 'No message to speak.';
+            setTimeout(() => { speakStatus.textContent = ''; }, 2000);
+        }
+        return;
+    }
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US'; // Set language
+
+    utterance.onstart = () => {
+        isSpeaking = true;
+        if(speakBtn) {
+            speakBtn.classList.add('speaking'); // Add a class for styling (e.g., pulsing)
+            speakBtn.innerHTML = '<i class="fas fa-stop"></i>'; // Change icon to stop
+        }
+        if(speakStatus) speakStatus.textContent = 'Speaking...';
+    };
+
+    utterance.onend = () => {
+        isSpeaking = false;
+        if(speakBtn) {
+            speakBtn.classList.remove('speaking');
+            speakBtn.innerHTML = '<i class="fas fa-volume-up"></i>'; // Reset icon
+        }
+        if(speakStatus) speakStatus.textContent = '';
+    };
+
+    utterance.onerror = (event) => {
+        isSpeaking = false;
+        if(speakBtn) {
+            speakBtn.classList.remove('speaking');
+            speakBtn.innerHTML = '<i class="fas fa-volume-up"></i>'; // Reset icon
+        }
+        if(speakStatus) speakStatus.textContent = 'Error';
+        console.error('SpeechSynthesisUtterance.onerror', event);
+    };
+
+    window.speechSynthesis.speak(utterance);
+}
+
+// Add click listener to the speak button
+if (speakBtn) {
+    speakBtn.addEventListener('click', () => {
+        if (isSpeaking) {
+            window.speechSynthesis.cancel(); // Stop speaking if clicked while active
+        } else {
+            // We always want to speak the *last* message from the bot.
+            speakText(lastBotMessage);
+        }
+    });
+}
+// --- End of TTS Functionality ---
+
+// --- ADDED: Speech-to-Text (STT) Functionality ---
+const listenBtn = document.getElementById('listen-btn');
+const voiceStatus = document.getElementById('voice-status'); // Correct ID from HTML
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+let recognition;
+
+if (SpeechRecognition) {
+    recognition = new SpeechRecognition();
+    recognition.continuous = false; // Stop after one phrase
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    if(listenBtn) {
+        listenBtn.addEventListener('click', () => {
+            // Check if recognition is already running
+            if (recognition && typeof recognition.start === 'function') {
+                try {
+                    // Check state if available
+                    let recognitionState;
+                    try {
+                        recognitionState = recognition.state;
+                    } catch (e) {
+                        recognitionState = 'idle'; // Fallback if .state is not available
+                    }
+
+                    if (recognitionState === 'listening') {
+                        recognition.stop();
+                        return;
+                    }
+                    recognition.start();
+                } catch (error) {
+                    // This can happen if start() is called while it's already running
+                    if (error.name === 'InvalidStateError') {
+                        // Already started, so stop it
+                        try {
+                            recognition.stop();
+                        } catch(e) {
+                            console.error("Error stopping recognition:", e);
+                        }
+                    } else {
+                        console.error("Speech recognition could not be started: ", error);
+                        if(voiceStatus) voiceStatus.textContent = 'Error starting...';
+                    }
+                }
+            }
+        });
+    }
+
+    recognition.onstart = () => {
+        if(listenBtn) {
+            listenBtn.classList.add('listening'); // Add class for pulsing/styling
+            listenBtn.innerHTML = '<i class="fas fa-stop"></i>'; // Change icon to stop
+        }
+        if(voiceStatus) voiceStatus.textContent = 'Listening...';
+    };
+
+    recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        if(userInput) userInput.value = transcript; // Put text in input box
+        handleUserInput(transcript); // Automatically send the message
+    };
+
+    recognition.onerror = (event) => {
+        console.error('Speech recognition error:', event.error);
+        if(voiceStatus) {
+            if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+                voiceStatus.textContent = 'Mic access denied';
+            } else {
+                voiceStatus.textContent = 'Error';
+            }
+        }
+    };
+
+    recognition.onend = () => {
+        if(listenBtn) {
+            listenBtn.classList.remove('listening');
+            listenBtn.innerHTML = '<i class="fas fa-microphone"></i>'; // Reset icon
+        }
+        if (voiceStatus && voiceStatus.textContent === 'Listening...') {
+            voiceStatus.textContent = ''; // Clear status if it was just 'Listening'
+        }
+    };
+
+} else {
+    // Speech Recognition not supported
+    if (listenBtn) {
+        listenBtn.disabled = true;
+    }
+    if (voiceStatus) {
+        voiceStatus.textContent = 'Speech not supported';
+    }
+    console.warn('Speech Recognition not supported in this browser.');
+}
+// --- End of STT Functionality ---
+
+
+// Initialize cart system when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    // Check for API key
+    if (typeof GEMINI_API_KEY === 'undefined' || GEMINI_API_KEY === '') {
+        console.error('GEMINI_API_KEY is not defined. Please check your config.js file.');
+        addMessage('bot', 'Error: The AI assistant is not configured. Please contact support.');
+    }
+
+    window.suggestCart = new CartSystem();
+    
+    // Initial bot message
+    const initialMessage = "Hello! I'm Sophia, your personal health assistant, at X-Trim Research Lab. I can help you understand your symptoms and suggest relevant lab tests. What's your main symptom today?";
+    const initialReplies = ['Headache', 'Fever', 'Stomach Pain', 'Fatigue'];
+    
+    lastBotMessage = initialMessage; // <-- Update last message
+
+    conversationHistory.push({
+        role: "model",
+        parts: [{ text: JSON.stringify({ message: initialMessage, suggestedTests: [], quickReplies: [] }) }]
+    });
+    addMessage('bot', initialMessage);
+    updateQuickReplies(initialReplies);
+});
+
+</script>
+</body>
+</html>
