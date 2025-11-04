@@ -159,3 +159,6 @@
         display: none;
       }
     }
+
+    @media (hover: hover) {
+}

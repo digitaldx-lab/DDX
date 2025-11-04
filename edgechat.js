@@ -22,8 +22,10 @@ document.addEventListener("DOMContentLoaded", function () {
         setTimeout(() => {
           bubbleText.textContent = messages[currentMessageIndex];
           bubbleText.classList.remove("typing-animation");
-          void bubbleText.offsetWidth; // reflow
+          requestAnimationFrame(() => {
+          bubbleText.offsetWidth; // ensure reflow
           bubbleText.classList.add("typing-animation");
+          });
           chatBubble.classList.add("active");
           currentMessageIndex = (currentMessageIndex + 1) % messages.length;
         }, 500);
