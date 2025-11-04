@@ -901,10 +901,75 @@ const registeredUsers = {
         name: 'Doc Joseph Ikedi',
         phone: '+2348037346656'
     },
-    'XTR-0001': {
-        id: 'XTR-DEMO',
-        name: 'Doc Joseph Ikedi',
-        phone: '+2348037346656'
+    'XTR-0002': {
+        id: 'XTR-0002',
+        name: 'Kelvin Zoe',
+        phone: '+2349133299876'
+    },
+    'XTR-0003': {
+        id: 'XTR-0003',
+        name: 'Grace',
+        phone: ''
+    },
+    'XTR-0004': {
+        id: 'XTR-0004',
+        name: 'Sommy',
+        phone: ''
+    },
+    'XTR-0005': {
+        id: 'XTR-0005',
+        name: 'Mr Lekwa Eke',
+        phone: ''
+    },
+    'XTR-0006': {
+        id: 'XTR-0006',
+        name: 'Mr Valentine Kelechi',
+        phone: ''
+    },
+    'XTR-0007': {
+        id: 'XTR-0007',
+        name: 'Chief Chukwuma Igbogbahaka',
+        phone: ''
+    },
+    'XTR-0008': {
+        id: 'XTR-0008',
+        name: 'Mr Nnamani Ifeanyi',
+        phone: ''
+    },
+    'XTR-0009': {
+        id: 'XTR-0009',
+        name: 'Nurse Ebere Okeke',
+        phone: ''
+    },
+    'XTR-0010': {
+        id: 'XTR-0010',
+        name: 'Mrs Blessing Ufomba',
+        phone: ''
+    },
+    'XTR-0011': {
+        id: 'XTR-0011',
+        name: 'Mrs Perpetual Akudo',
+        phone: ''
+    },
+    'XTR-0012': {
+        id: 'XTR-0012',
+        name: 'Prof Oju Onuoha',
+        phone: ''
+    },
+    'XTR-0013': {
+        id: 'XTR-0013',
+        name: 'Miss Christina Nwachukwu',
+        phone: ''
+    },
+    'XTR-0014': {
+        id: 'XTR-0014',
+        name: 'Mr Friday Ozuruonye',
+        phone: ''
+    },
+    'XTR-0015': {
+        id: 'XTR-0015',
+        name: 'Mr Fidelis Mbewu',
+        phone: ''
     }
     // Add more users as needed
 };
@@ -1288,100 +1353,100 @@ let lastBotMessage = ""; // <-- ADDED: To store the last bot message for TTS
 // Updated test database with Naira prices
 const testDatabase = {
     "TROBAS": {
-        "id": 1001,
-        "name": "Tropical Basics (TROBAS) Panel",
-        "price": 18000,
-        "description": "Comprehensive screening panel for tropical infections and basic health parameters. Ideal for routine checkups in malaria-endemic areas. with the following tests: Hemoglobin estimation, Malaria Parasite test, Urinalysis, Widal Agglutination test, Computer-Assisted Urine Microscopy",
-        "category": "Health Packages",
-        "image": "./images/trobas1.png"
+        id: 1001,
+        name: "Tropical Basics (TROBAS) Panel",
+        price: 18000,
+        description: "Comprehensive screening panel for tropical infections and basic health parameters. Ideal for routine checkups in malaria-endemic areas. with the following tests: Hemoglobin estimation, Malaria Parasite test, Urinalysis, Widal Agglutination test, Computer-Assisted Urine Microscopy",
+        category: "Health Packages",
+        image: "./images/trobas1.png"
     },
     "TREX": {
-        "id": 1002,
-        "name": "Tropical Extended (TREX) Panel",
-        "price": 25000,
-        "description": "Comprehensive tropical disease screening with blood and urine analysis with the following tests: Hemoglobin Estimation, Hct, MCHC, Malaria Parasite Test, Widal Agglutination Test, Urine Chemistry, Computer-Assisted Urine Microscopy, Helicobacter pylor",
-        "category": "Health Packages",
-        "image": "./images/trex1.png"
+        id: 1002,
+        name: "Tropical Extended (TREX) Panel",
+        price: 25000,
+        description: "Comprehensive tropical disease screening with blood and urine analysis with the following tests: Hemoglobin Estimation, Hct, MCHC, Malaria Parasite Test, Widal Agglutination Test, Urine Chemistry, Computer-Assisted Urine Microscopy, Helicobacter pylor",
+        category: "Health Packages",
+        image: "./images/trex1.png"
     },
     "TRAD": {
-        "id": 1003,
-        "name": "Tropical Advanced (TRAD) Panel",
-        "price": 35000,
-        "description": "Advanced tropical screening including liver function, parasites, and stool analysis with the following tests: HGB Estimation, Hct, MCHC, Malaria Parasite Test, Widal Agglutination Test, Urine Chemistry, Computer-Assisted Urine Microscopy, Helicobacter pylori, URMCS, TBil / DBIL, Mf, Stool Analysis.",
-        "category": "Health Packages",
-        "image": "./images/trad3.png"
+        id: 1003,
+        name: "Tropical Advanced (TRAD) Panel",
+        price: 35000,
+        description: "Advanced tropical screening including liver function, parasites, and stool analysis with the following tests: HGB Estimation, Hct, MCHC, Malaria Parasite Test, Widal Agglutination Test, Urine Chemistry, Computer-Assisted Urine Microscopy, Helicobacter pylori, URMCS, TBil / DBIL, Mf, Stool Analysis.",
+        category: "Health Packages",
+        image: "./images/trad3.png"
     },
     "PREMARBASIC": {
-        "id": 1004,
-        "name": "Pre-Marriage Basic Screening Panel",
-        "price": 15000,
-        "description": "Essential blood compatibility tests for marriage preparation with the following test: ABO Blood Grouping, Hemoglobin Genotype.",
-        "category": "Health Packages",
-        "image": "./images/premarbasic.jpg"
+        id: 1004,
+        name: "Pre-Marriage Basic Screening Panel",
+        price: 15000,
+        description: "Essential blood compatibility tests for marriage preparation with the following test: ABO Blood Grouping, Hemoglobin Genotype.",
+        category: "Health Packages",
+        image: "./images/premarbasic.jpg"
     },
     "PREMARMALE": {
-        "id": 1005,
-        "name": "Pre-Marriage Advanced Panel (Male)",
-        "price": 45000,
-        "description": "Complete male fertility and STI screening for marriage preparation with the following test: Hemoglobin Genotype, Blood Grouping, Computer-Assisted Semen Analysis and Culture, VDRL, HBsAg, HCV, Chlamydia, Urine Chemistry, Computer-Assisted Urine Microscopy, Urine Culture, T.Bil / D.BIL, RVS.",
-        "category": "Health Packages",
-        "image": "./images/premarmale.png"
+        id: 1005,
+        name: "Pre-Marriage Advanced Panel (Male)",
+        price: 45000,
+        description: "Complete male fertility and STI screening for marriage preparation with the following test: Hemoglobin Genotype, Blood Grouping, Computer-Assisted Semen Analysis and Culture, VDRL, HBsAg, HCV, Chlamydia, Urine Chemistry, Computer-Assisted Urine Microscopy, Urine Culture, T.Bil / D.BIL, RVS.",
+        category: "Health Packages",
+        image: "./images/premarmale.png"
     },
     "PREMARFEMALE": {
-        "id": 1006,
-        "name": "Pre-Marriage Advanced Panel (Female)",
-        "price": 50000,
-        "description": "Complete female fertility, pregnancy, and STI screening for marriage with the following test: Hemoglobin Genotype, Blood Grouping, RVS, HVS Microscopy and Culture, VDRL, Chlamydia, HBsAg, HCV, Pregnancy Test, Urine Chemistry, Computer-Assisted Urine Microscopy, Urine Culture, T.Bil / D.BIL.",
-        "category": "Health Packages",
-        "image": "./images/premarfemale.png"
+        id: 1006,
+        name: "Pre-Marriage Advanced Panel (Female)",
+        price: 50000,
+        description: "Complete female fertility, pregnancy, and STI screening for marriage with the following test: Hemoglobin Genotype, Blood Grouping, RVS, HVS Microscopy and Culture, VDRL, Chlamydia, HBsAg, HCV, Pregnancy Test, Urine Chemistry, Computer-Assisted Urine Microscopy, Urine Culture, T.Bil / D.BIL.",
+        category: "Health Packages",
+        image: "./images/premarfemale.png"
     },
     "STIPANEL": {
-        "id": 1007,
-        "name": "Sexually Transmitted Infection Panel",
-        "price": 25000,
-        "description": "Comprehensive screening for common sexually transmitted infections with the following test: RVS ,VDRL ,M/C/S, Chlamydia, HBsAg.",
-        "category": "Health Packages",
-        "image": "./images/sti.png"
+        id: 1007,
+        name: "Sexually Transmitted Infection Panel",
+        price: 25000,
+        description: "Comprehensive screening for common sexually transmitted infections with the following test: RVS ,VDRL ,M/C/S, Chlamydia, HBsAg.",
+        category: "Health Packages",
+        image: "./images/sti.png"
     },
     "FERTILITYMEN": {
-        "id": 1008,
-        "name": "Fertility Profile (Men)",
-        "price": 150000,
-        "description": "Complete hormonal assessment for male fertility evaluation with the following test: fT4, fT3, TSH, Testosterone (Free and Total), Prostate Specific Antigen (PSA), Estrone Hormone, Follicle Stimulating Hormone (FSH), Luteinizing Hormone (LH), Prolactin.",
-        "category": "Health Packages",
-        "image": "./images/fertilitymale.png"
+        id: 1008,
+        name: "Fertility Profile (Men)",
+        price: 150000,
+        description: "Complete hormonal assessment for male fertility evaluation with the following test: fT4, fT3, TSH, Testosterone (Free and Total), Prostate Specific Antigen (PSA), Estrone Hormone, Follicle Stimulating Hormone (FSH), Luteinizing Hormone (LH), Prolactin.",
+        category: "Health Packages",
+        image: "./images/fertilitymale.png"
     },
     "FERTILITYWOMEN": {
-        "id": 1009,
-        "name": "Fertility Profile (Women)",
-        "price": 120000,
-        "description": "Complete hormonal assessment for female fertility evaluation with the following test: Progesterone, Estrogen, Follicle Stimulating Hormone (FSH), Luteinizing Hormone (LH), Prolactin, fT3, fT4, TSH.",
-        "category": "Health Packages",
-        "image": "./images/fertilityfemale.png"
+        id: 1009,
+        name: "Fertility Profile (Women)",
+        price: 120000,
+        description: "Complete hormonal assessment for female fertility evaluation with the following test: Progesterone, Estrogen, Follicle Stimulating Hormone (FSH), Luteinizing Hormone (LH), Prolactin, fT3, fT4, TSH.",
+        category: "Health Packages",
+        image: "./images/fertilityfemale.png"
     },
     "LIVERPANEL": {
-        "id": 1010,
-        "name": "Liver Panel",
-        "price": 17000,
-        "description": "Complete liver function assessment with the following test: Total Bilirubin, Direct Bilirubin, ALT, AST, ALP, GGT.",
-        "category": "Health Packages",
-        "image": "./images/liver.png"
+        id: 1010,
+        name: "Liver Panel",
+        price: 17000,
+        description: "Complete liver function assessment with the following test: Total Bilirubin, Direct Bilirubin, ALT, AST, ALP, GGT.",
+        category: "Health Packages",
+        image: "./images/liver.png"
     },
     "KIDNEYPANEL": {
-        "id": 1011,
-        "name": "Kidney Panel",
-        "price": 17000,
-        "description": "Complete kidney function assessment with the following test: Urinalysis., Serum Urea, Blood Urea Nitrogen (BUN), Calcium, Creatinine.",
-        "category": "Health Packages",
-        "image": "./images/kidney.png"
+        id: 1011,
+        name: "Kidney Panel",
+        price: 17000,
+        description: "Complete kidney function assessment with the following test: Urinalysis., Serum Urea, Blood Urea Nitrogen (BUN), Calcium, Creatinine.",
+        category: "Health Packages",
+        image: "./images/kidney.png"
     },
     "CARDIACBIO": {
-        "id": 1012,
-        "name": "Cardiac Biomarkers",
-        "price": 48000,
-        "description": "Rapid cardiac injury assessment with the following test: Troponin, CK-MB, Myoglobin.",
-        "category": "Health Packages",
-        "image": "./images/cardiac.png"
+        id: 1012,
+        name: "Cardiac Biomarkers",
+        price: 48000,
+        description: "Rapid cardiac injury assessment with the following test: Troponin, CK-MB, Myoglobin.",
+        category: "Health Packages",
+        image: "./images/cardiac.png"
     },
     'HGB': {
         id: 'HGB',
