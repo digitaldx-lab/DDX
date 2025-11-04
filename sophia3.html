@@ -1287,6 +1287,102 @@ let lastBotMessage = ""; // <-- ADDED: To store the last bot message for TTS
 
 // Updated test database with Naira prices
 const testDatabase = {
+    "TROBAS": {
+        "id": 1001,
+        "name": "Tropical Basics (TROBAS) Panel",
+        "price": 18000,
+        "description": "Comprehensive screening panel for tropical infections and basic health parameters. Ideal for routine checkups in malaria-endemic areas. with the following tests: Hemoglobin estimation, Malaria Parasite test, Urinalysis, Widal Agglutination test, Computer-Assisted Urine Microscopy",
+        "category": "Health Packages",
+        "image": "./images/trobas1.png"
+    },
+    "TREX": {
+        "id": 1002,
+        "name": "Tropical Extended (TREX) Panel",
+        "price": 25000,
+        "description": "Comprehensive tropical disease screening with blood and urine analysis with the following tests: Hemoglobin Estimation, Hct, MCHC, Malaria Parasite Test, Widal Agglutination Test, Urine Chemistry, Computer-Assisted Urine Microscopy, Helicobacter pylor",
+        "category": "Health Packages",
+        "image": "./images/trex1.png"
+    },
+    "TRAD": {
+        "id": 1003,
+        "name": "Tropical Advanced (TRAD) Panel",
+        "price": 35000,
+        "description": "Advanced tropical screening including liver function, parasites, and stool analysis with the following tests: HGB Estimation, Hct, MCHC, Malaria Parasite Test, Widal Agglutination Test, Urine Chemistry, Computer-Assisted Urine Microscopy, Helicobacter pylori, URMCS, TBil / DBIL, Mf, Stool Analysis.",
+        "category": "Health Packages",
+        "image": "./images/trad3.png"
+    },
+    "PREMARBASIC": {
+        "id": 1004,
+        "name": "Pre-Marriage Basic Screening Panel",
+        "price": 15000,
+        "description": "Essential blood compatibility tests for marriage preparation with the following test: ABO Blood Grouping, Hemoglobin Genotype.",
+        "category": "Health Packages",
+        "image": "./images/premarbasic.jpg"
+    },
+    "PREMARMALE": {
+        "id": 1005,
+        "name": "Pre-Marriage Advanced Panel (Male)",
+        "price": 45000,
+        "description": "Complete male fertility and STI screening for marriage preparation with the following test: Hemoglobin Genotype, Blood Grouping, Computer-Assisted Semen Analysis and Culture, VDRL, HBsAg, HCV, Chlamydia, Urine Chemistry, Computer-Assisted Urine Microscopy, Urine Culture, T.Bil / D.BIL, RVS.",
+        "category": "Health Packages",
+        "image": "./images/premarmale.png"
+    },
+    "PREMARFEMALE": {
+        "id": 1006,
+        "name": "Pre-Marriage Advanced Panel (Female)",
+        "price": 50000,
+        "description": "Complete female fertility, pregnancy, and STI screening for marriage with the following test: Hemoglobin Genotype, Blood Grouping, RVS, HVS Microscopy and Culture, VDRL, Chlamydia, HBsAg, HCV, Pregnancy Test, Urine Chemistry, Computer-Assisted Urine Microscopy, Urine Culture, T.Bil / D.BIL.",
+        "category": "Health Packages",
+        "image": "./images/premarfemale.png"
+    },
+    "STIPANEL": {
+        "id": 1007,
+        "name": "Sexually Transmitted Infection Panel",
+        "price": 25000,
+        "description": "Comprehensive screening for common sexually transmitted infections with the following test: RVS ,VDRL ,M/C/S, Chlamydia, HBsAg.",
+        "category": "Health Packages",
+        "image": "./images/sti.png"
+    },
+    "FERTILITYMEN": {
+        "id": 1008,
+        "name": "Fertility Profile (Men)",
+        "price": 150000,
+        "description": "Complete hormonal assessment for male fertility evaluation with the following test: fT4, fT3, TSH, Testosterone (Free and Total), Prostate Specific Antigen (PSA), Estrone Hormone, Follicle Stimulating Hormone (FSH), Luteinizing Hormone (LH), Prolactin.",
+        "category": "Health Packages",
+        "image": "./images/fertilitymale.png"
+    },
+    "FERTILITYWOMEN": {
+        "id": 1009,
+        "name": "Fertility Profile (Women)",
+        "price": 120000,
+        "description": "Complete hormonal assessment for female fertility evaluation with the following test: Progesterone, Estrogen, Follicle Stimulating Hormone (FSH), Luteinizing Hormone (LH), Prolactin, fT3, fT4, TSH.",
+        "category": "Health Packages",
+        "image": "./images/fertilityfemale.png"
+    },
+    "LIVERPANEL": {
+        "id": 1010,
+        "name": "Liver Panel",
+        "price": 17000,
+        "description": "Complete liver function assessment with the following test: Total Bilirubin, Direct Bilirubin, ALT, AST, ALP, GGT.",
+        "category": "Health Packages",
+        "image": "./images/liver.png"
+    },
+    "KIDNEYPANEL": {
+        "id": 1011,
+        "name": "Kidney Panel",
+        "price": 17000,
+        "description": "Complete kidney function assessment with the following test: Urinalysis., Serum Urea, Blood Urea Nitrogen (BUN), Calcium, Creatinine.",
+        "category": "Health Packages",
+        "image": "./images/kidney.png"
+    },
+    "CARDIACBIO": {
+        "id": 1012,
+        "name": "Cardiac Biomarkers",
+        "price": 48000,
+        "description": "Rapid cardiac injury assessment with the following test: Troponin, CK-MB, Myoglobin.",
+        "category": "Health Packages",
+        "image": "./images/cardiac.png"
+    },
     'HGB': {
         id: 'HGB',
         name: 'Haemoglobin Estimation',
@@ -1898,11 +1994,12 @@ You MUST follow these rules:
 3.  Keep your conversational messages concise and easy to understand.
 4.  Ask clarifying questions one at a time to narrow down the symptoms.
 5.  When you have enough information, suggest relevant tests.
-6.  The available tests are: CBC, HGB, PCV, MPT, WAT, UC, CAURM, ERYBAS, FBC, CBS, SA, SSN, SSC, BG, HGBG, BG-HGBG, ASO-TITRE, RF, HCV, VDRL, HEP-B, ESR, FOB, HPYL, OMT, HVSMCS, URMCS, TDBIL, BCASA, COCASA, URCR, SE, EUC, LFT, LIPRO, TOTCHOL, STP, ETP, HORPRO, RVS, TPSA, CEA, TREX, TROBAS, SPT, ALB, VITD, CORT, KFT, MF, CAL, PRL, PROG, E2, FSH, LH, HCV2, Hbsag, HAV, FT4, CHLAMYD,  RES, FPSA, PSA-PRO, RBG, GONOR, FBG, HPYLANT, HbA1c, FT3, TSH, WOUND-SWAB-CS, hs-CRP, RSS, UR-ACID. Only suggest tests from this list.
+6.  The available tests are: CBC, HGB, PCV, MPT, WAT, UC, CAURM, ERYBAS, FBC, CBS, SA, SSN, SSC, BG, HGBG, BG-HGBG, ASO-TITRE, RF, HCV, VDRL, HEP-B, ESR, FOB, HPYL, OMT, HVSMCS, URMCS, TDBIL, BCASA, COCASA, URCR, SE, EUC, LFT, LIPRO, TOTCHOL, STP, ETP, HORPRO, RVS, TPSA, CEA, TREX, TROBAS, SPT, ALB, VITD, CORT, KFT, MF, CAL, PRL, PROG, E2, FSH, LH, HCV2, Hbsag, HAV, FT4, CHLAMYD,  RES, FPSA, PSA-PRO, RBG, GONOR, FBG, HPYLANT, HbA1c, FT3, TSH, WOUND-SWAB-CS, hs-CRP, RSS, UR-ACID. Only suggest tests from this list, and Health Packages: TROBAS, TREX, TRAD, PREMARBASIC, PREMARMALE, PREMARFEMALE, STIPANEL, FERTILITYMEN, FERTILITYWOMEN, LIVERPANEL, KIDNEYPANEL, CARDIACBIO.
 7.  Provide relevant quick reply options to guide the user.
 8.  If the user's query is unrelated to health, politely steer the conversation back to symptoms.
 9.  ALWAYS Verify Age and Gender befor recommending tests.
-1. You work at X-Trim Research Ltd Located at 61 Clifford Road, Aba, Abia State, Nigeria. Provide this information when asked about your location or company you can go on about telling how wonderful the company is, and politely steer the conversation back to symptoms.
+10. You work at X-Trim Research Ltd Located at 61 Clifford Road, Aba, Abia State, Nigeria. Provide this information when asked about your location or company you can go on about telling how wonderful the company is, and politely steer the conversation back to symptoms.
+11. Prioritize and present appropriate diagnostic options, starting with the Health Packages category: TROBAS, TREX, TRAD, PREMARBASIC, PREMARMALE, PREMARFEMALE, STIPANEL, FERTILITYMEN, FERTILITYWOMEN, LIVERPANEL, KIDNEYPANEL, CARDIACBIO,  before suggesting individual tests, always ensuring relevance to the user's need.
 
 The JSON output must follow this exact schema:
 {
