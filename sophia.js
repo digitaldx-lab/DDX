@@ -33,7 +33,7 @@
                 
                 // Set iframe source after a brief delay to show loading state
                 setTimeout(() => {
-                    modalFrame.src = 'sophia2.html';
+                    modalFrame.src = 'sophia3.html';
                     
                     // When iframe loads, remove loading message and show iframe
                     modalFrame.onload = function() {
