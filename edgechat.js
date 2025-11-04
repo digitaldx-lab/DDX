@@ -4,14 +4,16 @@ document.addEventListener("DOMContentLoaded", function () {
   const chatLink = document.querySelector(".chat-link");
 
   const messages = [
-    "Nnọọ! 😊",
+    "Ndeewo! 😊",
     "Kedu ka ị mere 😊",
     "Need help? 💬",
+    "Let's Talk Now💬",
+    "What Symptoms do you have? 🤒",
     "Dizziness? 🌀",
     "Fever? 🌡️",
     "Cough? 🤧",
     "Diagnose it Today! 🩺",
-    "We're here! 🤗",
+    "I'm here to help! 🤗",
   ];
 
   let currentMessageIndex = 0;
