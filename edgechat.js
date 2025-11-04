@@ -1,52 +1,67 @@
 document.addEventListener("DOMContentLoaded", function () {
-      const chatBubble = document.querySelector(".chat-bubble");
-      const bubbleText = chatBubble.querySelector("p");
-      const chatLink = document.querySelector(".chat-link");
+  const chatBubble = document.querySelector(".chat-bubble");
+  const bubbleText = chatBubble.querySelector("p");
+  const chatLink = document.querySelector(".chat-link");
 
-      const messages = [
-          "Nnọọ! 😊",
-          "Kedu ka ị mere 😊",
-          "Need help? 💬",
-          "Dizziness? 🌀",
-          "Fever? 🌡️",
-          "Cough? 🤧",
-          "Diagnose it Today! 🩺",
-          "We're here! 🤗",
-      ];
+  const messages = [
+    "Nnọọ! 😊",
+    "Kedu ka ị mere 😊",
+    "Need help? 💬",
+    "Dizziness? 🌀",
+    "Fever? 🌡️",
+    "Cough? 🤧",
+    "Diagnose it Today! 🩺",
+    "We're here! 🤗",
+  ];
 
-      let currentMessageIndex = 0;
-      let bubbleInterval;
+  let currentMessageIndex = 0;
+  let bubbleInterval;
 
-      function updateBubble() {
-        chatBubble.classList.remove("active");
-        setTimeout(() => {
-          bubbleText.textContent = messages[currentMessageIndex];
-          bubbleText.classList.remove("typing-animation");
-          requestAnimationFrame(() => {
-          bubbleText.offsetWidth; // ensure reflow
-          bubbleText.classList.add("typing-animation");
-          });
-          chatBubble.classList.add("active");
-          currentMessageIndex = (currentMessageIndex + 1) % messages.length;
-        }, 500);
-      }
+  /** 💡 Force CSS animation reflow on all devices */
+  function restartTypingAnimation() {
+    bubbleText.classList.remove("typing-animation");
+    void bubbleText.offsetWidth; // works better than requestAnimationFrame on mobile
+    bubbleText.classList.add("typing-animation");
+  }
 
-      function startMessageCycle() {
-        updateBubble();
-        bubbleInterval = setInterval(updateBubble, 3500);
-      }
+  function updateBubble() {
+    chatBubble.classList.remove("active");
+    setTimeout(() => {
+      bubbleText.textContent = messages[currentMessageIndex];
+      restartTypingAnimation();
+      chatBubble.classList.add("active");
+      currentMessageIndex = (currentMessageIndex + 1) % messages.length;
+    }, 500);
+  }
 
-      function stopMessageCycle() {
-        clearInterval(bubbleInterval);
-      }
+  function startMessageCycle() {
+    updateBubble();
+    bubbleInterval = setInterval(updateBubble, 3500);
+  }
 
-      startMessageCycle();
+  function stopMessageCycle() {
+    clearInterval(bubbleInterval);
+  }
 
-      chatLink.addEventListener("mouseenter", () => {
-        stopMessageCycle();
-        bubbleText.textContent = "Let's talk! 💬";
-        chatBubble.classList.add("active");
-      });
+  startMessageCycle();
 
-      chatLink.addEventListener("mouseleave", startMessageCycle);
-    });
+  // Hover (desktop) and tap (mobile) interaction
+  chatLink.addEventListener("mouseenter", () => {
+    stopMessageCycle();
+    bubbleText.textContent = "Let's talk! 💬";
+    restartTypingAnimation();
+    chatBubble.classList.add("active");
+  });
+
+  chatLink.addEventListener("mouseleave", startMessageCycle);
+
+  // 👇 Touch fallback for mobile users (since :hover doesn’t exist)
+  chatLink.addEventListener("touchstart", () => {
+    stopMessageCycle();
+    bubbleText.textContent = "Let's talk! 💬";
+    restartTypingAnimation();
+    chatBubble.classList.add("active");
+  });
+
+  chatLink.addEventListener("touchend", startMessageCycle);
+});
