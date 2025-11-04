@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     "Ndeewo! 😊",
     "Kedu ka ị mere 😊",
     "Need help? 💬",
-    "Let's Talk Now💬",
+    "Let's Talk Now 💬",
     "What Symptoms do you have? 🤒",
     "Dizziness? 🌀",
     "Fever? 🌡️",
