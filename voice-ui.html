@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Agent Voice UI — Warm Human</title>
+<style>
+  :root{
+    --bg: #0b1116;
+    --card: rgba(255,255,255,0.03);
+    --glass: rgba(255,255,255,0.02);
+    --muted: #b9c3d6;
+    --accent-1: #ffb887; /* warm orange */
+    --accent-2: #ffd9b8; /* pale */
+    --accent-3: #ff8a5b; /* deeper */
+    --wave-bg: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
+    --radius: 14px;
+    --transition: 180ms;
+  }
+
+  html,body{height:100%;margin:0;background:linear-gradient(180deg,#061018 0%, var(--bg) 100%);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;color:#f0f6fb;-webkit-font-smoothing:antialiased}
+  .wrap{
+    min-height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:36px;
+    box-sizing:border-box;
+  }
+
+  .panel{
+    width:920px;
+    max-width:calc(100% - 48px);
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:20px;
+    padding:20px;
+    box-shadow: 0 10px 30px rgba(2,6,12,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+    display:grid;
+    grid-template-columns: 300px 1fr;
+    gap:18px;
+    align-items:stretch;
+    border:1px solid rgba(255,255,255,0.03);
+  }
+
+  /* Left: mic card */
+  .mic-card{
+    background: linear-gradient(180deg, rgba(255,255,255,0.018), rgba(255,255,255,0.008));
+    border-radius:var(--radius);
+    padding:18px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    align-items:center;
+    justify-content:flex-start;
+    position:relative;
+    overflow:hidden;
+  }
+
+  .mic-orb {
+    position:absolute;
+    width:220px; height:220px;
+    left:-30px; top:-40px;
+    border-radius:50%;
+    background: radial-gradient(circle at 30% 30%, rgba(255,138,91,0.08), transparent 30%),
+                radial-gradient(circle at 70% 70%, rgba(255,184,135,0.04), transparent 20%);
+    filter: blur(20px);
+    pointer-events:none;
+  }
+
+  .mic-visual {
+    width:120px; height:120px;
+    display:flex; align-items:center; justify-content:center;
+    border-radius:50%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.005));
+    box-shadow: 0 8px 20px rgba(0,0,0,0.45);
+    transition: transform var(--transition) ease;
+    will-change:transform;
+  }
+
+  /* Mic icon */
+  svg.mic { width:56px; height:56px; display:block; filter: drop-shadow(0 6px 20px rgba(255,140,90,0.06)); }
+
+  .status {
+    font-size:13px; color:var(--muted); text-align:center;
+  }
+
+  .controls { display:flex; gap:10px; margin-top:6px; }
+  .controls button {
+    appearance:none; border:0; cursor:pointer;
+    padding:10px 14px; border-radius:10px; font-weight:700;
+    box-shadow: 0 6px 18px rgba(4,8,16,0.5);
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    color:#f7fbff;
+    transition: transform 120ms ease, box-shadow 120ms ease, background 200ms ease;
+  }
+  .controls button:active { transform: translateY(1px); }
+  .btn-primary {
+    background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+    color:#2a0f00;
+    box-shadow: 0 10px 30px rgba(255,145,80,0.12);
+  }
+  .btn-ghost { background: transparent; border:1px solid rgba(255,255,255,0.04); color:var(--muted); }
+
+  .mic-footer { font-size:12px; color:var(--muted); text-align:center; margin-top:6px; }
+
+  /* Right: waveform and transcript */
+  .right {
+    display:flex; flex-direction:column; gap:12px;
+  }
+  .waveframe{
+    background: var(--wave-bg);
+    border-radius:var(--radius);
+    padding:14px;
+    height:260px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    align-items:stretch;
+    justify-content:center;
+    border:1px solid rgba(255,255,255,0.03);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.55);
+  }
+
+  canvas#wave { width:100%; height:140px; border-radius:8px; display:block; }
+  .vumeter {
+    height:14px; border-radius:999px; background:rgba(255,255,255,0.03); overflow:hidden; width:100%;
+  }
+  .vu-fill {
+    height:100%; width:0%;
+    background: linear-gradient(90deg, rgba(255,138,91,0.95), rgba(255,216,177,0.95));
+    box-shadow: 0 6px 18px rgba(255,138,91,0.06) inset;
+    transition: width 120ms linear;
+  }
+
+  .transcript {
+    margin-top:6px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.003));
+    padding:12px;
+    border-radius:10px;
+    color:#fff;
+    font-weight:600;
+    letter-spacing:0.2px;
+  }
+  .transcript small { display:block; color:var(--muted); font-weight:500; margin-bottom:6px; font-size:12px; }
+
+  .row { display:flex; gap:12px; align-items:center; justify-content:space-between; }
+  .tip { color:var(--muted); font-size:13px; }
+
+  /* accessibility: reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+
+  @media (max-width:880px){
+    .panel{ grid-template-columns: 1fr; padding:14px; width:100%;}
+    .mic-card{ order:2; flex-direction:row; gap:12px; align-items:center; padding:12px;}
+    .mic-visual{ width:80px; height:80px; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="panel" role="application" aria-label="Voice UI — warm human">
+      <!-- MIC CARD -->
+      <div class="mic-card" aria-hidden="false">
+        <div class="mic-orb" aria-hidden="true"></div>
+
+        <div class="mic-visual" id="micVisual" aria-hidden="true" title="Microphone visual">
+          <!-- Soft mic icon -->
+          <svg class="mic" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <g fill="none" stroke="none">
+              <rect width="24" height="24" fill="none"/>
+            </g>
+            <path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3z" fill="#fff" opacity="0.95"/>
+            <path d="M19 11a7 7 0 0 1-14 0" stroke="rgba(0,0,0,0.06)" stroke-width="1" fill="none"/>
+            <path d="M12 17v3" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </div>
+
+        <div class="status" id="status">Microphone: <strong id="micStatus">stopped</strong></div>
+
+        <div class="controls" role="toolbar" aria-label="Microphone controls">
+          <button id="startBtn" class="btn-primary" title="Start listening (requires microphone access)">Start listening</button>
+          <button id="stopBtn" class="btn-ghost" disabled title="Stop listening">Stop</button>
+        </div>
+
+        <div class="mic-footer">Warm, responsive waveform • gentle, human pacing</div>
+      </div>
+
+      <!-- RIGHT: waveform + transcript -->
+      <div class="right">
+        <div class="waveframe" aria-live="polite" aria-atomic="true">
+          <canvas id="wave" role="img" aria-label="Audio waveform visualization"></canvas>
+
+          <div class="vumeter" aria-hidden="false" aria-label="volume meter">
+            <div class="vu-fill" id="vuFill" style="width:0%"></div>
+          </div>
+
+          <div class="transcript" id="transcriptBlock">
+            <small>Detected utterance (sample):</small>
+            <div id="sampleText" style="font-size:16px;line-height:1.38">Hello — speak naturally.</div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="tip">Tip: speak naturally — peaks make the waveform bloom softly.</div>
+          <div style="display:flex;gap:10px;align-items:center">
+            <button id="simulateBtn" class="btn-ghost" title="Simulate speech">Simulate</button>
+            <button id="resetBtn" class="btn-ghost" title="Reset visualization">Reset</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+/*
+  Warm Human Voice UI
+  - Clean, modular code
+  - Smooth waveform, RMS-based VU meter
+  - Accessible controls & polite aria updates
+  - Easy tuning via constants below
+*/
+
+(function () {
+  // ---------- Config ----------
+  const CONFIG = {
+    FFT_SIZE: 2048,
+    SMOOTHING: 0.86,          // analyser.smoothingTimeConstant
+    RMS_SMOOTH_ALPHA: 0.18,   // smoothing for rms -> vu
+    VU_MULTIPLIER: 2.0,       // maps rms to visual percent
+    WAVE_LINE_WIDTH: 2,
+    WAVE_SMOOTHING: 0.12,     // smoothing for overall waveform amplitude drawing
+    PEAK_GLOW_THRESHOLD: 0.42 // when to emphasize glow on the wave
+  };
+
+  // ---------- Elements ----------
+  const startBtn = document.getElementById('startBtn');
+  const stopBtn  = document.getElementById('stopBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const simulateBtn = document.getElementById('simulateBtn');
+  const micStatus = document.getElementById('micStatus');
+  const vuFill = document.getElementById('vuFill');
+  const sampleText = document.getElementById('sampleText');
+  const micVisual = document.getElementById('micVisual');
+  const canvas = document.getElementById('wave');
+  const canvasCtx = canvas.getContext('2d');
+
+  let audioCtx = null;
+  let analyser = null;
+  let dataArray = null;
+  let sourceNode = null;
+  let micStream = null;
+  let rafId = null;
+  let lastRms = 0;
+  let wavePeak = 0;
+
+  // ---------- Responsive canvas ----------
+  function resizeCanvas() {
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.floor(canvas.clientWidth * dpr);
+    canvas.height = Math.floor(canvas.clientHeight * dpr);
+    canvasCtx.setTransform(dpr, 0, 0, dpr, 0, 0); // scale drawing to CSS pixels
+  }
+  window.addEventListener('resize', () => { resizeCanvas(); drawSilence(); });
+  resizeCanvas();
+
+  // ---------- Silence baseline ----------
+  function drawSilence() {
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    canvasCtx.clearRect(0,0,w,h);
+    // soft background
+    canvasCtx.fillStyle = 'rgba(255,255,255,0.012)';
+    canvasCtx.fillRect(0,0,w,h);
+    // center baseline
+    canvasCtx.fillStyle = 'rgba(255,255,255,0.03)';
+    canvasCtx.fillRect(0, h/2 - 0.75, w, 1.5);
+  }
+
+  drawSilence();
+
+  // ---------- Audio analyser creation ----------
+  function createAnalyser(context) {
+    const an = context.createAnalyser();
+    an.fftSize = CONFIG.FFT_SIZE;
+    an.smoothingTimeConstant = CONFIG.SMOOTHING;
+    return an;
+  }
+
+  // ---------- Update mic visual (subtle breathing + pulse) ----------
+  function updateMicVisual(rmsPercent) {
+    // gentle breathing baseline
+    const breath = 1 + Math.sin(Date.now() / 2000) * 0.008;
+    // pulse with audio (scale slightly with Rms)
+    const pulse = 1 + rmsPercent * 0.06;
+    micVisual.style.transform = `scale(${(breath * pulse).toFixed(3)})`;
+    // small glow when loud
+    const glow = Math.min(0.9, rmsPercent * 1.1);
+    micVisual.style.boxShadow = `0 10px 30px rgba(0,0,0,0.45), 0 0 ${12 * glow}px rgba(255,140,85,${0.06 * glow})`;
+  }
+
+  // ---------- Draw waveform ----------
+  function drawWave() {
+    if (!analyser) return;
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    canvasCtx.clearRect(0,0,w,h);
+
+    // background fill
+    const bg = canvasCtx.createLinearGradient(0,0,0,h);
+    bg.addColorStop(0, 'rgba(255,255,255,0.006)');
+    bg.addColorStop(1, 'rgba(255,255,255,0.003)');
+    canvasCtx.fillStyle = bg;
+    canvasCtx.fillRect(0,0,w,h);
+
+    // read waveform
+    analyser.getByteTimeDomainData(dataArray);
+
+    // compute RMS
+    let sum = 0;
+    for (let i=0; i<dataArray.length; i++) {
+      const v = (dataArray[i] - 128) / 128;
+      sum += v * v;
+    }
+    const rms = Math.sqrt(sum / dataArray.length); // 0..1
+    lastRms = smooth(rms, lastRms, CONFIG.RMS_SMOOTH_ALPHA);
+
+    // draw stroke with warm gradient and variable glow on peaks
+    const grad = canvasCtx.createLinearGradient(0,0,w,0);
+    grad.addColorStop(0, 'rgba(255,200,160,0.95)');
+    grad.addColorStop(0.5, 'rgba(255,145,80,0.98)');
+    grad.addColorStop(1, 'rgba(255,220,180,0.95)');
+    canvasCtx.lineWidth = CONFIG.WAVE_LINE_WIDTH;
+    canvasCtx.strokeStyle = grad;
+    canvasCtx.beginPath();
+
+    const slice = w / dataArray.length;
+    for (let i=0; i<dataArray.length; i++) {
+      const v = (dataArray[i] - 128) / 128;
+      // soften peaks a bit for a warm look
+      const easedV = Math.sign(v) * Math.pow(Math.abs(v), 0.85);
+      const y = h / 2 + easedV * (h / 2 - 12);
+      const x = i * slice;
+      if (i === 0) canvasCtx.moveTo(x, y);
+      else canvasCtx.lineTo(x, y);
+    }
+    canvasCtx.stroke();
+
+    // fill under the curve softly
+    canvasCtx.lineTo(w, h);
+    canvasCtx.lineTo(0, h);
+    const fillGrad = canvasCtx.createLinearGradient(0,0,0,h);
+    fillGrad.addColorStop(0, 'rgba(255,145,80,0.06)');
+    fillGrad.addColorStop(1, 'rgba(10,18,24,0.03)');
+    canvasCtx.fillStyle = fillGrad;
+    canvasCtx.fill();
+
+    // subtle glow on peaks
+    const percent = Math.min(1, lastRms * CONFIG.VU_MULTIPLIER);
+    if (percent > CONFIG.PEAK_GLOW_THRESHOLD) {
+      const glowStrength = (percent - CONFIG.PEAK_GLOW_THRESHOLD) / (1 - CONFIG.PEAK_GLOW_THRESHOLD);
+      canvasCtx.shadowColor = 'rgba(255,140,85,0.12)';
+      canvasCtx.shadowBlur = 18 * glowStrength;
+      canvasCtx.stroke();
+      canvasCtx.shadowBlur = 0;
+    }
+
+    // update vu meter
+    const vuPercent = Math.min(1, lastRms * CONFIG.VU_MULTIPLIER);
+    vuFill.style.width = `${(vuPercent * 100).toFixed(1)}%`;
+
+    // remember wavePeak (for simulate)
+    wavePeak = Math.max(wavePeak * 0.95, vuPercent);
+
+    // mic visual
+    updateMicVisual(vuPercent);
+
+    rafId = requestAnimationFrame(drawWave);
+  }
+
+  // ---------- Utility: smoothing ----------
+  function smooth(value, prev, alpha = 0.12) {
+    return prev === undefined ? value : (alpha * value + (1 - alpha) * prev);
+  }
+
+  // ---------- Start microphone ----------
+  async function startMic() {
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      micStatus.textContent = 'requesting…';
+      startBtn.disabled = true;
+
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: { echoCancellation: true, noiseSuppression: true }, video: false
+      });
+
+      micStream = stream;
+      sourceNode = audioCtx.createMediaStreamSource(stream);
+      analyser = createAnalyser(audioCtx);
+      sourceNode.connect(analyser);
+      dataArray = new Uint8Array(analyser.fftSize);
+      micStatus.textContent = 'listening';
+      stopBtn.disabled = false;
+
+      // ensure audio context resumed (Chrome policies)
+      if (audioCtx.state === 'suspended') await audioCtx.resume();
+
+      // kick off draw loop
+      if (!rafId) drawWave();
+    } catch (err) {
+      console.error('Microphone error', err);
+      micStatus.textContent = 'error';
+      startBtn.disabled = false;
+      alert('Unable to access microphone: ' + (err && err.message ? err.message : err));
+    }
+  }
+
+  // ---------- Stop microphone ----------
+  function stopMic() {
+    if (micStream) {
+      micStream.getTracks().forEach(t => t.stop());
+      micStream = null;
+    }
+    if (sourceNode) { try { sourceNode.disconnect(); } catch (e) {} sourceNode = null; }
+    if (analyser) { try { analyser.disconnect(); } catch (e) {} analyser = null; }
+    if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+    dataArray = null;
+    micStatus.textContent = 'stopped';
+    startBtn.disabled = false;
+    stopBtn.disabled = true;
+    // reset visuals
+    vuFill.style.width = '0%';
+    wavePeak = 0;
+    micVisual.style.transform = '';
+    micVisual.style.boxShadow = '';
+    drawSilence();
+  }
+
+  // ---------- Simulate speech (for demos) ----------
+  function simulateSpeech() {
+    const phrase = sampleText.textContent.trim() || 'Hello there';
+    // simple syllable-based schedule
+    const syllables = Math.max(4, Math.round(phrase.split(/\s+/).length * 1.8));
+    let i = 0;
+
+    // stop any live mic while simulating
+    const wasListening = !!micStream;
+    if (wasListening) stopMic();
+
+    function step() {
+      const t = i / (syllables * 2);
+      // generate a warm pulsing envelope
+      const envelope = 0.08 + Math.abs(Math.sin(i * 0.9)) * (0.35 + Math.random() * 0.25);
+      // artificially push wavePeak and vu
+      wavePeak = Math.max(wavePeak, envelope);
+      vuFill.style.width = `${Math.min(1, envelope) * 100}%`;
+      updateMicVisual(envelope);
+      i++;
+      if (i <= syllables * 2) {
+        setTimeout(step, 110 + Math.random() * 80);
+      } else {
+        // settle back
+        setTimeout(() => {
+          vuFill.style.width = '0%';
+          micVisual.style.transform = '';
+          if (wasListening) startMic();
+        }, 220);
+      }
+    }
+    step();
+  }
+
+  // ---------- Reset visualization ----------
+  function resetVisualization() {
+    wavePeak = 0;
+    vuFill.style.width = '0%';
+    drawSilence();
+  }
+
+  // ---------- Events ----------
+  startBtn.addEventListener('click', startMic);
+  stopBtn.addEventListener('click', stopMic);
+  simulateBtn.addEventListener('click', simulateSpeech);
+  resetBtn.addEventListener('click', resetVisualization);
+
+  // ---------- Initial idle breathing animation ----------
+  (function idle() {
+    // small idle mic breathing even when paused
+    const idleLevel = 0.01 + Math.max(0, Math.sin(Date.now() / 1800)) * 0.01;
+    updateMicVisual(idleLevel);
+    requestAnimationFrame(idle);
+  })();
+
+  // ---------- keyboard shortcuts (S = start, X = stop) ----------
+  window.addEventListener('keydown', (ev) => {
+    if (ev.key === 's' || ev.key === 'S') startBtn.click();
+    if (ev.key === 'x' || ev.key === 'X') stopBtn.click();
+  });
+
+  // expose small debug in console (optional)
+  window._voiceUI = {
+    start: startMic,
+    stop: stopMic,
+    simulate: simulateSpeech,
+    reset: resetVisualization
+  };
+
+})();
+</script>
+</body>
+</html>

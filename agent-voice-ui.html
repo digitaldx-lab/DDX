@@ -1,422 +1,1358 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Agent Voice UI — Live Speaking Animation</title>
-<style>
-  :root{
-    --bg:#0f1724;
-    --card:#0b1220;
-    --accent:#7c5cff;
-    --muted:#98a0b3;
-    --glass: rgba(255,255,255,0.03);
-    --glass2: rgba(255,255,255,0.02);
-  }
-  html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;color:#e6eef8;background:linear-gradient(180deg,#071025 0%, var(--bg) 100%);-webkit-font-smoothing:antialiased}
-  .wrap{
-    min-height:100%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:48px;
-    box-sizing:border-box;
-    gap:28px;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sophia - Voice Health Assistant</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <style>
+        /* Custom Styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
 
-  .panel{
-    width:880px;
-    max-width:calc(100% - 48px);
-    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    border-radius:16px;
-    padding:28px;
-    box-shadow: 0 10px 30px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
-    display:grid;
-    grid-template-columns: 320px 1fr;
-    gap:20px;
-    align-items:stretch;
-    border: 1px solid rgba(255,255,255,0.03);
-  }
+        /* Sidebar */
+        #sidebar {
+            width: 280px;
+            background-color: #1f2937;
+            color: #d1d5db;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        #sidebar.collapsed {
+            width: 0;
+            padding: 1.5rem 0;
+            overflow: hidden;
+        }
 
-  /* Left avatar column */
-  .avatar-card{
-    background: linear-gradient(180deg, var(--glass2), transparent);
-    border-radius:12px;
-    padding:18px;
-    display:flex;
-    flex-direction:column;
-    gap:12px;
-    align-items:center;
-    justify-content:center;
-    position:relative;
-    overflow:hidden;
-  }
-  .avatar{
-    width:180px;height:180px;
-    display:grid;
-    place-items:center;
-    transform-origin:center;
-  }
+        /* Chat Container Wrapper */
+        #chat-container-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            position: relative;
+            background-color: #ffffff;
+            transition: all 0.3s ease;
+        }
+        #sidebar.collapsed + #chat-container-wrapper {
+            width: 100%;
+        }
 
-  /* A minimal stylized face using SVG */
-  svg.face { width:160px; height:160px; display:block; }
-  .eye { transition: transform .18s linear; transform-origin:center; }
-  .mouth { transform-origin: center top; transition: transform 0.08s cubic-bezier(.2,.9,.2,1); }
-  .face-bg { filter: drop-shadow(0 8px 16px rgba(0,0,0,0.6)); }
+        /* Header */
+        #chat-header {
+            background-color: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+        .header-icons {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+        .header-icon {
+            font-size: 1.25rem;
+            color: #4b5563;
+            cursor: pointer;
+            position: relative;
+        }
+        #cart-count-header {
+            position: absolute;
+            top: -6px;
+            right: -8px;
+            background-color: #ef4444;
+            color: white;
+            font-size: 0.7rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
 
-  .status {
-    font-size:13px; color:var(--muted);
-  }
+        /* Chat Container */
+        #chat-container {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            background-color: #f9fafb;
+        }
+        .chat-bubble-user {
+            background-color: #3b82f6;
+            color: white;
+            border-bottom-right-radius: 0.25rem;
+        }
+        .chat-bubble-bot {
+            background-color: #e5e7eb;
+            color: #1f2937;
+            border-bottom-left-radius: 0.25rem;
+        }
 
-  .controls {
-    display:flex; gap:8px; margin-top:8px;
-  }
-  button {
-    background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
-    border: 1px solid rgba(255,255,255,0.04);
-    color: #eaf0ff;
-    padding:10px 14px;
-    border-radius:10px;
-    cursor:pointer;
-    font-weight:600;
-    transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
-  }
-  button:active { transform: translateY(1px) scale(.995); }
-  .btn-primary { background: linear-gradient(90deg, var(--accent), #5dd0ff); box-shadow: 0 8px 30px rgba(124,92,255,0.12); color:#071025; }
-  .btn-danger { background: linear-gradient(90deg, #ff6b6b, #ff9b6b); color:#071025; }
+        /* Suggested Tests */
+        #suggested-tests-container {
+            border-top: 1px solid #e0e0e0;
+            margin-top: 1rem;
+            padding-top: 1rem;
+        }
+        .suggestion {
+            background-color: #ffffff;
+            border: 1px solid #e5e7eb;
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-  /* Right column - waveform and transcript */
-  .right {
-    display:flex; flex-direction:column; gap:12px;
-  }
-  .waveframe {
-    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    border-radius:12px;
-    padding:14px;
-    height:220px;
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-    align-items:stretch;
-    justify-content:center;
-    border: 1px solid rgba(255,255,255,0.03);
-  }
-  canvas#wave { width:100%; height:120px; border-radius:8px; background: linear-gradient(180deg,#071022, #0a1726); box-shadow: inset 0 1px 0 rgba(255,255,255,0.02); }
-  .vumeter {
-    height:14px; border-radius:8px; background:rgba(255,255,255,0.03); overflow:hidden; width:100%;
-  }
-  .vu-fill {
-    height:100%;
-    width:0%;
-    background: linear-gradient(90deg, #6dd3ff, var(--accent));
-    transition: width 0.12s linear;
-  }
-  .transcript {
-    margin-top:6px;
-    background: linear-gradient(180deg,#071026, rgba(255,255,255,0.01));
-    padding:12px;
-    border-radius:10px;
-    box-shadow: 0 6px 18px rgba(4,8,16,0.6);
-    color: #e9f2ff;
-    font-weight:600;
-    letter-spacing:0.2px;
-  }
-  .transcript small { display:block; color:var(--muted); font-weight:500; margin-bottom:6px; font-size:12px; }
+        /* Quick Replies */
+        #quick-replies {
+            padding: 0.75rem 1.5rem;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            background-color: #ffffff;
+        }
+        #quick-replies button {
+            background-color: #f3f4f6;
+            color: #3b82f6;
+            border: 1px solid #d1d5db;
+        }
+        #quick-replies button:hover {
+            background-color: #e5e7eb;
+        }
 
-  /* subtle moving gradient backdrop behind avatar */
-  .orb {
-    position:absolute; left:-20%; top:-40%; width:260px; height:260px; border-radius:50%;
-    background: radial-gradient(circle at 30% 30%, rgba(124,92,255,0.18), transparent 30%),
-                radial-gradient(circle at 70% 70%, rgba(93,208,255,0.09), transparent 20%);
-    filter: blur(30px);
-    transform: rotate(8deg);
-    pointer-events:none;
-  }
+        /* Input Area */
+        #input-area {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #e5e7eb;
+            background-color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        #user-input {
+            /* Hiding the text input as requested for voice-only */
+            display: none; 
+        }
+        #send-btn {
+            /* Hiding the send button as requested for voice-only */
+            display: none;
+        }
 
-  /* footer */
-  .footer { font-size:12px; color:var(--muted); margin-top:8px; text-align:center; }
+        /* Voice/Speak Buttons */
+        .voice-btn {
+            background-color: #3b82f6;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .voice-btn:hover {
+            background-color: #2563eb;
+        }
+        .voice-btn.secondary {
+            background-color: #e5e7eb;
+            color: #4b5563;
+        }
+        .voice-btn.secondary:hover {
+            background-color: #d1d5db;
+        }
+        .voice-btn.listening {
+            animation: pulse 1.5s infinite;
+            background-color: #ef4444; /* Red when listening */
+        }
+        .voice-btn.speaking {
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+        }
+        .voice-btn.listening {
+             animation: pulse-red 1.5s infinite;
+        }
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
 
-  /* responsive */
-  @media (max-width:880px){
-    .panel{ grid-template-columns: 1fr; padding:18px; width:100%;}
-    .avatar-card{ order:2 }
-  }
-</style>
+        #voice-status-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: #6b7280;
+            font-style: italic;
+        }
+        #voice-status-container .fa-spin {
+            display: none; /* Hide spinner by default */
+        }
+
+        /* Typing indicator */
+        .loader {
+            width: 40px;
+            height: 20px;
+            --c:no-repeat linear-gradient(#e5e7eb 0 0);
+            background: var(--c) 0% 50%, var(--c) 50% 50%, var(--c) 100% 50%;
+            background-size: 8px 8px;
+            animation: loading 1s infinite;
+            border-radius: 8px; /* Added for bubble effect */
+            padding: 6px 10px; /* Added for bubble effect */
+        }
+        @keyframes loading {
+            0% { background-size: 8px 8px, 8px 8px, 8px 8px }
+            33% { background-size: 8px 16px, 8px 8px, 8px 8px }
+            66% { background-size: 8px 8px, 8px 16px, 8px 8px }
+            100% { background-size: 8px 8px, 8px 8px, 8px 16px }
+        }
+
+        /* Cart Sidebar */
+        #cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 380px;
+            height: 100%;
+            background-color: #ffffff;
+            box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
+            transition: right 0.3s ease;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+        }
+        #cart-sidebar.active {
+            right: 0;
+        }
+        .cart-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #cart-content {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+        .cart-empty {
+            text-align: center;
+            margin-top: 4rem;
+            color: #9ca3af;
+        }
+        .cart-empty .fas {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        .cart-item {
+            display: flex;
+            padding: 0.75rem;
+            border-bottom: 1px solid #e5e7eb;
+            gap: 0.75rem;
+        }
+        .item-image img {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        .item-details { flex: 1; }
+        .item-name { font-weight: 600; }
+        .item-category { font-size: 0.8rem; color: #6b7280; }
+        .item-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.5rem;
+        }
+        .quantity-controls { display: flex; align-items: center; gap: 0.5rem; }
+        .quantity-btn {
+            width: 24px;
+            height: 24px;
+            border: 1px solid #d1d5db;
+            border-radius: 50%;
+            color: #3b82f6;
+        }
+        .remove-btn { font-size: 0.8rem; color: #ef4444; }
+        .cart-footer {
+            padding: 1.5rem;
+            border-top: 1px solid #e5e7eb;
+        }
+        #checkout-btn {
+            width: 100%;
+            background-color: #2563eb;
+            color: white;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            padding: 2rem;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Notification */
+        #cart-notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #22c55e;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.3s, bottom 0.3s;
+        }
+        #cart-notification.show {
+            opacity: 1;
+            bottom: 40px;
+        }
+    </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="panel" role="application" aria-label="Agent voice UI prototype">
-      <div class="avatar-card" aria-hidden="false">
-        <div class="orb" aria-hidden="true"></div>
 
-        <div class="avatar" id="avatar">
-          <!-- SVG face -->
-          <svg class="face" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <defs>
-              <linearGradient id="skin" x1="0" x2="1">
-                <stop offset="0" stop-color="#0f1c2b"/>
-                <stop offset="1" stop-color="#09121a"/>
-              </linearGradient>
-              <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="6" result="b"/>
-                <feComposite in="b" in2="SourceGraphic" operator="over"/>
-              </filter>
-            </defs>
-            <g class="face-bg">
-              <circle cx="100" cy="100" r="72" fill="url(#skin)"/>
-            </g>
-            <!-- eyes -->
-            <g transform="translate(0,-6)">
-              <ellipse class="eye" id="eyeL" cx="70" cy="92" rx="9" ry="10" fill="#eaf1ff" />
-              <ellipse class="eye" id="eyeR" cx="130" cy="92" rx="9" ry="10" fill="#eaf1ff" />
-              <circle cx="70" cy="92" r="4" fill="#071025"/>
-              <circle cx="130" cy="92" r="4" fill="#071025"/>
-            </g>
-            <!-- mouth -->
-            <g transform="translate(0,10)">
-              <path id="mouth" class="mouth" d="M70,128 Q100,138 130,128 Q100,148 70,128 Z" fill="#ffb3b3" opacity="0.98"/>
-            </g>
-            <!-- subtle glossy -->
-            <ellipse cx="72" cy="72" rx="28" ry="16" fill="rgba(255,255,255,0.02)"/>
-          </svg>
+    <!-- Sidebar -->
+    <div id="sidebar" class="collapsed">
+        <!-- Sidebar content (e.g., logo, nav) -->
+        <h2 class="text-2xl font-bold mb-6">Sophia</h2>
+        <nav>
+            <a href="#" class="block py-2 px-4 rounded hover:bg-gray-700">New Chat</a>
+            <a href="#" class="block py-2 px-4 rounded hover:bg-gray-700">History</a>
+            <a href="#" class="block py-2 px-4 rounded hover:bg-gray-700">Profile</a>
+        </nav>
+        <div class="mt-auto">
+            <a href="#" class="block py-2 px-4 rounded hover:bg-gray-700">Settings</a>
         </div>
-
-        <div class="status" id="status">Microphone: <strong id="micStatus">stopped</strong></div>
-        <div class="controls" role="toolbar" aria-label="controls">
-          <button id="startBtn" class="btn-primary" title="Start microphone (grants access)">Start listening</button>
-          <button id="stopBtn" class="btn-danger" disabled>Stop</button>
-        </div>
-        <div class="footer">Real-time speaking animation — volume-driven lip & waveform demo</div>
-      </div>
-
-      <div class="right">
-        <div class="waveframe" aria-live="polite">
-          <canvas id="wave"></canvas>
-          <div class="vumeter" aria-hidden="false">
-            <div class="vu-fill" id="vuFill" style="width:0%"></div>
-          </div>
-
-          <div class="transcript" id="transcript">
-            <small>Detected utterance (sample):</small>
-            <div id="sampleText" style="font-size:16px;line-height:1.3">Welcome</div>
-          </div>
-        </div>
-
-        <div style="display:flex;gap:12px;align-items:center;justify-content:space-between">
-          <div style="color:var(--muted)">Tip: speak naturally — mouth scales with volume and waveform smooths peaks.</div>
-          <div>
-            <button id="simulateBtn">Simulate sample speech</button>
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
 
-<script>
-(async function(){
-  // Elements
-  const startBtn = document.getElementById('startBtn');
-  const stopBtn = document.getElementById('stopBtn');
-  const micStatus = document.getElementById('micStatus');
-  const vuFill = document.getElementById('vuFill');
-  const canvas = document.getElementById('wave');
-  const sampleText = document.getElementById('sampleText');
-  const avatar = document.getElementById('avatar');
-  const mouth = document.getElementById('mouth');
-  const eyeL = document.getElementById('eyeL');
-  const eyeR = document.getElementById('eyeR');
-  const simulateBtn = document.getElementById('simulateBtn');
+    <!-- Main Chat Area -->
+    <div id="chat-container-wrapper" class="expanded">
+        <!-- Header -->
+        <header id="chat-header">
+            <div class="flex items-center gap-4">
+                <button id="sidebar-toggle" class="text-xl text-gray-600 hover:text-gray-900">
+                    <i id="toggle-icon" class="fas fa-chevron-right"></i>
+                </button>
+                <h1 class="header-logo">X-Trim Research</h1>
+            </div>
+            <div class="header-icons">
+                <div id="cart-icon-header" class="header-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cart-count-header">0</span>
+                </div>
+            </div>
+        </header>
 
-  let audioCtx = null;
-  let analyser = null;
-  let dataArray = null;
-  let source = null;
-  let micStream = null;
-  let rafId = null;
-  const canvasCtx = canvas.getContext('2d');
+        <!-- Chat Messages -->
+        <div id="chat-container">
+            <!-- Messages will be added here -->
+        </div>
 
-  // Resize canvas nicely
-  function resizeCanvas(){ canvas.width = canvas.clientWidth * devicePixelRatio; canvas.height = canvas.clientHeight * devicePixelRatio; canvasCtx.scale(devicePixelRatio, devicePixelRatio); }
-  window.addEventListener('resize', ()=>{ resizeCanvas(); drawSilence(); });
-  resizeCanvas();
+        <!-- Quick Replies -->
+        <div id="quick-replies">
+            <!-- Quick replies will be added here -->
+        </div>
 
-  // helper: smooth running average
-  function smooth(value, prev, alpha=0.12){ return prev === undefined ? value : (alpha*value + (1-alpha)*prev); }
-  let smoothLevel = 0;
+        <!-- Input Area -->
+        <div id="input-area">
+            <!-- 
+                VOICE-ONLY UI UPDATE:
+                - The text input and send button are hidden via CSS.
+                - We add a "Repeat" button (speak-btn) for accessibility.
+                - The "Listen" button (listen-btn) is now the primary input.
+            -->
+            <button id="speak-btn" class="voice-btn secondary" title="Repeat last message">
+                <i class="fas fa-volume-up"></i>
+            </button>
 
-  // draw silence baseline
-  function drawSilence(){
-    canvasCtx.clearRect(0,0,canvas.width,canvas.height);
-    const w = canvas.clientWidth, h = canvas.clientHeight;
-    canvasCtx.fillStyle = 'rgba(255,255,255,0.02)';
-    canvasCtx.fillRect(0,0,w,h);
-    canvasCtx.fillStyle = 'rgba(255,255,255,0.03)';
-    canvasCtx.fillRect(0,h/2 - 1, w, 2);
-  }
-  drawSilence();
+            <div id="voice-status-container">
+                <i id="voice-loader" class="fas fa-spinner fa-spin"></i>
+                <span id="voice-status">Tap the mic to speak</span>
+                <span id="speak-status" class="ml-2"></span>
+            </div>
 
-  // create analyser
-  function createAnalyser(ctx){
-    const an = ctx.createAnalyser();
-    an.fftSize = 2048;
-    an.smoothingTimeConstant = 0.85; // smooth the waveform
-    return an;
-  }
+            <input type="text" id="user-input" placeholder="Type your message...">
+            <button id="send-btn"><i class="fas fa-paper-plane"></i></button>
 
-  // update UI based on level (0..1)
-  function updateAvatar(level){
-    // mouth scale: minimal when quiet, larger when loud
-    const min = 0.02, max = 0.9;
-    const scale = Math.max(min, Math.min(max, level * 1.6));
-    mouth.style.transform = `translateY(0px) scaleY(${1 + scale})`;
-    // eyes subtle squint
-    const eyeScale = 1 - Math.min(0.22, level * 0.3);
-    eyeL.style.transform = `scaleY(${eyeScale})`;
-    eyeR.style.transform = `scaleY(${eyeScale})`;
-    // avatar "breathing" using transform scale for a lively effect
-    const baseBreath = 1 + Math.sin(Date.now() / 1600) * 0.007;
-    avatar.style.transform = `scale(${baseBreath})`;
-  }
+            <button id="listen-btn" class="voice-btn" title="Tap to speak">
+                <i class="fas fa-microphone"></i>
+            </button>
+        </div>
+    </div>
 
-  // draw waveform
-  function draw(){
-    if(!analyser) return;
-    const w = canvas.clientWidth, h = canvas.clientHeight;
-    canvasCtx.clearRect(0,0, w, h);
-    // background
-    const bg = canvasCtx.createLinearGradient(0,0,0,h);
-    bg.addColorStop(0, 'rgba(11,19,30,0.0)');
-    bg.addColorStop(1, 'rgba(6,14,22,0.0)');
-    canvasCtx.fillStyle = bg;
-    canvasCtx.fillRect(0,0,w,h);
+    <!-- Cart Sidebar -->
+    <div id="cart-sidebar">
+        <div class="cart-header">
+            <h3 class="text-xl font-bold">Your Cart</h3>
+            <button id="close-cart" class="text-xl text-gray-500">&times;</button>
+        </div>
+        <div id="cart-content">
+            <!-- Cart items will be added here -->
+        </div>
+        <div class="cart-footer">
+            <div class="flex justify-between items-center mb-4">
+                <span class="text-lg font-semibold">Total:</span>
+                <span id="cart-total-price" class="text-lg font-bold">₦0</span>
+            </div>
+            <button id="checkout-btn">Proceed to Checkout</button>
+        </div>
+    </div>
 
-    // get waveform
-    analyser.getByteTimeDomainData(dataArray);
-    // compute RMS for VU
-    let sum = 0;
-    for(let i=0;i<dataArray.length;i++){
-      const v = (dataArray[i] - 128) / 128; sum += v*v;
+    <!-- Cart Notification -->
+    <div id="cart-notification">
+        <i class="fas fa-check-circle mr-2"></i>
+        <span>Item added to cart!</span>
+    </div>
+
+    <!-- Authentication Modal -->
+    <div id="auth-modal" class="modal">
+        <div class="modal-content">
+            <h2 class="text-2xl font-bold mb-4 text-center">Member Verification</h2>
+            <p class="text-center text-gray-600 mb-6">Please verify your membership to continue.</p>
+            <form id="auth-form">
+                <div class="mb-4">
+                    <label for="member-id" class="block text-sm font-medium text-gray-700 mb-1">Member ID</label>
+                    <input type="text" id="member-id" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="e.g., XTR-0001" required>
+                </div>
+                <div class="mb-6">
+                    <label for="member-name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                    <input type="text" id="member-name" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="e.g., Doc Joseph Ikedi" required>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-md font-semibold hover:bg-blue-700">Verify</button>
+            </form>
+            <div class="mt-6 text-center text-sm">
+                <p class="text-gray-600">Not a member? <a href="#" id="register-link" class="text-blue-600 hover:underline">Register now</a></p>
+                <p class="mt-2"><a href="#" id="issues-link" class="text-gray-500 hover:underline">Having issues?</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Registration Modal -->
+    <div id="register-modal" class="modal">
+        <div class="modal-content">
+            <h2 class="text-2xl font-bold mb-4 text-center">Register with Us</h2>
+            <p class="text-center text-gray-600 mb-6">Contact us on WhatsApp to get your new Member ID.</p>
+            <div class="mb-4">
+                <label for="register-name" class="block text-sm font-medium text-gray-700 mb-1">Your Full Name</label>
+                <input type="text" id="register-name" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Enter your name" required>
+            </div>
+            <button id="register-whatsapp" class="w-full bg-green-500 text-white py-2 rounded-md font-semibold hover:bg-green-600 mb-4">Register via WhatsApp</button>
+            <button id="back-to-auth" class="w-full bg-gray-200 text-gray-700 py-2 rounded-md hover:bg-gray-300">Back to Login</button>
+        </div>
+    </div>
+
+    <!-- Issues Modal -->
+    <div id="issues-modal" class="modal">
+        <div class="modal-content">
+            <h2 class="text-2xl font-bold mb-4 text-center">Having Issues?</h2>
+            <p class="text-center text-gray-600 mb-6">Let us know your name and we'll help you on WhatsApp.</p>
+            <div class="mb-4">
+                <label for="issues-name" class="block text-sm font-medium text-gray-700 mb-1">Your Full Name</label>
+                <input type="text" id="issues-name" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Enter your name" required>
+            </div>
+            <button id="issues-whatsapp" class="w-full bg-green-500 text-white py-2 rounded-md font-semibold hover:bg-green-600 mb-4">Get Help via WhatsApp</button>
+            <button id="back-to-auth-issues" class="w-full bg-gray-200 text-gray-700 py-2 rounded-md hover:bg-gray-300">Back to Login</button>
+        </div>
+    </div>
+
+    <!-- Load Config First -->
+    <script src="./config.js"></script>
+
+    <!-- Main Application Logic -->
+    <script>
+    
+    // Registered users database
+    const registeredUsers = {
+        'XTR-0001': {
+            id: 'XTR-0001',
+            name: 'Doc Joseph Ikedi',
+            phone: '+2348037346656'
+        }
+        // Add more users as needed
+    };
+
+    // Authentication state
+    let isAuthenticated = false;
+    let userMessageCount = 0;
+    const AUTH_TRIGGER_COUNT = 3; // Show auth modal after 3 messages
+
+    // Cart System Class
+    class CartSystem {
+        constructor() {
+            this.cart = this.loadCart();
+            this.updateCartUI();
+        }
+
+        loadCart() {
+            try {
+                const cartData = sessionStorage.getItem('suggestCart');
+                return cartData ? JSON.parse(cartData) : {};
+            } catch (error) {
+                console.error('Error loading cart from sessionStorage:', error);
+                return {};
+            }
+        }
+
+        saveCart() {
+            try {
+                sessionStorage.setItem('suggestCart', JSON.stringify(this.cart));
+            } catch (error) {
+                console.error('Error saving cart to sessionStorage:', error);
+            }
+        }
+
+        addItem(test) {
+            // Check if item already exists in cart
+            if (this.cart[test.id]) {
+                this.showNotification('Item already in cart!');
+                return false;
+            }
+
+            // Add item to cart
+            this.cart[test.id] = {
+                ...test,
+                quantity: 1
+            };
+
+            this.saveCart();
+            this.updateCartUI();
+            this.showNotification('Test added to cart!');
+            return true;
+        }
+
+        removeItem(testId) {
+            if (this.cart[testId]) {
+                delete this.cart[testId];
+                this.saveCart();
+                this.updateCartUI();
+                this.showNotification('Item removed from cart');
+            }
+        }
+
+        updateQuantity(testId, newQuantity) {
+            if (this.cart[testId]) {
+                if (newQuantity <= 0) {
+                    this.removeItem(testId);
+                } else {
+                    this.cart[testId].quantity = newQuantity;
+                    this.saveCart();
+                    this.updateCartUI();
+                }
+            }
+        }
+
+        getCartCount() {
+            return Object.keys(this.cart).length;
+        }
+
+        getCartTotal() {
+            return Object.values(this.cart).reduce((total, item) => {
+                return total + (item.price * item.quantity);
+            }, 0);
+        }
+
+        updateCartUI() {
+            // Update cart count
+            const cartCount = this.getCartCount();
+            const cartCountElement = document.getElementById('cart-count'); // Note: This ID is not in the HTML, but cart-count-header is.
+            const cartCountHeaderElement = document.getElementById('cart-count-header');
+
+            if (cartCountElement) {
+                cartCountElement.textContent = cartCount;
+            }
+            if (cartCountHeaderElement) {
+                cartCountHeaderElement.textContent = cartCount;
+            }
+
+            // Update cart content
+            this.updateCartContent();
+        }
+
+        updateCartContent() {
+            const cartContent = document.getElementById('cart-content');
+            if (!cartContent) return;
+
+            if (this.getCartCount() === 0) {
+                cartContent.innerHTML = `
+                    <div class="cart-empty">
+                        <i class="fas fa-shopping-cart"></i>
+                        <p>Your cart is empty</p>
+                    </div>
+                `;
+            } else {
+                let itemsHTML = '';
+                Object.values(this.cart).forEach(item => {
+                    itemsHTML += `
+                        <div class="cart-item">
+                            <div class="item-image">
+                                <img src="${item.image}" alt="${item.name}" onerror="this.src='https://placehold.co/60x60/e0e0e0/777?text=Test'">
+                            </div>
+                            <div class="item-details">
+                                <div class="item-name">${item.name}</div>
+                                <div class="item-category">${item.category}</div>
+                            </div>
+                            <div class="item-controls">
+                                <div class="quantity-controls">
+                                    <button class="quantity-btn decrease" data-id="${item.id}">-</button>
+                                    <span class="quantity">${item.quantity}</span>
+                                    <button class="quantity-btn increase" data-id="${item.id}">+</button>
+                                </div>
+                                <button class="remove-btn" data-id="${item.id}">Remove</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                cartContent.innerHTML = itemsHTML;
+
+                // Add event listeners
+                cartContent.querySelectorAll('.decrease').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const id = e.target.dataset.id;
+                        const currentQuantity = this.cart[id].quantity;
+                        this.updateQuantity(id, currentQuantity - 1);
+                    });
+                });
+
+                cartContent.querySelectorAll('.increase').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const id = e.target.dataset.id;
+                        const currentQuantity = this.cart[id].quantity;
+                        this.updateQuantity(id, currentQuantity + 1);
+                    });
+                });
+
+                cartContent.querySelectorAll('.remove-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const id = e.target.dataset.id;
+                        this.removeItem(id);
+                    });
+                });
+            }
+
+            // Update total price
+            const totalPriceElement = document.getElementById('cart-total-price');
+            if (totalPriceElement) {
+                totalPriceElement.textContent = `₦${this.getCartTotal().toLocaleString()}`;
+            }
+        }
+
+        showNotification(message) {
+            const notification = document.getElementById('cart-notification');
+            if (notification) {
+                notification.querySelector('span').textContent = message;
+                notification.classList.add('show');
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 2000);
+            }
+        }
+
+        clearCart() {
+            this.cart = {};
+            this.saveCart();
+            this.updateCartUI();
+        }
+
+        // WhatsApp Integration
+        checkout() {
+            if (this.getCartCount() === 0) {
+                // Using custom notification instead of alert
+                this.showNotification('Your cart is empty!');
+                return;
+            }
+
+            const message = this.formatWhatsAppMessage();
+            const phoneNumber = '+2348120527885'; // Replace with your WhatsApp number
+            
+            // Detect device and create appropriate WhatsApp URL
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            const whatsappUrl = isMobile
+                ? `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
+                : `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
+
+            // Open WhatsApp
+            window.open(whatsappUrl, '_blank');
+        }
+
+        formatWhatsAppMessage() {
+            const items = Object.values(this.cart);
+            const itemsList = items.map(item =>
+                `• ${item.name} (${item.quantity})`
+            ).join('\n');
+
+            return `Hello! I would like to order the following lab tests (Specifically Suggested by Sophia):\n\n${itemsList}\n\nPlease provide Total and payment details. Thank you!`;
+        }
     }
-    const rms = Math.sqrt(sum / dataArray.length); // 0..1
-    smoothLevel = smooth(rms, smoothLevel, 0.18);
 
-    // draw gradient stroke
-    const grad = canvasCtx.createLinearGradient(0,0,w,0);
-    grad.addColorStop(0, '#6dd3ff');
-    grad.addColorStop(0.5, 'var(--accent)');
-    grad.addColorStop(1, '#7c5cff');
-    canvasCtx.lineWidth = 2;
-    canvasCtx.strokeStyle = grad;
-
-    canvasCtx.beginPath();
-    const slice = w / dataArray.length;
-    for(let i=0;i<dataArray.length;i++){
-      const v = (dataArray[i] - 128) / 128;
-      const y = h/2 + v * (h/2 - 10);
-      const x = i * slice;
-      if(i===0) canvasCtx.moveTo(x,y);
-      else canvasCtx.lineTo(x,y);
+    // Authentication functions
+    function showAuthModal() {
+        document.getElementById('auth-modal').classList.add('active');
     }
-    canvasCtx.stroke();
 
-    // fill under curve softly
-    canvasCtx.lineTo(w, h); canvasCtx.lineTo(0, h); canvasCtx.closePath();
-    const fillGrad = canvasCtx.createLinearGradient(0,0,0,h);
-    fillGrad.addColorStop(0, 'rgba(124,92,255,0.06)');
-    fillGrad.addColorStop(1, 'rgba(13,25,36,0.02)');
-    canvasCtx.fillStyle = fillGrad;
-    canvasCtx.fill();
-
-    // update VU meter
-    const percent = Math.min(1, smoothLevel * 2.2);
-    vuFill.style.width = `${(percent * 100).toFixed(1)}%`;
-
-    // update avatar
-    updateAvatar(percent);
-
-    // next frame
-    rafId = requestAnimationFrame(draw);
-  }
-
-  // start capturing microphone
-  async function startMic(){
-    try{
-      if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      micStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation:true, noiseSuppression:true }, video:false });
-      source = audioCtx.createMediaStreamSource(micStream);
-      analyser = createAnalyser(audioCtx);
-      source.connect(analyser);
-      dataArray = new Uint8Array(analyser.fftSize);
-      micStatus.textContent = 'listening';
-      startBtn.disabled = true;
-      stopBtn.disabled = false;
-      // resume ctx if suspended (Chrome autoplay policies)
-      if(audioCtx.state === 'suspended') await audioCtx.resume();
-      draw();
-    }catch(err){
-      console.error('Mic start failed', err);
-      alert('Unable to access microphone: ' + (err.message || err));
-      micStatus.textContent = 'error';
+    function hideAuthModal() {
+        document.getElementById('auth-modal').classList.remove('active');
     }
-  }
 
-  // stop capturing
-  function stopMic(){
-    if(micStream){
-      micStream.getTracks().forEach(t => t.stop());
-      micStream = null;
+    function showRegisterModal() {
+        document.getElementById('register-modal').classList.add('active');
+        hideAuthModal();
     }
-    if(source) { try{ source.disconnect(); }catch(e){} source=null; }
-    if(analyser){ analyser.disconnect(); analyser=null; }
-    if(rafId){ cancelAnimationFrame(rafId); rafId = null; }
-    vuFill.style.width = '0%';
-    micStatus.textContent = 'stopped';
-    startBtn.disabled = false;
-    stopBtn.disabled = true;
-    drawSilence();
-    // reset mouth/eyes gently
-    mouth.style.transform = 'translateY(0px) scaleY(1)';
-    eyeL.style.transform = 'scaleY(1)';
-    eyeR.style.transform = 'scaleY(1)';
-  }
 
-  startBtn.addEventListener('click', startMic);
-  stopBtn.addEventListener('click', stopMic);
+    function hideRegisterModal() {
+        document.getElementById('register-modal').classList.remove('active');
+    }
 
-  // Simulate sample speech: animates avatar & wave using synthetic oscillator
-  simulateBtn.addEventListener('click', async ()=>{
-    // flash the transcript text, animate mouth periodically
-    const phrase = sampleText.textContent.trim();
-    sampleText.style.opacity = '0.95';
-    // use an offline oscillator to pump the analyser if available,
-    // but easier: animate mouth on a schedule mimicking syllables
-    const syllables = Math.max(6, Math.round(phrase.split(/\s+/).length * 1.8));
-    let i = 0;
-    const int = setInterval(()=>{
-      const level = 0.15 + Math.abs(Math.sin(i * 0.8)) * 0.9;
-      updateAvatar(Math.min(1, level));
-      vuFill.style.width = `${Math.min(1, level)*100}%`;
-      i++;
-      if(i > syllables*2){
-        clearInterval(int);
-        // settle back
-        const settle = setInterval(()=>{
-          updateAvatar(0.02);
-          vuFill.style.width = `0%`;
-          clearInterval(settle);
-        }, 120);
-      }
-    }, 120);
-  });
+    function showIssuesModal() {
+        document.getElementById('issues-modal').classList.add('active');
+        hideAuthModal();
+    }
 
-  // Draw initial gentle idle animation
-  (function idleLoop(){
-    const level = 0.02 + Math.max(0, Math.sin(Date.now() / 1500)) * 0.02;
-    updateAvatar(level);
-    requestAnimationFrame(idleLoop);
-  })();
+    function hideIssuesModal() {
+        document.getElementById('issues-modal').classList.remove('active');
+    }
 
-})();
-</script>
+    function verifyUser(memberId, memberName) {
+        // Normalize inputs
+        const normalizedId = memberId.toUpperCase().trim();
+        const normalizedName = memberName.trim().toLowerCase();
+        
+        // Check if user exists and name matches
+        if (registeredUsers[normalizedId] &&
+            registeredUsers[normalizedId].name.toLowerCase() === normalizedName) {
+            return true;
+        }
+        return false;
+    }
+
+    function openWhatsApp(message) {
+        const phoneNumber = '+2348120527885'; // Your WhatsApp number
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        const whatsappUrl = isMobile
+            ? `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
+            : `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
+        
+        window.open(whatsappUrl, '_blank');
+    }
+
+    // Chatbot functionality
+    const chatContainer = document.getElementById('chat-container');
+    const userInput = document.getElementById('user-input');
+    const sendBtn = document.getElementById('send-btn');
+    const quickRepliesContainer = document.getElementById('quick-replies');
+
+    // Sidebar toggle functionality
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const toggleIcon = document.getElementById('toggle-icon');
+    const chatContainerWrapper = document.getElementById('chat-container-wrapper');
+
+    sidebarToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('collapsed');
+        chatContainerWrapper.classList.toggle('expanded');
+        
+        if (sidebar.classList.contains('collapsed')) {
+            toggleIcon.classList.remove('fa-chevron-left');
+            toggleIcon.classList.add('fa-chevron-right');
+        } else {
+            toggleIcon.classList.remove('fa-chevron-right');
+            toggleIcon.classList.add('fa-chevron-left');
+        }
+    });
+
+    // Cart elements
+    const cartIconHeader = document.getElementById('cart-icon-header');
+    const cartSidebar = document.getElementById('cart-sidebar');
+    const closeCartBtn = document.getElementById('close-cart');
+    const checkoutBtn = document.getElementById('checkout-btn');
+
+    // Cart toggle functionality
+    cartIconHeader.addEventListener('click', () => {
+        cartSidebar.classList.add('active');
+    });
+    closeCartBtn.addEventListener('click', () => {
+        cartSidebar.classList.remove('active');
+    });
+    checkoutBtn.addEventListener('click', () => {
+        window.suggestCart.checkout();
+    });
+
+    // Authentication event listeners
+    document.getElementById('auth-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const memberId = document.getElementById('member-id').value;
+        const memberName = document.getElementById('member-name').value;
+        
+        if (verifyUser(memberId, memberName)) {
+            isAuthenticated = true;
+            hideAuthModal();
+            const authSuccessMessage = 'Thank you! You have been successfully verified. How can I help you with your symptoms today?';
+            lastBotMessage = authSuccessMessage;
+            addMessage('bot', authSuccessMessage, true); // Speak this message
+            updateQuickReplies(['Headache', 'Fever', 'Stomach Pain', 'Fatigue']);
+        } else {
+            // Use custom notification
+            window.suggestCart.showNotification('Invalid member ID or name.');
+        }
+    });
+
+    document.getElementById('register-link').addEventListener('click', function(e) {
+        e.preventDefault();
+        showRegisterModal();
+    });
+
+    document.getElementById('issues-link').addEventListener('click', function(e) {
+        e.preventDefault();
+        showIssuesModal();
+    });
+
+    document.getElementById('back-to-auth').addEventListener('click', function() {
+        hideRegisterModal();
+        showAuthModal();
+    });
+
+    document.getElementById('back-to-auth-issues').addEventListener('click', function() {
+        hideIssuesModal();
+        showAuthModal();
+    });
+
+    document.getElementById('register-whatsapp').addEventListener('click', function() {
+        const name = document.getElementById('register-name').value;
+        if (!name) {
+            window.suggestCart.showNotification('Please enter your name');
+            return;
+        }
+        const message = `Hey, I'm ${name} I'd like to become a register to enjoy Sophia's services.`;
+        openWhatsApp(message);
+    });
+
+    document.getElementById('issues-whatsapp').addEventListener('click', function() {
+        const name = document.getElementById('issues-name').value;
+        if (!name) {
+            window.suggestCart.showNotification('Please enter your name');
+            return;
+        }
+        const message = `Hello I'm ${name} I have issue with my registration code, can i get help.`;
+        openWhatsApp(message);
+    });
+
+    // --- GEMINI API INTEGRATION ---
+    let GEMINI_API_URL = ''; // Will be set in DOMContentLoaded
+    let conversationHistory = [];
+    let lastBotMessage = "";
+
+    // Updated test database
+    const testDatabase = {
+        "TROBAS": { id: 1001, name: "Tropical Basics (TROBAS) Panel", price: 18000, description: "Comprehensive screening panel for tropical infections and basic health parameters. Ideal for routine checkups in malaria-endemic areas. with the following tests: Hemoglobin estimation, Malaria Parasite test, Urinalysis, Widal Agglutination test, Computer-Assisted Urine Microscopy", category: "Health Packages", image: "https://placehold.co/100x100/3b82f6/ffffff?text=TROBAS" },
+        "TREX": { id: 1002, name: "Tropical Extended (TREX) Panel", price: 25000, description: "Comprehensive tropical disease screening with blood and urine analysis with the following tests: Hemoglobin Estimation, Hct, MCHC, Malaria Parasite Test, Widal Agglutination Test, Urine Chemistry, Computer-Assisted Urine Microscopy, Helicobacter pylor", category: "Health Packages", image: "https://placehold.co/100x100/3b82f6/ffffff?text=TREX" },
+        "TRAD": { id: 1003, name: "Tropical Advanced (TRAD) Panel", price: 35000, description: "Advanced tropical screening including liver function, parasites, and stool analysis with the following tests: HGB Estimation, Hct, MCHC, Malaria Parasite Test, Widal Agglutination Test, Urine Chemistry, Computer-Assisted Urine Microscopy, Helicobacter pylori, URMCS, TBil / DBIL, Mf, Stool Analysis.", category: "Health Packages", image: "https://placehold.co/100x100/3b82f6/ffffff?text=TRAD" },
+        // Add other test codes here from the system prompt
+    };
+
+    const systemPrompt = `You are a friendly and helpful Health AI Assistant, called Sophia. Your goal is to understand a user's health symptoms and suggest relevant medical tests from a predefined list.
+
+You MUST follow these rules:
+1.  Your responses MUST be in JSON format.
+2.  Do not use markdown in the JSON response.
+3.  Keep your conversational messages concise and easy to understand.
+4.  Ask clarifying questions one at a time to narrow down the symptoms.
+5.  When you have enough information, suggest relevant tests.
+6.  The available tests are: CBC, HGB, PCV, MPT, WAT, UC, CAURM, ERYBAS, FBC, CBS, SA, SSN, SSC, BG, HGBG, BG-HGBG, ASO-TITRE, RF, HCV, VDRL, HEP-B, ESR, FOB, HPYL, OMT, HVSMCS, URMCS, TDBIL, BCASA, COCASA, URCR, SE, EUC, LFT, LIPRO, TOTCHOL, STP, ETP, HORPRO, RVS, TPSA, CEA, TREX, TROBAS, SPT, ALB, VITD, CORT, KFT, MF, CAL, PRL, PROG, E2, FSH, LH, HCV2, Hbsag, HAV, FT4, CHLAMYD,  RES, FPSA, PSA-PRO, RBG, GONOR, FBG, HPYLANT, HbA1c, FT3, TSH, WOUND-SWAB-CS, hs-CRP, RSS, UR-ACID. Only suggest tests from this list, and Health Packages: TROBAS, TREX, TRAD, PREMARBASIC, PREMARMALE, PREMARFEMALE, STIPANEL, FERTILITYMEN, FERTILITYWOMEN, LIVERPANEL, KIDNEYPANEL, CARDIACBIO.
+7.  Provide relevant quick reply options to guide the user.
+8.  If the user's query is unrelated to health, politely steer the conversation back to symptoms.
+9.  ALWAYS Verify Age and Gender befor recommending tests.
+10. You work at X-Trim Research Ltd Located at 61 Clifford Road, Aba, Abia State, Nigeria. Provide this information when asked about your location or company you can go on about telling how wonderful the company is, and politely steer the conversation back to symptoms.
+11. Prioritize and present appropriate diagnostic options, starting with the Health Packages category: TROBAS, TREX, TRAD, PREMARBASIC, PREMARMALE, PREMARFEMALE, STIPANEL, FERTILITYMEN, FERTILITYWOMEN, LIVERPANEL, KIDNEYPANEL, CARDIACBIO,  before suggesting individual tests, always ensuring relevance to the user's need.
+
+The JSON output must follow this exact schema:
+{
+  "message": "Your conversational response to the user.",
+  "suggestedTests": ["TEST_CODE_1", "TEST_CODE_2", ...],
+  "quickReplies": ["Option 1", "Option 2", ...]
+}`;
+
+    const addMessage = (sender, message, speakNow = false) => {
+        const messageWrapper = document.createElement('div');
+        messageWrapper.classList.add('flex', 'mb-4', sender === 'user' ? 'justify-end' : 'justify-start');
+        
+        const messageBubble = document.createElement('div');
+        messageBubble.classList.add('rounded-xl', 'py-2', 'px-4', 'max-w-xs', 'lg:max-w-md', sender === 'user' ? 'chat-bubble-user' : 'chat-bubble-bot');
+        messageBubble.innerText = message;
+        
+        messageWrapper.appendChild(messageBubble);
+        chatContainer.appendChild(messageWrapper);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+
+        if (sender === 'bot') {
+            lastBotMessage = message; // Update last message
+            if (speakNow) {
+                speakWithElevenLabs(message); // Automatically speak bot messages
+            }
+        }
+    };
+
+    const showTypingIndicator = () => {
+        const typingWrapper = document.createElement('div');
+        typingWrapper.id = 'typing-indicator';
+        typingWrapper.classList.add('flex', 'mb-4', 'justify-start');
+        typingWrapper.innerHTML = `<div class="loader"></div>`;
+        chatContainer.appendChild(typingWrapper);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    };
+
+    const removeTypingIndicator = () => {
+        const indicator = document.getElementById('typing-indicator');
+        if (indicator) {
+            indicator.remove();
+        }
+    };
+
+    const updateQuickReplies = (replies = []) => {
+        quickRepliesContainer.innerHTML = '';
+        if (replies.length > 0) {
+            replies.forEach(reply => {
+                const button = document.createElement('button');
+                button.textContent = reply;
+                button.classList.add('px-3', 'py-1', 'border', 'border-blue-500', 'text-blue-500', 'rounded-full', 'text-sm', 'hover:bg-blue-500', 'hover:text-white', 'transition');
+                button.onclick = () => handleUserInput(reply);
+                quickRepliesContainer.appendChild(button);
+            });
+        }
+    };
+
+    const processBotResponse = async (userInputText) => {
+        conversationHistory.push({ role: "user", parts: [{ text: userInputText }] });
+
+        try {
+            const payload = {
+                contents: conversationHistory,
+                systemInstruction: {
+                    parts: [{ text: systemPrompt }]
+                },
+            };
+
+            const response = await fetch(GEMINI_API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                throw new Error(`API error: ${response.statusText}`);
+            }
+
+            const result = await response.json();
+            const botResponseText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+
+            if (!botResponseText) {
+                throw new Error("Received an empty response from the API.");
+            }
+
+            const cleanedJsonString = botResponseText.replace(/```json|```/g, '').trim();
+            const botResponseJson = JSON.parse(cleanedJsonString);
+            
+            conversationHistory.push({ role: "model", parts: [{ text: JSON.stringify(botResponseJson) }] });
+            
+            removeTypingIndicator();
+
+            if (botResponseJson.message) {
+                // Add the message, and speak it by passing 'true'
+                addMessage('bot', botResponseJson.message, true);
+            }
+            if (botResponseJson.quickReplies) {
+                updateQuickReplies(botResponseJson.quickReplies);
+            }
+            if (botResponseJson.suggestedTests && botResponseJson.suggestedTests.length > 0) {
+                suggestTests(botResponseJson.suggestedTests);
+            }
+
+        } catch (error) {
+            console.error("Error calling Gemini API:", error);
+            removeTypingIndicator();
+            const errorMsg = "I'm having a little trouble connecting right now. Please try again in a moment.";
+            // Add the error message, and speak it
+            addMessage('bot', errorMsg, true);
+        }
+    };
+
+    const handleUserInput = (inputText) => {
+        const trimmedInput = inputText.trim();
+        if (trimmedInput === '') return;
+
+        // Count user messages
+        userMessageCount++;
+        
+        // Check if authentication is required
+        if (userMessageCount >= AUTH_TRIGGER_COUNT && !isAuthenticated) {
+            showAuthModal();
+            return;
+        }
+
+        addMessage('user', trimmedInput);
+        userInput.value = '';
+        updateQuickReplies();
+        showTypingIndicator();
+        
+        processBotResponse(trimmedInput);
+    };
+
+    // Removed text input listeners
+    // sendBtn.addEventListener('click', () => handleUserInput(userInput.value));
+    // userInput.addEventListener('keypress', (e) => { ... });
+
+    const suggestTests = (testCodes) => {
+        const suggestedTestsContainer = document.createElement('div');
+        suggestedTestsContainer.id = 'suggested-tests-container';
+        suggestedTestsContainer.className = 'mt-4 p-4 bg-gray-100 rounded-lg border border-gray-200';
+        suggestedTestsContainer.innerHTML = '<h3 class="font-bold text-lg mb-3 text-gray-800">Suggested Tests</h3>';
+        
+        testCodes.forEach(code => {
+            const test = testDatabase[code.toUpperCase()]; // Ensure code is uppercase
+            if (!test) {
+                console.warn(`Test code "${code}" not found in local database.`);
+                return;
+            }
+
+            const card = document.createElement('div');
+            card.classList.add('p-4', 'rounded-lg', 'shadow-md', 'border', 'border-gray-200', 'test-card-enter', 'mb-3', 'suggestion');
+            card.innerHTML = `
+                <h3 class="font-bold text-md text-gray-800">${test.name}</h3>
+                <p class="text-sm text-gray-600 my-1">${test.description}</p>
+                <div class="flex justify-between items-center mt-3">
+                    <span class="font-bold text-blue-600">₦${test.price.toLocaleString()}</span>
+                    <button class="add-to-cart-btn bg-blue-100 text-blue-700 px-4 py-1 rounded-md text-sm font-semibold hover:bg-blue-200 transition" data-code="${code.toUpperCase()}">Add to Cart</button>
+                </div>
+            `;
+            suggestedTestsContainer.appendChild(card);
+        });
+
+        chatContainer.appendChild(suggestedTestsContainer);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+
+        // Add event listeners to the add to cart buttons
+        document.querySelectorAll('#suggested-tests-container .add-to-cart-btn').forEach(button => {
+            button.onclick = (e) => {
+                const code = e.target.dataset.code;
+                const test = testDatabase[code];
+                if (test && window.suggestCart) {
+                    const added = window.suggestCart.addItem(test);
+                    if (added) {
+                        e.target.textContent = 'Added!';
+                        e.target.disabled = true;
+                        e.target.classList.remove('bg-blue-100', 'hover:bg-blue-200');
+                        e.target.classList.add('bg-green-100', 'text-green-700');
+                    }
+                } else {
+                    console.error("Could not add item to cart. Test or suggestCart is missing.", { test, suggestCart: window.suggestCart });
+                }
+            };
+        });
+    };
+
+    // --- NEW: ElevenLabs Text-to-Speech (TTS) Functionality ---
+    const speakBtn = document.getElementById('speak-btn');
+    const speakStatus = document.getElementById('speak-status');
+    const voiceLoader = document.getElementById('voice-loader');
+    let isSpeaking = false;
+    let currentAudio = null; // To store the current audio object
+
+    const ELEVENLABS_VOICE_ID = '21m00Tcm4T06WkcVjbrA'; // Voice ID for 'Rachel'
+    const ELEVENLABS_API_URL = `https://api.elevenlabs.io/v1/text-to-speech/${ELEVENLABS_VOICE_ID}`;
+
+    /**
+     * Speaks the provided text using the ElevenLabs API.
+     * @param {string} text The text to speak.
+     */
+    async function speakWithElevenLabs(text) {
+        if (typeof ELEVENLABS_API_KEY === 'undefined' || ELEVENLABS_API_KEY === '' || ELEVENLABS_API_KEY === 'YOUR_ELEVENLABS_API_KEY_HERE') {
+            console.error('ElevenLabs API Key is not set.');
+            if (speakStatus) speakStatus.textContent = 'TTS not configured.';
+            return;
+        }
+
+        if (isSpeaking && currentAudio) {
+            currentAudio.pause(); // Stop currently playing audio
+        }
+
+        if (!text) {
+            console.log('No text to speak.');
+            return;
+        }
+
+        isSpeaking = true;
+        if (speakBtn) {
+            speakBtn.classList.add('speaking');
+            speakBtn.innerHTML = '<i class="fas fa-stop"></i>';
+        }
+        if (speakStatus) speakStatus.textContent = 'Speaking...';
+        if (voiceLoader) voiceLoader.style.display = 'inline-block';
+
+        try {
+            const response = await fetch(ELEVENLABS_API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'xi-api-key': ELEVENLABS_API_KEY
+                },
+                body: JSON.stringify({
+                    text: text,
+                    model_id: 'eleven_multilingual_v2', // Or another model
+                    voice_settings: {
+                        stability: 0.5,
+                        similarity_boost: 0.75
+                    }
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`ElevenLabs API error: ${response.statusText}`);
+            }
+
+            const audioBlob = await response.blob();
+            const audioUrl = URL.createObjectURL(audioBlob);
+            
+            if (currentAudio) {
+                currentAudio.removeEventListener('ended', onAudioEnd);
+                currentAudio.removeEventListener('error', onAudioError);
+            }
+
+            currentAudio = new Audio(audioUrl);
+            
+            const onAudioEnd = () => {
+                isSpeaking = false;
+                if (speakBtn) {
+                    speakBtn.classList.remove('speaking');
+                    speakBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+                }
+                if (speakStatus) speakStatus.textContent = '';
+                if (voiceLoader) voiceLoader.style.display = 'none';
+                currentAudio = null;
+            };
+
+            const onAudioError = (e) => {
+                console.error('Audio playback error:', e);
+                onAudioEnd(); // Reset state on error
+            };
+
+            currentAudio.addEventListener('ended', onAudioEnd);
+            currentAudio.addEventListener('error', onAudioError);
+            
+            currentAudio.play();
+
+        } catch (error) {
+            console.error('Error with ElevenLabs TTS:', error);
+            isSpeaking = false;
+            if (speakBtn) {
+                speakBtn.classList.remove('speaking');
+                speakBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+            }
+            if (speakStatus) speakStatus.textContent = 'Error';
+            if (voiceLoader) voiceLoader.style.display = 'none';
+            currentAudio = null;
+        }
+    }
+
+    // Add click listener to the "Repeat" button
+    if (speakBtn) {
+        speakBtn.addEventListener('click', () => {
+            if (isSpeaking) {
+                if (currentAudio) {
+                    currentAudio.pause(); // This will trigger the 'onAudioEnd' logic
+                }
+            } else {
+                // Speak the *last* message from the bot.
+                speakWithElevenLabs(lastBotMessage);
+            }
+        });
+    }
+    // --- End of TTS Functionality ---
+
+    // --- Speech-to-Text (STT) Functionality ---
+    const listenBtn = document.getElementById('listen-btn');
+    const voiceStatus = document.getElementById('voice-status');
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognition;
+
+    if (SpeechRecognition) {
+        recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.lang = 'en-US';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        if (listenBtn) {
+            listenBtn.addEventListener('click', () => {
+                if (isSpeaking && currentAudio) {
+                    currentAudio.pause(); // Stop TTS if it's running
+                }
+
+                // Check state before starting
+                try {
+                    recognition.start();
+                } catch (error) {
+                    if (error.name === 'InvalidStateError') {
+                        // Already started, so stop it
+                        try {
+                            recognition.stop();
+                        } catch(e) {
+                            console.error("Error stopping recognition:", e);
+                        }
+                    } else {
+                        console.error("Speech recognition could not be started: ", error);
+                        if(voiceStatus) voiceStatus.textContent = 'Error starting...';
+                    }
+                }
+            });
+        }
+
+        recognition.onstart = () => {
+            if(listenBtn) {
+                listenBtn.classList.add('listening');
+                listenBtn.innerHTML = '<i class="fas fa-stop"></i>';
+            }
+            if(voiceStatus) voiceStatus.textContent = 'Listening...';
+        };
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            if(userInput) userInput.value = transcript;
+            handleUserInput(transcript);
+        };
+
+        recognition.onerror = (event) => {
+            console.error('Speech recognition error:', event.error);
+            if(voiceStatus) {
+                if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+                    voiceStatus.textContent = 'Mic access denied';
+                } else if (event.error === 'no-speech') {
+                    voiceStatus.textContent = 'No speech detected';
+                } else {
+                    voiceStatus.textContent = 'Error';
+                }
+            }
+        };
+
+        recognition.onend = () => {
+            if(listenBtn) {
+                listenBtn.classList.remove('listening');
+                listenBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+            }
+            if (voiceStatus && voiceStatus.textContent === 'Listening...') {
+                voiceStatus.textContent = 'Tap the mic to speak';
+            }
+            // Clear status after a short delay
+            setTimeout(() => {
+                if (voiceStatus && voiceStatus.textContent !== 'Listening...') {
+                    voiceStatus.textContent = 'Tap the mic to speak';
+                }
+            }, 2000);
+        };
+
+    } else {
+        // Speech Recognition not supported
+        if (listenBtn) {
+            listenBtn.disabled = true;
+        }
+        if (voiceStatus) {
+            voiceStatus.textContent = 'Speech not supported';
+        }
+        console.warn('Speech Recognition not supported in this browser.');
+    }
+    // --- End of STT Functionality ---
+
+
+    // Initialize cart system when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        // Check for API keys
+        let keysValid = true;
+        if (typeof GEMINI_API_KEY === 'undefined' || GEMINI_API_KEY === '' || GEMINI_API_KEY === 'YOUR_GEMINI_API_KEY_HERE') {
+            console.error('GEMINI_API_KEY is not defined. Please check your config.js file.');
+            addMessage('bot', 'Error: The AI assistant is not configured. Please contact support.');
+            keysValid = false;
+        } else {
+            GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${GEMINI_API_KEY}`;
+        }
+
+        if (typeof ELEVENLABS_API_KEY === 'undefined' || ELEVENLABS_API_KEY === '' || ELEVENLABS_API_KEY === 'YOUR_ELEVENLABS_API_KEY_HERE') {
+            console.warn('ELEVENLABS_API_KEY is not defined. Voice responses will be disabled.');
+            if(speakStatus) speakStatus.textContent = 'TTS not configured.';
+            if(speakBtn) speakBtn.disabled = true;
+        }
+
+        window.suggestCart = new CartSystem();
+        
+        // Initial bot message
+        if (keysValid) {
+            const initialMessage = "Hello! I'm Sophia, your personal health assistant, at X-Trim Research Lab. I can help you understand your symptoms and suggest relevant lab tests. What's your main symptom today?";
+            const initialReplies = ['Headache', 'Fever', 'Stomach Pain', 'Fatigue'];
+            
+            conversationHistory.push({
+                role: "model",
+                parts: [{ text: JSON.stringify({ message: initialMessage, suggestedTests: [], quickReplies: [] }) }]
+            });
+            
+            // Add initial message and speak it
+            addMessage('bot', initialMessage, true);
+            updateQuickReplies(initialReplies);
+        }
+    });
+
+    </script>
 </body>
 </html>
