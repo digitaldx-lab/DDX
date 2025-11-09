@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sophia | Voice Assistant</title>
+    <!-- Logo Display -->
+    <link rel="icon" type="image/png" href="./images/Sophia.png">
+
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+
     <!-- Load Lucide icons -->
     <script type="module" src="https://unpkg.com/lucide-react@latest/dist/lucide-react.js"></script>
     <script src="https://unpkg.com/lucide-icons@latest/dist/lucide.min.js"></script>
@@ -43,13 +47,9 @@ body::before {
     top: 0;
     left: 0;
     width: 100%;
-    /* Use 100% height here to ensure it covers the entire page, even if the content makes the page scroll */
     height: 100%; 
-    
     /* Black color with 50% opacity */
-    background-color: rgba(0, 0, 0, 0.5); 
-    
-    /* Place it above the background image but below the content */
+    background-color: rgba(0, 0, 0, 0.788); 
     z-index: 1; 
 }
         /* Custom styles for the orb and animations */
@@ -161,11 +161,16 @@ body::before {
             87% { box-shadow: .2em -.2em 0 0 currentcolor; }
         }
         .hidden {display: none;}
-
+.body{
+    position: relative; /* Ensures content is placed above the overlay */
+    z-index: 2; /* Content needs a higher z-index than the overlay (1) */
+    padding: 20px;
+}
 
     </style>
 </head>
 <body class="bg-slate-900 text-slate-200 font-sans h-full flex items-center justify-center overflow-hidden">
+    <div class="body">
 
     <div class="flex flex-col items-center justify-center text-center p-6">
         <!-- The Orb -->
@@ -198,7 +203,7 @@ body::before {
         <!-- Error Message Container -->
         <div id="error-message" class="mt-6 p-4 bg-red-900 border border-red-700 text-red-200 rounded-lg hidden"></div>
     </div>
-
+</div>
     <script type="module">
         // --- DOM Elements ---
         const toggleButton = document.getElementById('toggle-button');
@@ -223,7 +228,7 @@ body::before {
         let appState = 'idle'; // idle, listening, processing, speaking
         let recognition;
         let chatHistory = [
-            { role: "user", parts: [{ text: "Your persona is Sophia, a friendly and supportive Health AI. Your mission is to assist users by understanding their health complaints and offering actionable advice by suggesting relevant medical tests. This selection must be based exclusively on an internal, limited test list. (When asked about your employer, state that you work for X-Trim Research Ltd at 61 Clifford Road, Aba, Abia State, Nigeria, and include positive, promotional language about the company." }] },
+            { role: "user", parts: [{ text: "Your persona is Sophia, a friendly and supportive Health AI. Your mission is to assist users by understanding their health complaints and offering actionable advice by suggesting relevant medical tests. This selection must be based exclusively on an internal, limited test list. (When asked about your employer, state that you work for X-Trim Research Ltd at 61 Clifford Road, Aba, Abia State, Nigeria, and include positive, promotional language about the company. you MUST not use Markdown in your response" }] },
             { role: "model", parts: [{ text: "Understood. I'll be Sophia, your friendly and professional assistant, keeping things concise." }] }
         ];
 
