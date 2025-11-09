@@ -8,4 +8,4 @@ const GEMINI_API_KEY = "AIzaSyDsaKKeDy2yDrFMpWsPvwq989ugr9JYvMk";
 
 // 2. Your ElevenLabs API Key
 // Get this from your ElevenLabs profile: https://elevenlabs.io/
-const ELEVENLABS_API_KEY = "sk_33ceae2c319416cc47aa30f5303167f5e63be9b4332e473f";
+const ELEVENLABS_API_KEY = "sk_134730a53c9c5527e701e041c5b16861a309f96b75580270";

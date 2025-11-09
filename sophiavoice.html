@@ -129,16 +129,20 @@
         const errorMessage = document.getElementById('error-message');
 
         // --- API Configuration ---
-        const API_KEY = ""; // Leave as-is, will be handled by the environment
-        const GEMINI_TEXT_API_URL = `https://generativeloanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${API_KEY}`;
-        const GEMINI_TTS_API_URL = `https://generativeloanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${API_KEY}`;
-        const VOICE_NAME = "Kore"; // This will be "Sophia"s" voice. Try "Puck" for another option.
+        // IMPORTANT: Replace with your actual Gemini API key
+        const ELEVEN_API_KEY = "YOUR_ELEVENLABS_API_KEY";  // Replace me
+        const ELEVEN_VOICE_ID = "JBFqnCBsd6RMkjVDRZzb";    // Replace if using another voice
+
+        const API_KEY = "AIzaSyDsaKKeDy2yDrFMpWsPvwq989ugr9JYvMk"; 
+        const GEMINI_TEXT_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${API_KEY}`;
+        const GEMINI_TTS_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${API_KEY}`;
+        const VOICE_NAME = "Kore";
 
         // --- State ---
         let appState = 'idle'; // idle, listening, processing, speaking
         let recognition;
         let chatHistory = [
-            { role: "user", parts: [{ text: "You are Sophia, a helpful and concise AI assistant. Respond in a friendly and professional tone. Keep your answers brief, to one or two sentences." }] },
+            { role: "user", parts: [{ text: "You are a friendly and helpful Health AI Assistant, called Sophia. Your goal is to understand a user's health symptoms and suggest relevant medical tests from a predefined list, You work at X-Trim Research Ltd Located at 61 Clifford Road, Aba, Abia State, Nigeria. Provide this information when asked about your location or company you can go on about telling how wonderful the company is" }] },
             { role: "model", parts: [{ text: "Understood. I'll be Sophia, your friendly and professional assistant, keeping things concise." }] }
         ];
 
@@ -213,7 +217,6 @@
             appState = newState;
             orb.className = 'orb'; // Reset classes
             processingIndicator.classList.add('hidden');
-            transcriptMessage.textContent = '';
             errorMessage.classList.add('hidden');
             
             switch (newState) {
@@ -228,7 +231,7 @@
                     toggleButton.disabled = false;
                     break;
                 case 'processing':
-                    orb.classList.add('idle'); // Show idle orb during processing
+                    orb.classList.add('idle');
                     processingIndicator.classList.remove('hidden');
                     statusMessage.textContent = 'Thinking...';
                     toggleButton.disabled = true;
@@ -253,33 +256,6 @@
         }
 
         /**
-         * Retries a fetch request with exponential backoff.
-         * @param {function} fetchFn - A function that returns a fetch Promise.
-         * @param {number} maxRetries - Maximum number of retries.
-         * @returns {Promise<Response>}
-         */
-        async function fetchWithBackoff(fetchFn, maxRetries = 3) {
-            let delay = 1000;
-            for (let i = 0; i < maxRetries; i++) {
-                try {
-                    const response = await fetchFn();
-                    if (response.ok) {
-                        return response;
-                    }
-                    // Don't retry on client errors (4xx)
-                    if (response.status >= 400 && response.status < 500) {
-                        throw new Error(`Client Error: ${response.status} ${response.statusText}`);
-                    }
-                    // Retry on server errors (5xx) or rate limits (429)
-                } catch (error) {
-                    if (i === maxRetries - 1) throw error;
-                }
-                await new Promise(resolve => setTimeout(resolve, delay));
-                delay *= 2;
-            }
-        }
-
-        /**
          * Sends user text to Gemini and gets a text response.
          * @param {string} userText - The user's transcribed speech.
          */
@@ -288,29 +264,32 @@
 
             const payload = {
                 contents: chatHistory,
-                // Simple system instruction
-                systemInstruction: {
-                    parts: [{ text: "You are Sophia, a helpful and concise AI assistant. Respond in a friendly and professional tone. Keep your answers brief, to one or two sentences." }]
+                generationConfig: {
+                    temperature: 0.7,
+                    maxOutputTokens: 150,
                 }
             };
 
             try {
-                const response = await fetchWithBackoff(() => 
-                    fetch(GEMINI_TEXT_API_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    })
-                );
+                const response = await fetch(GEMINI_TEXT_API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.status} ${response.statusText}`);
+                }
 
                 const result = await response.json();
                 const botText = result.candidates?.[0]?.content?.parts?.[0]?.text;
 
                 if (botText) {
                     chatHistory.push({ role: "model", parts: [{ text: botText }] });
+                    // Use browser's built-in TTS as fallback since Gemini TTS API structure is complex
                     speakText(botText);
                 } else {
-                    throw new Error("Invalid response from Gemini API.");
+                    throw new Error("No response text from Gemini API");
                 }
             } catch (error) {
                 showError(`Error getting response: ${error.message}`);
@@ -318,141 +297,28 @@
         }
 
         /**
-         * Sends text to the TTS API and gets audio data.
+         * Speaks text using the browser's built-in SpeechSynthesis API
          * @param {string} textToSpeak - The text to be spoken.
          */
-        async function speakText(textToSpeak) {
-            const payload = {
-                contents: [{
-                    parts: [{ text: `Say this in a professional, friendly tone: ${textToSpeak}` }]
-                }],
-                generationConfig: {
-                    responseModalities: ["AUDIO"],
-                    speechConfig: {
-                        voiceConfig: {
-                            prebuiltVoiceConfig: { voiceName: VOICE_NAME }
-                        }
-                    }
-                },
-                model: "gemini-2.5-flash-preview-tts"
-            };
-
-            try {
-                const response = await fetchWithBackoff(() => 
-                    fetch(GEMINI_TTS_API_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    })
-                );
+        function speakText(textToSpeak) {
+            // Use browser's built-in TTS as a reliable fallback
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(textToSpeak);
+                utterance.rate = 0.9;
+                utterance.pitch = 1;
+                utterance.volume = 1;
                 
-                const result = await response.json();
-                const part = result?.candidates?.[0]?.content?.parts?.[0];
-                const audioData = part?.inlineData?.data;
-                const mimeType = part?.inlineData?.mimeType;
-
-                if (audioData && mimeType && mimeType.startsWith("audio/L16")) {
-                    const sampleRateMatch = mimeType.match(/rate=(\d+)/);
-                    const sampleRate = sampleRateMatch ? parseInt(sampleRateMatch[1], 10) : 24000;
-                    playAudio(audioData, sampleRate);
-                } else {
-                    throw new Error("Invalid audio data received from TTS API.");
-                }
-
-            } catch (error) {
-                showError(`Error generating speech: ${error.message}`);
-            }
-        }
-
-        /**
-         * Plays the base64-encoded PCM audio data.
-         * @param {string} base64Data - Base64 string of PCM audio.
-         * @param {number} sampleRate - The audio sample rate (e.g., 24000).
-         */
-        function playAudio(base64Data, sampleRate) {
-            try {
-                const pcmData = base64ToArrayBuffer(base64Data);
-                const pcm16 = new Int16Array(pcmData);
-                const wavBlob = pcmToWav(pcm16, sampleRate);
-                const audioUrl = URL.createObjectURL(wavBlob);
+                utterance.onstart = () => updateUI('speaking');
+                utterance.onend = () => updateUI('idle');
+                utterance.onerror = () => {
+                    showError('Speech synthesis failed');
+                    updateUI('idle');
+                };
                 
-                audioPlayer.src = audioUrl;
-                audioPlayer.play();
-            } catch (error) {
-                showError(`Error playing audio: ${error.message}`);
-            }
-        }
-
-        // --- Audio Helper Functions ---
-
-        /**
-         * Decodes a base64 string into an ArrayBuffer.
-         * @param {string} base64 - The base64-encoded string.
-         * @returns {ArrayBuffer}
-         */
-        function base64ToArrayBuffer(base64) {
-            const binaryString = window.atob(base64);
-            const len = binaryString.length;
-            const bytes = new Uint8Array(len);
-            for (let i = 0; i < len; i++) {
-                bytes[i] = binaryString.charCodeAt(i);
-            }
-            return bytes.buffer;
-        }
-
-        /**
-         * Converts raw PCM audio data into a WAV blob.
-         * @param {Int16Array} pcmData - The raw PCM data.
-         * @param {number} sampleRate - The audio sample rate.
-         * @returns {Blob}
-         */
-        function pcmToWav(pcmData, sampleRate) {
-            const numChannels = 1;
-            const bitsPerSample = 16;
-            const dataSize = pcmData.length * (bitsPerSample / 8);
-            const blockAlign = numChannels * (bitsPerSample / 8);
-            const byteRate = sampleRate * blockAlign;
-
-            const buffer = new ArrayBuffer(44 + dataSize);
-            const view = new DataView(buffer);
-
-            // RIFF header
-            writeString(view, 0, 'RIFF');
-            view.setUint32(4, 36 + dataSize, true);
-            writeString(view, 8, 'WAVE');
-
-            // fmt chunk
-            writeString(view, 12, 'fmt ');
-            view.setUint32(16, 16, true); // chunk size
-            view.setUint16(20, 1, true);  // audio format (1 = PCM)
-            view.setUint16(22, numChannels, true);
-            view.setUint32(24, sampleRate, true);
-            view.setUint32(28, byteRate, true);
-            view.setUint16(32, blockAlign, true);
-            view.setUint16(34, bitsPerSample, true);
-
-            // data chunk
-            writeString(view, 36, 'data');
-            view.setUint32(40, dataSize, true);
-
-            // Write PCM data
-            let offset = 44;
-            for (let i = 0; i < pcmData.length; i++, offset += 2) {
-                view.setInt16(offset, pcmData[i], true);
-            }
-
-            return new Blob([view], { type: 'audio/wav' });
-        }
-
-        /**
-         * Helper to write a string to a DataView.
-         * @param {DataView} view - The DataView to write to.
-         * @param {number} offset - The byte offset.
-         * @param {string} string - The string to write.
-         */
-        function writeString(view, offset, string) {
-            for (let i = 0; i < string.length; i++) {
-                view.setUint8(offset + i, string.charCodeAt(i));
+                speechSynthesis.speak(utterance);
+            } else {
+                showError('Speech synthesis not supported in this browser');
+                updateUI('idle');
             }
         }
     </script>
