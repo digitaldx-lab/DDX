@@ -5,6 +5,8 @@
 // 1. Your Google Gemini API Key
 // Get this from Google AI Studio: https://aistudio.google.com/
 const GEMINI_API_KEY = "AIzaSyDsaKKeDy2yDrFMpWsPvwq989ugr9JYvMk";
+const GEMINI_API_KEY_VOICE = "AIzaSyDJWdOLFVELBKeLInW_Te7mZ-X-VJoC_gU";
+
 
 // 2. Your ElevenLabs API Key
 // Get this from your ElevenLabs profile: https://elevenlabs.io/

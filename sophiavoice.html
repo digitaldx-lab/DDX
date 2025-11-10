@@ -215,14 +215,8 @@ body::before {
         const errorMessage = document.getElementById('error-message');
 
         // --- API Configuration ---
-        // IMPORTANT: Replace with your actual Gemini API key
-        const ELEVEN_API_KEY = "YOUR_ELEVENLABS_API_KEY";  // Replace me
-        const ELEVEN_VOICE_ID = "JBFqnCBsd6RMkjVDRZzb";    // Replace if using another voice
-
         const API_KEY = "AIzaSyDsaKKeDy2yDrFMpWsPvwq989ugr9JYvMk"; 
-        const GEMINI_TEXT_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${API_KEY}`;
-        const GEMINI_TTS_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${API_KEY}`;
-        const VOICE_NAME = "Kore";
+        const GEMINI_TEXT_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${API_KEY}`;
 
         // --- State ---
         let appState = 'idle'; // idle, listening, processing, speaking
