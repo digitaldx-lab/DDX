@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sophia | AI Health Assistant</title>
+    <meta name="description" content="Sophia - Your friendly AI health assistant powered by X-Trim Research Ltd">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="./images/Sophia.png">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons (single import) -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <style>
+        :root {
+            --primary-blue: rgba(14, 165, 233, 0.6);
+            --listening-blue: rgba(96, 165, 250, 0.7);
+            --speaking-green: rgba(52, 211, 153, 0.7);
+            --transition-duration: 0.3s;
+        }
+
+        body {
+            position: relative;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background-image: url('./images/Sophia.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: white;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.788);
+            z-index: 1;
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+            padding: 20px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        /* Orb Animations */
+        @keyframes pulse-idle {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse-listening {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 20px 0px rgba(96, 165, 250, 0.7);
+            }
+            50% {
+                transform: scale(1.1);
+                box-shadow: 0 0 40px 10px rgba(96, 165, 250, 1);
+            }
+        }
+
+        @keyframes pulse-speaking {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 20px 0px rgba(52, 211, 153, 0.7);
+            }
+            50% {
+                transform: scale(1.1);
+                box-shadow: 0 0 40px 10px rgba(52, 211, 153, 1);
+            }
+        }
+
+        .orb {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--primary-blue) 0%, rgba(15,23,42,0.8) 70%);
+            border: 2px solid rgba(56, 189, 248, 0.3);
+            box-shadow: 0 0 15px 0px rgba(56, 189, 248, 0.5);
+            transition: all var(--transition-duration) ease-in-out;
+        }
+
+        .orb.idle {
+            animation: pulse-idle 4s ease-in-out infinite;
+        }
+
+        .orb.listening {
+            background: radial-gradient(circle, var(--listening-blue) 0%, rgba(15,23,42,0.8) 70%);
+            animation: pulse-listening 1.5s ease-in-out infinite;
+        }
+
+        .orb.speaking {
+            background: radial-gradient(circle, var(--speaking-green) 0%, rgba(15,23,42,0.8) 70%);
+            animation: pulse-speaking 1s ease-in-out infinite;
+        }
+
+        /* Processing Animation */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loader {
+            transform: rotateZ(45deg);
+            perspective: 1000px;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            color: #fff;
+        }
+        
+        .loader:before,
+        .loader:after {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: inherit;
+            height: inherit;
+            border-radius: 50%;
+            transform: rotateX(70deg);
+            animation: 1s spin linear infinite;
+        }
+        
+        .loader:after {
+            color: rgb(0, 225, 255);
+            transform: rotateY(70deg);
+            animation-delay: .4s;
+        }
+
+        @keyframes spin {
+            0%, 100% { box-shadow: .2em 0px 0 0px currentcolor; }
+            12% { box-shadow: .2em .2em 0 0 currentcolor; }
+            25% { box-shadow: 0 .2em 0 0px currentcolor; }
+            37% { box-shadow: -.2em .2em 0 0 currentcolor; }
+            50% { box-shadow: -.2em 0 0 0 currentcolor; }
+            62% { box-shadow: -.2em -.2em 0 0 currentcolor; }
+            75% { box-shadow: 0px -.2em 0 0 currentcolor; }
+            87% { box-shadow: .2em -.2em 0 0 currentcolor; }
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-200 font-sans h-full">
+    <div class="content-wrapper flex flex-col items-center justify-center text-center p-6">
+        <!-- The Orb -->
+        <div id="orb-container" class="relative mb-10">
+            <div id="orb" class="orb idle" aria-live="polite" aria-label="Sophia assistant status indicator"></div>
+            <!-- Processing Spinner -->
+            <div id="processing-indicator" class="absolute inset-0 flex items-center justify-center hidden">
+                <div class="loader" aria-label="Processing your request"></div>
+            </div>
+        </div>
+
+        <!-- Status Messages -->
+        <div class="h-10 mb-8 min-h-[80px]">
+            <p id="status-message" class="text-xl text-slate-400 mb-2" aria-live="polite">Press the mic to start</p>
+            <p id="transcript-message" class="text-lg text-slate-300 fade-in" aria-live="assertive"></p>
+        </div>
+
+        <!-- Control Button -->
+        <button 
+            id="toggle-button" 
+            class="bg-blue-600 p-6 rounded-full shadow-lg hover:bg-blue-500 active:bg-blue-700 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-blue-400 focus:ring-opacity-50"
+            aria-label="Toggle microphone"
+        >
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mic text-white">
+                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                <line x1="12" x2="12" y1="19" y2="22"></line>
+            </svg>
+        </button>
+
+        <!-- Hidden Audio Player -->
+        <audio id="audio-player" class="hidden" aria-hidden="true"></audio>
+
+        <!-- Error Message Container -->
+        <div id="error-message" class="mt-6 p-4 bg-red-900 border border-red-700 text-red-200 rounded-lg hidden" role="alert"></div>
+    </div>
+
+    <script type="module">
+        // Application State Management
+        class SophiaApp {
+            constructor() {
+                // DOM Elements
+                this.toggleButton = document.getElementById('toggle-button');
+                this.orb = document.getElementById('orb');
+                this.processingIndicator = document.getElementById('processing-indicator');
+                this.statusMessage = document.getElementById('status-message');
+                this.transcriptMessage = document.getElementById('transcript-message');
+                this.audioPlayer = document.getElementById('audio-player');
+                this.errorMessage = document.getElementById('error-message');
+                
+                // App State
+                this.state = {
+                    current: 'idle', // idle, listening, processing, speaking
+                    recognition: null,
+                    speechSynthesis: window.speechSynthesis,
+                    isSpeechSupported: 'speechSynthesis' in window,
+                    isRecognitionSupported: !!(window.SpeechRecognition || window.webkitSpeechRecognition)
+                };
+                
+                // Configuration
+                this.config = {
+                    // API keys should be handled server-side in production
+                    apiKey: this.getApiKey(),
+                    textApiUrl: `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${this.getApiKey()}`,
+                    recognitionLang: 'en-US',
+                    speechRate: 0.9,
+                    speechPitch: 1,
+                    maxResponseTokens: 150
+                };
+                
+                // Chat History
+                this.chatHistory = [
+                    { 
+                        role: "user", 
+                        parts: [{ 
+                            text: "You are Sophia, a friendly and supportive Health AI assistant. Your mission is to assist users by understanding their health complaints and offering actionable advice by suggesting relevant medical tests based on an internal test list. When asked about your employer, state that you work for X-Trim Research Ltd at 61 Clifford Road, Aba, Abia State, Nigeria. Keep responses concise and helpful. Do not use Markdown formatting." 
+                        }] 
+                    },
+                    { 
+                        role: "model", 
+                        parts: [{ 
+                            text: "Understood. I'm Sophia, ready to assist with your health questions in a friendly and professional manner." 
+                        }] 
+                    }
+                ];
+                
+                this.init();
+            }
+            
+            /**
+             * Initialize the application
+             */
+            init() {
+                // Initialize icons
+                if (window.lucide) {
+                    lucide.createIcons();
+                }
+                
+                // Initialize speech recognition
+                this.initSpeechRecognition();
+                
+                // Set up event listeners
+                this.setupEventListeners();
+                
+                // Check for required APIs
+                this.checkApiSupport();
+            }
+            
+            /**
+             * Get API key (in production, this should come from a secure server)
+             */
+            getApiKey() {
+                // In a real application, fetch this from your backend
+                return ""; // API key should be provided here or fetched securely
+            }
+            
+            /**
+             * Initialize speech recognition
+             */
+            initSpeechRecognition() {
+                if (!this.state.isRecognitionSupported) {
+                    this.showError("Speech recognition is not supported in your browser. Please try Chrome or Edge.");
+                    this.toggleButton.disabled = true;
+                    return;
+                }
+                
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                this.state.recognition = new SpeechRecognition();
+                this.state.recognition.continuous = false;
+                this.state.recognition.lang = this.config.recognitionLang;
+                this.state.recognition.interimResults = false;
+                this.state.recognition.maxAlternatives = 1;
+                
+                // Set up recognition event handlers
+                this.state.recognition.onstart = () => {
+                    this.updateState('listening');
+                };
+                
+                this.state.recognition.onresult = (event) => {
+                    const transcript = event.results[0][0].transcript;
+                    this.transcriptMessage.textContent = `"${transcript}"`;
+                    this.updateState('processing');
+                    this.getBotResponse(transcript);
+                };
+                
+                this.state.recognition.onend = () => {
+                    if (this.state.current === 'listening') {
+                        this.updateState('idle');
+                    }
+                };
+                
+                this.state.recognition.onerror = (event) => {
+                    if (event.error !== 'no-speech') {
+                        this.showError(`Speech recognition error: ${event.error}`);
+                    }
+                    this.updateState('idle');
+                };
+            }
+            
+            /**
+             * Set up event listeners
+             */
+            setupEventListeners() {
+                // Toggle button click
+                this.toggleButton.addEventListener('click', () => this.toggleListening());
+                
+                // Keyboard shortcuts
+                document.addEventListener('keydown', (e) => {
+                    if (e.code === 'Space' && e.target === document.body) {
+                        e.preventDefault();
+                        this.toggleListening();
+                    }
+                });
+                
+                // Audio player events
+                this.audioPlayer.addEventListener('play', () => {
+                    this.updateState('speaking');
+                });
+                
+                this.audioPlayer.addEventListener('ended', () => {
+                    this.updateState('idle');
+                });
+                
+                // Handle page visibility changes
+                document.addEventListener('visibilitychange', () => {
+                    if (document.hidden && this.state.current === 'listening') {
+                        this.state.recognition.stop();
+                    }
+                });
+            }
+            
+            /**
+             * Check for required API support
+             */
+            checkApiSupport() {
+                if (!this.state.isSpeechSupported) {
+                    console.warn('Speech synthesis not supported');
+                }
+                
+                if (!this.config.apiKey) {
+                    this.showError('API configuration required. Please check your setup.');
+                }
+            }
+            
+            /**
+             * Toggle listening state
+             */
+            toggleListening() {
+                if (!this.state.recognition) return;
+                
+                try {
+                    if (this.state.current === 'idle') {
+                        this.state.recognition.start();
+                    } else if (this.state.current === 'listening') {
+                        this.state.recognition.stop();
+                        this.updateState('idle');
+                    }
+                } catch (error) {
+                    this.showError("Microphone access required. Please allow microphone permissions.");
+                    this.updateState('idle');
+                }
+            }
+            
+            /**
+             * Update application state and UI
+             * @param {string} newState - The new state to transition to
+             */
+            updateState(newState) {
+                const previousState = this.state.current;
+                this.state.current = newState;
+                
+                // Reset UI elements
+                this.orb.className = 'orb';
+                this.processingIndicator.classList.add('hidden');
+                this.errorMessage.classList.add('hidden');
+                
+                // Update based on new state
+                switch (newState) {
+                    case 'idle':
+                        this.orb.classList.add('idle');
+                        this.statusMessage.textContent = 'Press the mic to start';
+                        this.toggleButton.disabled = false;
+                        this.toggleButton.setAttribute('aria-label', 'Start listening');
+                        break;
+                        
+                    case 'listening':
+                        this.orb.classList.add('listening');
+                        this.statusMessage.textContent = 'Listening...';
+                        this.transcriptMessage.textContent = '';
+                        this.toggleButton.disabled = false;
+                        this.toggleButton.setAttribute('aria-label', 'Stop listening');
+                        break;
+                        
+                    case 'processing':
+                        this.orb.classList.add('idle');
+                        this.processingIndicator.classList.remove('hidden');
+                        this.statusMessage.textContent = 'Thinking...';
+                        this.toggleButton.disabled = true;
+                        this.toggleButton.setAttribute('aria-label', 'Processing your request');
+                        break;
+                        
+                    case 'speaking':
+                        this.orb.classList.add('speaking');
+                        this.statusMessage.textContent = 'Speaking...';
+                        this.toggleButton.disabled = true;
+                        this.toggleButton.setAttribute('aria-label', 'Sophia is speaking');
+                        break;
+                }
+                
+                // Log state changes for debugging
+                if (previousState !== newState) {
+                    console.log(`State changed: ${previousState} -> ${newState}`);
+                }
+            }
+            
+            /**
+             * Display error message to user
+             * @param {string} message - Error message to display
+             */
+            showError(message) {
+                console.error('Sophia Error:', message);
+                this.errorMessage.textContent = message;
+                this.errorMessage.classList.remove('hidden');
+                
+                // Auto-hide error after 5 seconds
+                setTimeout(() => {
+                    this.errorMessage.classList.add('hidden');
+                }, 5000);
+            }
+            
+            /**
+             * Get response from Gemini API
+             * @param {string} userText - User's input text
+             */
+            async getBotResponse(userText) {
+                // Add user message to chat history
+                this.chatHistory.push({ 
+                    role: "user", 
+                    parts: [{ text: userText }] 
+                });
+                
+                const payload = {
+                    contents: this.chatHistory,
+                    generationConfig: {
+                        temperature: 0.7,
+                        maxOutputTokens: this.config.maxResponseTokens,
+                    }
+                };
+                
+                try {
+                    const response = await fetch(this.config.textApiUrl, {
+                        method: 'POST',
+                        headers: { 
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        throw new Error(`API Error: ${response.status} - ${errorText}`);
+                    }
+                    
+                    const result = await response.json();
+                    const botText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                    
+                    if (botText) {
+                        // Add bot response to chat history
+                        this.chatHistory.push({ 
+                            role: "model", 
+                            parts: [{ text: botText }] 
+                        });
+                        
+                        // Limit chat history to prevent token overflow
+                        if (this.chatHistory.length > 10) {
+                            this.chatHistory = this.chatHistory.slice(-10);
+                        }
+                        
+                        // Speak the response
+                        this.speakText(botText);
+                    } else {
+                        throw new Error("No response text from API");
+                    }
+                } catch (error) {
+                    this.showError(`Failed to get response: ${error.message}`);
+                    this.updateState('idle');
+                }
+            }
+            
+            /**
+             * Convert text to speech
+             * @param {string} text - Text to speak
+             */
+            speakText(text) {
+                if (!this.state.isSpeechSupported) {
+                    this.showError('Text-to-speech not supported in your browser');
+                    this.updateState('idle');
+                    return;
+                }
+                
+                // Cancel any ongoing speech
+                this.state.speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = this.config.speechRate;
+                utterance.pitch = this.config.speechPitch;
+                utterance.volume = 1;
+                
+                utterance.onstart = () => {
+                    this.updateState('speaking');
+                };
+                
+                utterance.onend = () => {
+                    this.updateState('idle');
+                };
+                
+                utterance.onerror = (event) => {
+                    console.error('Speech synthesis error:', event);
+                    this.showError('Speech synthesis failed');
+                    this.updateState('idle');
+                };
+                
+                this.state.speechSynthesis.speak(utterance);
+            }
+        }
+        
+        // Initialize the application when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new SophiaApp();
+        });
+        
+        // Handle potential errors during initialization
+        window.addEventListener('error', (event) => {
+            console.error('Global error:', event.error);
+        });
+    </script>
+</body>
+</html>

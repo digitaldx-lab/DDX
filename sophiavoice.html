@@ -11,7 +11,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- Load Lucide icons -->
-    <script type="module" src="https://unpkg.com/lucide-react@latest/dist/lucide-react.js"></script>
     <script src="https://unpkg.com/lucide-icons@latest/dist/lucide.min.js"></script>
     
     <style>
@@ -215,8 +214,9 @@ body::before {
         const errorMessage = document.getElementById('error-message');
 
         // --- API Configuration ---
-        const API_KEY = "AIzaSyDsaKKeDy2yDrFMpWsPvwq989ugr9JYvMk"; 
-        const GEMINI_TEXT_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${API_KEY}`;
+        const API_KEY = "AIzaSyDJWdOLFVELBKeLInW_Te7mZ-X-VJoC_gU"; 
+        // Use the stable alias for the high-performing model
+        const GEMINI_TEXT_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
 
         // --- State ---
         let appState = 'idle'; // idle, listening, processing, speaking
@@ -340,41 +340,46 @@ body::before {
          * @param {string} userText - The user's transcribed speech.
          */
         async function getBotResponse(userText) {
-            chatHistory.push({ role: "user", parts: [{ text: userText }] });
+    chatHistory.push({ role: "user", parts: [{ text: userText }] });
 
-            const payload = {
-                contents: chatHistory,
-                generationConfig: {
-                    temperature: 0.7,
-                    maxOutputTokens: 150,
-                }
-            };
-
-            try {
-                const response = await fetch(GEMINI_TEXT_API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!response.ok) {
-                    throw new Error(`API Error: ${response.status} ${response.statusText}`);
-                }
-
-                const result = await response.json();
-                const botText = result.candidates?.[0]?.content?.parts?.[0]?.text;
-
-                if (botText) {
-                    chatHistory.push({ role: "model", parts: [{ text: botText }] });
-                    // Use browser's built-in TTS as fallback since Gemini TTS API structure is complex
-                    speakText(botText);
-                } else {
-                    throw new Error("No response text from Gemini API");
-                }
-            } catch (error) {
-                showError(`Error getting response: ${error.message}`);
-            }
+    const payload = {
+        contents: chatHistory,
+        generationConfig: {
+            temperature: 0.7,
+            maxOutputTokens: 1024,
         }
+    };
+
+    try {
+        const response = await fetch(GEMINI_TEXT_API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            throw new Error(`API Error: ${response.status} ${response.statusText}`);
+        }
+
+        // 🌟 CRITICAL DEBUGGING LINE ADDED HERE 🌟
+        const result = await response.json(); 
+        console.log("🔥 Raw Gemini Response for Debugging:", result); 
+        // 👆 Look at this log when the error occurs!
+
+        const botText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+
+        if (botText) {
+            chatHistory.push({ role: "model", parts: [{ text: botText }] });
+            // Use browser's built-in TTS as fallback since Gemini TTS API structure is complex
+            speakText(botText);
+        } else {
+            // This is the line that throws the error you see:
+            throw new Error("No response text from Gemini API");
+        }
+    } catch (error) {
+        showError(`Error getting response: ${error.message}`);
+    }
+}
 
         /**
          * Speaks text using the browser's built-in SpeechSynthesis API
