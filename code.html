@@ -241,7 +241,7 @@
                 GEMINI: {
                     API_KEY: "AIzaSyDJWdOLFVELBKeLInW_Te7mZ-X-VJoC_gU", // ADD YOUR API KEY HERE
                     TEXT_API_URL: `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`,
-                    MAX_TOKENS: 1024,
+                    MAX_TOKENS: 2048,
                     TEMPERATURE: 0.7
                 },
                 SPEECH: {
@@ -593,7 +593,7 @@
                 });
                 
                 // Keep chat history manageable (last 10 exchanges)
-                if (chatHistory.length > 20) {
+                if (chatHistory.length > 10) {
                     chatHistory.splice(2, 2); // Remove oldest exchange but keep system prompt
                 }
                 
