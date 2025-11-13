@@ -4,23 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sophia | AI Health Assistant</title>
-    <meta name="description" content="Sophia - Your friendly AI health assistant powered by X-Trim Research Ltd">
+    <meta name="description" content="Sophia - Your friendly AI health assistant providing medical guidance and test recommendations">
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="./images/Sophia.png">
 
-    <!-- Tailwind CSS -->
+    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Lucide Icons (single import) -->
+    <!-- Load Lucide icons -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     
     <style>
         :root {
-            --primary-blue: rgba(14, 165, 233, 0.6);
+            --primary-blue: rgba(56, 189, 248, 0.7);
             --listening-blue: rgba(96, 165, 250, 0.7);
             --speaking-green: rgba(52, 211, 153, 0.7);
-            --transition-duration: 0.3s;
+            --error-red: rgba(239, 68, 68, 0.9);
         }
 
         body {
@@ -37,7 +37,7 @@
             background-repeat: no-repeat;
             background-attachment: fixed;
             color: white;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
             min-height: 100vh;
         }
 
@@ -48,16 +48,16 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.788);
+            background-color: rgba(0, 0, 0, 0.85);
             z-index: 1;
         }
 
         .content-wrapper {
             position: relative;
             z-index: 2;
-            padding: 20px;
+            padding: 2rem;
             width: 100%;
-            max-width: 600px;
+            max-width: 500px;
         }
 
         /* Orb Animations */
@@ -75,22 +75,22 @@
         @keyframes pulse-listening {
             0%, 100% {
                 transform: scale(1);
-                box-shadow: 0 0 20px 0px rgba(96, 165, 250, 0.7);
+                box-shadow: 0 0 20px 0px var(--listening-blue);
             }
             50% {
                 transform: scale(1.1);
-                box-shadow: 0 0 40px 10px rgba(96, 165, 250, 1);
+                box-shadow: 0 0 40px 10px var(--listening-blue);
             }
         }
 
         @keyframes pulse-speaking {
             0%, 100% {
                 transform: scale(1);
-                box-shadow: 0 0 20px 0px rgba(52, 211, 153, 0.7);
+                box-shadow: 0 0 20px 0px var(--speaking-green);
             }
             50% {
                 transform: scale(1.1);
-                box-shadow: 0 0 40px 10px rgba(52, 211, 153, 1);
+                box-shadow: 0 0 40px 10px var(--speaking-green);
             }
         }
 
@@ -98,41 +98,40 @@
             width: 200px;
             height: 200px;
             border-radius: 50%;
-            background: radial-gradient(circle, var(--primary-blue) 0%, rgba(15,23,42,0.8) 70%);
+            background: radial-gradient(circle, var(--primary-blue) 0%, rgba(15, 23, 42, 0.8) 70%);
             border: 2px solid rgba(56, 189, 248, 0.3);
             box-shadow: 0 0 15px 0px rgba(56, 189, 248, 0.5);
-            transition: all var(--transition-duration) ease-in-out;
+            transition: all 0.3s ease-in-out;
         }
 
-        .orb.idle {
+        .orb--idle {
             animation: pulse-idle 4s ease-in-out infinite;
         }
 
-        .orb.listening {
-            background: radial-gradient(circle, var(--listening-blue) 0%, rgba(15,23,42,0.8) 70%);
+        .orb--listening {
+            background: radial-gradient(circle, var(--listening-blue) 0%, rgba(15, 23, 42, 0.8) 70%);
             animation: pulse-listening 1.5s ease-in-out infinite;
         }
 
-        .orb.speaking {
-            background: radial-gradient(circle, var(--speaking-green) 0%, rgba(15,23,42,0.8) 70%);
+        .orb--speaking {
+            background: radial-gradient(circle, var(--speaking-green) 0%, rgba(15, 23, 42, 0.8) 70%);
             animation: pulse-speaking 1s ease-in-out infinite;
         }
 
-        /* Processing Animation */
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .orb--error {
+            background: radial-gradient(circle, var(--error-red) 0%, rgba(15, 23, 42, 0.8) 70%);
+            animation: none;
         }
 
+        /* Processing Loader */
         .loader {
             transform: rotateZ(45deg);
             perspective: 1000px;
             border-radius: 50%;
             width: 48px;
             height: 48px;
-            color: #fff;
+            color: rgb(255, 13, 0);
         }
-        
         .loader:before,
         .loader:after {
             content: '';
@@ -146,13 +145,11 @@
             transform: rotateX(70deg);
             animation: 1s spin linear infinite;
         }
-        
         .loader:after {
             color: rgb(0, 225, 255);
             transform: rotateY(70deg);
             animation-delay: .4s;
         }
-
         @keyframes spin {
             0%, 100% { box-shadow: .2em 0px 0 0px currentcolor; }
             12% { box-shadow: .2em .2em 0 0 currentcolor; }
@@ -163,428 +160,1184 @@
             75% { box-shadow: 0px -.2em 0 0 currentcolor; }
             87% { box-shadow: .2em -.2em 0 0 currentcolor; }
         }
+        .hidden {display: none;}
 
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border: 0;
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .hidden-reply{display: none;}
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .hidden {
-            display: none;
+            display: none !important;
         }
 
-        .fade-in {
-            animation: fadeIn 0.5s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .btn--disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-200 font-sans h-full">
-    <div class="content-wrapper flex flex-col items-center justify-center text-center p-6">
-        <!-- The Orb -->
-        <div id="orb-container" class="relative mb-10">
-            <div id="orb" class="orb idle" aria-live="polite" aria-label="Sophia assistant status indicator"></div>
-            <!-- Processing Spinner -->
-            <div id="processing-indicator" class="absolute inset-0 flex items-center justify-center hidden">
-                <div class="loader" aria-label="Processing your request"></div>
+<body class="bg-slate-900 text-slate-200">
+    <div class="content-wrapper">
+        <div class="flex flex-col items-center justify-center text-center">
+            <!-- Header -->
+            <header class="mb-8">
+                <h1 class="text-3xl font-bold text-white mb-2"><span style="color: red;">X</span><span style="color: aqua;">-Trim Research Ltd.</span></h1>
+                <h1 class="text-3xl font-bold text-white mb-2">Sophia</h1>
+                <p class="text-slate-400">Your AI Health Assistant</p>
+            </header>
+
+            <!-- The Orb -->
+            <div id="orb-container" class="relative mb-10">
+                <div id="orb" class="orb orb--idle"></div>
+                <!-- Processing Indicator -->
+                <div id="processing-indicator" class="absolute inset-0 flex items-center justify-center hidden">
+                    <div class="loader"></div>
+                </div>
+            </div>
+
+            <!-- Status Display -->
+            <div class="h-24 mb-8 w-full">
+                <p id="status-message" class="text-xl text-slate-400 mb-2">Press the mic to start</p>
+                <p id="transcript-message" class="text-lg text-slate-300 min-h-[1.5rem] fade-in"></p>
+                <p id="response-message" class="hidden-reply text-md text-emerald-300 mt-2 min-h-[1.5rem] fade-in"></p>
+
+            </div>
+
+            <!-- Control Button -->
+            <button 
+                id="toggle-button" 
+                class="bg-blue-600 p-6 rounded-full shadow-lg hover:bg-blue-500 active:bg-blue-700 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-blue-400 focus:ring-opacity-50"
+                aria-label="Toggle microphone"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mic text-white">
+                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                    <line x1="12" x2="12" y1="19" y2="22"></line>
+                </svg>
+            </button>
+
+            <!-- Error Message Container -->
+            <div id="error-message" class="mt-6 p-4 bg-red-900/80 border border-red-700 text-red-200 rounded-lg hidden fade-in w-full max-w-md"></div>
+
+            <!-- Disclaimer -->
+            <div class="mt-10 text-xs text-slate-500 max-w-md">
+                <p>Sophia provides health information for educational purposes only. Always consult healthcare professionals at X-Trim Research Ltd for medical advice.</p>
             </div>
         </div>
-
-        <!-- Status Messages -->
-        <div class="h-10 mb-8 min-h-[80px]">
-            <p id="status-message" class="text-xl text-slate-400 mb-2" aria-live="polite">Press the mic to start</p>
-            <p id="transcript-message" class="text-lg text-slate-300 fade-in" aria-live="assertive"></p>
-        </div>
-
-        <!-- Control Button -->
-        <button 
-            id="toggle-button" 
-            class="bg-blue-600 p-6 rounded-full shadow-lg hover:bg-blue-500 active:bg-blue-700 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-blue-400 focus:ring-opacity-50"
-            aria-label="Toggle microphone"
-        >
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mic text-white">
-                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
-                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-                <line x1="12" x2="12" y1="19" y2="22"></line>
-            </svg>
-        </button>
-
-        <!-- Hidden Audio Player -->
-        <audio id="audio-player" class="hidden" aria-hidden="true"></audio>
-
-        <!-- Error Message Container -->
-        <div id="error-message" class="mt-6 p-4 bg-red-900 border border-red-700 text-red-200 rounded-lg hidden" role="alert"></div>
     </div>
 
-    <script type="module">
-        // Application State Management
-        class SophiaApp {
-            constructor() {
-                // DOM Elements
-                this.toggleButton = document.getElementById('toggle-button');
-                this.orb = document.getElementById('orb');
-                this.processingIndicator = document.getElementById('processing-indicator');
-                this.statusMessage = document.getElementById('status-message');
-                this.transcriptMessage = document.getElementById('transcript-message');
-                this.audioPlayer = document.getElementById('audio-player');
-                this.errorMessage = document.getElementById('error-message');
-                
-                // App State
-                this.state = {
-                    current: 'idle', // idle, listening, processing, speaking
-                    recognition: null,
-                    speechSynthesis: window.speechSynthesis,
-                    isSpeechSupported: 'speechSynthesis' in window,
-                    isRecognitionSupported: !!(window.SpeechRecognition || window.webkitSpeechRecognition)
-                };
-                
-                // Configuration
-                this.config = {
-                    // API keys should be handled server-side in production
-                    apiKey: this.getApiKey(),
-                    textApiUrl: `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${this.getApiKey()}`,
-                    recognitionLang: 'en-US',
-                    speechRate: 0.9,
-                    speechPitch: 1,
-                    maxResponseTokens: 150
-                };
-                
-                // Chat History
-                this.chatHistory = [
-                    { 
-                        role: "user", 
-                        parts: [{ 
-                            text: "You are Sophia, a friendly and supportive Health AI assistant. Your mission is to assist users by understanding their health complaints and offering actionable advice by suggesting relevant medical tests based on an internal test list. When asked about your employer, state that you work for X-Trim Research Ltd at 61 Clifford Road, Aba, Abia State, Nigeria. Keep responses concise and helpful. Do not use Markdown formatting." 
-                        }] 
-                    },
-                    { 
-                        role: "model", 
-                        parts: [{ 
-                            text: "Understood. I'm Sophia, ready to assist with your health questions in a friendly and professional manner." 
-                        }] 
-                    }
-                ];
-                
-                this.init();
-            }
-            
-            /**
-             * Initialize the application
-             */
-            init() {
-                // Initialize icons
-                if (window.lucide) {
-                    lucide.createIcons();
+    <script>
+        // Sophia Voice Assistant - Professional Implementation
+        (function() {
+            'use strict';
+
+            // --- Configuration ---
+            const CONFIG = {
+                GEMINI: {
+                    API_KEY: "AIzaSyDJWdOLFVELBKeLInW_Te7mZ-X-VJoC_gU", // ADD YOUR API KEY HERE
+                    TEXT_API_URL: `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`,
+                    MAX_TOKENS: 2048,
+                    TEMPERATURE: 0.7
+                },
+                SPEECH: {
+                    LANGUAGE: 'en-US',
+                    INTERIM_RESULTS: false,
+                    CONTINUOUS: false
+                },
+                UI: {
+                    DEBOUNCE_DELAY: 300,
+                    MESSAGE_TIMEOUT: 10000
                 }
-                
-                // Initialize speech recognition
-                this.initSpeechRecognition();
+            };
+
+            // --- Test Database ---
+            const TEST_SUGGESTIONS = {
+                "TROBAS": {
+        id: 1001,
+        name: "Tropical Basics (TROBAS) Panel",
+        price: 18000,
+        description: "Comprehensive screening panel for tropical infections and basic health parameters. Ideal for routine checkups in malaria-endemic areas. with the following tests: Hemoglobin estimation, Malaria Parasite test, Urinalysis, Widal Agglutination test, Computer-Assisted Urine Microscopy",
+        category: "Health Packages",
+    },
+    "TREX": {
+        id: 1002,
+        name: "Tropical Extended (TREX) Panel",
+        price: 25000,
+        description: "Comprehensive tropical disease screening with blood and urine analysis with the following tests: Hemoglobin Estimation, Hct, MCHC, Malaria Parasite Test, Widal Agglutination Test, Urine Chemistry, Computer-Assisted Urine Microscopy, Helicobacter pylor",
+        category: "Health Packages",
+    },
+    "TRAD": {
+        id: 1003,
+        name: "Tropical Advanced (TRAD) Panel",
+        price: 35000,
+        description: "Advanced tropical screening including liver function, parasites, and stool analysis with the following tests: HGB Estimation, Hct, MCHC, Malaria Parasite Test, Widal Agglutination Test, Urine Chemistry, Computer-Assisted Urine Microscopy, Helicobacter pylori, URMCS, TBil / DBIL, Mf, Stool Analysis.",
+        category: "Health Packages",
+    },
+    "PREMARBASIC": {
+        id: 1004,
+        name: "Pre-Marriage Basic Screening Panel",
+        price: 15000,
+        description: "Essential blood compatibility tests for marriage preparation with the following test: ABO Blood Grouping, Hemoglobin Genotype.",
+        category: "Health Packages",
+    },
+    "PREMARMALE": {
+        id: 1005,
+        name: "Pre-Marriage Advanced Panel (Male)",
+        price: 45000,
+        description: "Complete male fertility and STI screening for marriage preparation with the following test: Hemoglobin Genotype, Blood Grouping, Computer-Assisted Semen Analysis and Culture, VDRL, HBsAg, HCV, Chlamydia, Urine Chemistry, Computer-Assisted Urine Microscopy, Urine Culture, T.Bil / D.BIL, RVS.",
+        category: "Health Packages",
+    },
+    "PREMARFEMALE": {
+        id: 1006,
+        name: "Pre-Marriage Advanced Panel (Female)",
+        price: 50000,
+        description: "Complete female fertility, pregnancy, and STI screening for marriage with the following test: Hemoglobin Genotype, Blood Grouping, RVS, HVS Microscopy and Culture, VDRL, Chlamydia, HBsAg, HCV, Pregnancy Test, Urine Chemistry, Computer-Assisted Urine Microscopy, Urine Culture, T.Bil / D.BIL.",
+        category: "Health Packages",
+    },
+    "STIPANEL": {
+        id: 1007,
+        name: "Sexually Transmitted Infection Panel",
+        price: 25000,
+        description: "Comprehensive screening for common sexually transmitted infections with the following test: RVS ,VDRL ,M/C/S, Chlamydia, HBsAg.",
+        category: "Health Packages",
+    },
+    "FERTILITYMEN": {
+        id: 1008,
+        name: "Fertility Profile (Men)",
+        price: 150000,
+        description: "Complete hormonal assessment for male fertility evaluation with the following test: fT4, fT3, TSH, Testosterone (Free and Total), Prostate Specific Antigen (PSA), Estrone Hormone, Follicle Stimulating Hormone (FSH), Luteinizing Hormone (LH), Prolactin.",
+        category: "Health Packages",
+    },
+    "FERTILITYWOMEN": {
+        id: 1009,
+        name: "Fertility Profile (Women)",
+        price: 120000,
+        description: "Complete hormonal assessment for female fertility evaluation with the following test: Progesterone, Estrogen, Follicle Stimulating Hormone (FSH), Luteinizing Hormone (LH), Prolactin, fT3, fT4, TSH.",
+        category: "Health Packages",
+    },
+    "LIVERPANEL": {
+        id: 1010,
+        name: "Liver Panel",
+        price: 17000,
+        description: "Complete liver function assessment with the following test: Total Bilirubin, Direct Bilirubin, ALT, AST, ALP, GGT.",
+        category: "Health Packages",
+    },
+    "KIDNEYPANEL": {
+        id: 1011,
+        name: "Kidney Panel",
+        price: 17000,
+        description: "Complete kidney function assessment with the following test: Urinalysis., Serum Urea, Blood Urea Nitrogen (BUN), Calcium, Creatinine.",
+        category: "Health Packages",
+    },
+    "CARDIACBIO": {
+        id: 1012,
+        name: "Cardiac Biomarkers",
+        price: 48000,
+        description: "Rapid cardiac injury assessment with the following test: Troponin, CK-MB, Myoglobin.",
+        category: "Health Packages",
+    },
+    'HGB': {
+        id: 'HGB',
+        name: 'Haemoglobin Estimation',
+        price: 3000,
+        description: 'Measures the amount of haemoglobin in your blood to check for anaemia or other blood conditions.',
+        category: 'Blood Test',
+    },
+    'PCV': {
+        id: 'PCV',
+        name: 'Packed Cell Volume',
+        price: 2500,
+        description: 'Determines the percentage of red blood cells in your blood.',
+        category: 'Blood Test',
+    },
+    'MPT': {
+        id: 'MPT',
+        name: 'Malaria Parasite Test',
+        price: 4000,
+        description: 'Detects the presence of malaria parasites in your blood.',
+        category: 'Parasitology',
+    },
+    'WAT': {
+        id: 'WAT',
+        name: 'Widal Agglutination Test',
+        price: 5000,
+        description: 'Used to diagnose typhoid fever by detecting Salmonella antibodies in blood.',
+        category: 'Serology',
+    },
+    'UC': {
+        id: 'UC',
+        name: 'Urine Chemistry',
+        price: 4000,
+        description: 'Analyzes the chemical composition of urine to detect abnormalities.',
+        category: 'Urine Test',
+    },
+    'CAURM': {
+        id: 'CAURM',
+        name: 'Computer Assisted Urine Microscopy',
+        price: 2500,
+        description: 'Provides detailed microscopic analysis of urine using automated systems.',
+        category: 'Urine Test',
+    },
+    'ERYBAS': {
+        id: 'ERYBAS',
+        name: 'Erythrocyte Basic',
+        price: 8500,
+        description: 'Examines red blood cell structure and count for haematological disorders.',
+        category: 'Blood Test',
+    },
+    'FBC': {
+        id: 'FBC',
+        name: 'Full Blood Count',
+        price: 10000,
+        description: 'Evaluates overall health by measuring various components of blood.',
+        category: 'Blood Test',
+    }
+    ,
+    'CBS': { 
+        id: 'CBS',
+        name: 'Complete Blood Study', 
+        price: 20500, 
+        description: 'A detailed evaluation of all blood components for comprehensive diagnosis.',
+        category: 'Blood Test',
+    },
+    'SA': { 
+        id: 'SA',
+        name: 'Stool Analysis', 
+        price: 4000, 
+        description: 'Examines stool samples for infections, parasites, and digestive issues.',
+        category: 'Parasitology',
+    },
+    'SSN': { 
+        id: 'SSN',
+        name: 'Skin Snip', 
+        price: 6000, 
+        description: 'Tests for microfilariae and other skin-borne infections using small skin samples.',
+        category: 'Parasitology',
+    },
+    'SSC': { 
+        id: 'SSC',
+        name: 'Skin Scraping', 
+        price: 6000, 
+        description: 'Used to diagnose fungal or parasitic skin infections.',
+        category: 'Microbiology',
+    },
+    'BG': { 
+        id: 'BG',
+        name: 'Blood Grouping', 
+        price: 3000, 
+        description: 'Determines your blood type and Rh factor.',
+        category: 'Blood Test',
+    },
+    'HGBG': { 
+        id: 'HGBG',
+        name: 'Haemoglobin Genotype', 
+        price: 5000, 
+        description: 'Identifies your haemoglobin type to detect sickle cell or thalassemia traits.',
+        category: 'Genetic Test',
+    },
+    'BG-HGBG': { 
+        id: 'BG-HGBG',
+        name: 'Blood Grouping & Genotype', 
+        price: 7500, 
+        description: 'Combines blood group typing and genotype testing in one package.',
+        category: 'Blood Test',
+    },
+    'ASO-TITRE': { 
+        id: 'ASO-TITRE',
+        name: 'Antistreptolysin O Titre', 
+        price: 8000, 
+        description: 'Detects antibodies produced in response to Streptococcus infection.',
+        category: 'Serology',
+    },
+    'RF': { 
+        id: 'RF',
+        name: 'Rheumatoid Factor', 
+        price: 8000, 
+        description: 'Checks for rheumatoid factor antibodies that indicate autoimmune disorders.',
+        category: 'Serology',
+    },
+    'HCV': { 
+        id: 'HCV',
+        name: 'Hepatitis C Virus', 
+        price: 5000, 
+        description: 'Screens for antibodies against the Hepatitis C virus.',
+        category: 'Virology',
+    },
+    'VDRL': { 
+        id: 'VDRL',
+        name: 'Venereal Disease Research Lab', 
+        price: 4000, 
+        description: 'Tests for syphilis by detecting antibodies in the blood.',
+        category: 'Serology',
+    },
+    'HEP-B': { 
+        id: 'HEP-B',
+        name: 'Hepatitis B Virus', 
+        price: 4000, 
+        description: 'Detects infection with the Hepatitis B virus.',
+        category: 'Virology',
+    },
+    'HIV': { 
+        id: 'HIV',
+        name: 'Human Immunodeficiency Virus', 
+        price: 4000, 
+        description: 'Screens for HIV infection by detecting antibodies or antigens in the blood.',
+        category: 'Virology',
+    },
+    'ESR': { 
+        id: 'ESR',
+        name: 'Erythrocyte Sedimentation Rate', 
+        price: 10000, 
+        description: 'Measures how quickly red blood cells settle in a test tube to help detect inflammation in the body.',
+        category: 'Blood Test',
+    },
+    'FOB': { 
+        id: 'FOB',
+        name: 'Faecal Occult Blood', 
+        price: 4000, 
+        description: 'Detects hidden blood in stool, useful in screening for gastrointestinal bleeding or colon cancer.',
+        category: 'Stool Test',
+    },
+    'HPYL': { 
+        id: 'HPYL',
+        name: 'Helicobacter Pylori Antibody Test', 
+        price: 5000, 
+        description: 'Detects antibodies against Helicobacter pylori, a bacteria associated with stomach ulcers.',
+        category: 'Serology',
+    },
+    'OMT': { 
+        id: 'OMT',
+        name: 'Ovulation Monitoring Test', 
+        price: 12000, 
+        description: 'Tracks ovulation cycle through hormone levels or ultrasound imaging to assess fertility.',
+        category: 'Fertility Test',
+    },
+    'HVSMCS': { 
+        id: 'HVSMCS',
+        name: 'High Vaginal Swab Microscopy, Culture and Sensitivity', 
+        price: 8500, 
+        description: 'Identifies vaginal infections and determines effective treatments through culture and sensitivity testing.',
+        category: 'Microbiology',
+    },
+    'URMCS': { 
+        id: 'URMCS',
+        name: 'Urine Culture And Sensitivity', 
+        price: 6500, 
+        description: 'Detects bacterial infection in urine and identifies the best antibiotic treatment.',
+        category: 'Urine Test',
+    },
+    'TDBIL': { 
+        id: 'TDBIL',
+        name: 'Total and Direct Bilirubin', 
+        price: 6000, 
+        description: 'Measures bilirubin levels in the blood to assess liver function and detect jaundice or liver disorders.',
+        category: 'Liver Function Test',
+    },
+    'BCASA': { 
+        id: 'BCASA',
+        name: 'Basic Computer Assisted Semen Analysis (for hospital use)', 
+        price: 4000, 
+        description: 'Evaluates sperm count, motility, and morphology using automated analysis systems.',
+        category: 'Fertility Test',
+    },
+    'COCASA': { 
+        id: 'COCASA',
+        name: 'Complete Computer Assisted Semen Analysis, Culture & Sensitivity', 
+        price: 18000, 
+        description: 'Comprehensive semen analysis with culture and sensitivity testing for fertility and infection diagnosis.',
+        category: 'Fertility Test',
+    },
+    'URCR': { 
+        id: 'URCR',
+        name: 'Urea Creatinine', 
+        price: 12000, 
+        description: 'Measures urea and creatinine levels in blood to assess kidney function.',
+        category: 'Renal Function Test',
+    },
+    'SE': { 
+        id: 'SE',
+        name: 'Serum Electrolytes', 
+        price: 9000, 
+        description: 'Measures key electrolytes in the blood such as sodium, potassium, and chloride to assess fluid and acid-base balance.',
+        category: 'Electrolyte Test',
+    },
+    'EUC': { 
+        id: 'EUC',
+        name: 'Electrolyte, Urea, Creatinine', 
+        price: 25000, 
+        description: 'Comprehensive kidney and electrolyte profile to evaluate renal function and fluid balance.',
+        category: 'Renal Function Test',
+    },
+    'LFT': { 
+        id: 'LFT',
+        name: 'Liver Function Test', 
+        price: 16000, 
+        description: 'Evaluates enzymes, proteins, and bilirubin levels to assess liver health and performance.',
+        category: 'Liver Function Test',
+    },
+    'LIPRO': { 
+        id: 'LIPRO',
+        name: 'Lipid Profile', 
+        price: 18000, 
+        description: 'Measures cholesterol and triglyceride levels to assess heart disease risk.',
+        category: 'Cardiac Test',
+    },
+    'TOTCHOL': { 
+        id: 'TOTCHOL',
+        name: 'Total Cholesterol', 
+        price: 8000, 
+        description: 'Determines total cholesterol levels to monitor cardiovascular health.',
+        category: 'Cardiac Test',
+    },
+    'STP': { 
+        id: 'STP',
+        name: 'Standard Thyroid Panel (T4 and TSH)', 
+        price: 25000, 
+        description: 'Assesses thyroid gland function by measuring T4 and TSH hormone levels.',
+        category: 'Hormonal Test',
+    },
+    'ETP': { 
+        id: 'ETP',
+        name: 'Extended Thyroid Panel (T3, T4 and TSH)', 
+        price: 54000, 
+        description: 'Comprehensive thyroid profile for detailed evaluation of thyroid activity and metabolism.',
+        category: 'Hormonal Test',
+    },
+    'HORPRO': { 
+        id: 'HORPRO',
+        name: 'Hormonal Profile', 
+        price: 80000, 
+        description: 'Full hormonal panel assessing reproductive, adrenal, and thyroid hormones for both men and women.',
+        category: 'Hormonal Test',
+    },
+    'RVS': { 
+        id: 'RVS',
+        name: 'Retroviral Screening', 
+        price: 4000, 
+        description: 'Screens for retroviral infections including HIV antibodies.',
+        category: 'Virology',
+    },
+    'TPSA': { 
+        id: 'TPSA',
+        name: 'Prostate Specific Antigen', 
+        price: 16000, 
+        description: 'Measures PSA levels to screen for prostate abnormalities and cancer.',
+        category: 'Cancer Marker',
+    },
+    'CEA': { 
+        id: 'CEA',
+        name: 'Carcinoembryonic Antigen', 
+        price: 14000, 
+        description: 'Used to detect and monitor certain types of cancers, especially of the colon and rectum.',
+        category: 'Cancer Marker',
+    },
+    'TREX': { 
+        id: 'TREX',
+        name: 'Tropical Extended', 
+        price: 22500, 
+        description: 'Comprehensive tropical disease panel covering major infections prevalent in tropical regions.',
+        category: 'Tropical Disease Panel',
+    },
+    'TROBAS': { 
+        id: 'TROBAS',
+        name: 'Tropical Basic', 
+        price: 15500, 
+        description: 'Basic screening for common tropical infections and parasitic diseases.',
+        category: 'Tropical Disease Panel',
+    },
+    'SPT': { 
+        id: 'SPT',
+        name: 'Serum Pregnancy Test', 
+        price: 2500, 
+        description: 'Detects the presence of hCG hormone in the blood to confirm pregnancy.',
+        category: 'Fertility Test',
+    },
+    'ALB': { 
+        id: 'ALB',
+        name: 'Albumin', 
+        price: 6000, 
+        description: 'Measures albumin levels in the blood to evaluate liver and kidney health.',
+        category: 'Liver Function Test',
+    },
+    'VITD': { 
+        id: 'VITD',
+        name: 'Vitamin D', 
+        price: 16000, 
+        description: 'Determines Vitamin D levels to assess bone health and immune function.',
+        category: 'Nutritional Test',
+    },
+    'CORT': { 
+        id: 'CORT',
+        name: 'Cortisol', 
+        price: 18000, 
+        description: 'Measures cortisol hormone levels to assess stress response and adrenal gland function.',
+        category: 'Hormonal Test',
+    },
+    'KFT': { 
+        id: 'KFT',
+        name: 'Kidney Function Test', 
+        price: 14000, 
+        description: 'Evaluates how well the kidneys are filtering waste and maintaining fluid balance.',
+        category: 'Renal Function Test',
+    },
+    'MF': { 
+        id: 'MF',
+        name: 'Micro Filaria', 
+        price: 8000, 
+        description: 'Detects microfilariae in the blood, which cause filariasis and related parasitic diseases.',
+        category: 'Parasitology',
+    },
+    'CAL': { 
+        id: 'CAL',
+        name: 'Calcium', 
+        price: 14000, 
+        description: 'Measures calcium levels in blood to assess bone health and parathyroid function.',
+        category: 'Nutritional Test',
+    },
+    'PRL': { 
+        id: 'PRL',
+        name: 'Prolactin', 
+        price: 18000, 
+        description: 'Measures prolactin hormone levels to evaluate pituitary gland function and fertility issues.',
+        category: 'Hormonal Test',
+    },
+    'PROG': { 
+        id: 'PROG',
+        name: 'Progesterone', 
+        price: 18000, 
+        description: 'Assesses progesterone levels to monitor ovulation, fertility, and pregnancy health.',
+        category: 'Hormonal Test',
+    },
+    'E2': { 
+        id: 'E2',
+        name: 'Estradiol Hormonal Test', 
+        price: 16000, 
+        description: 'Measures estradiol levels to evaluate ovarian function and hormone balance.',
+        category: 'Hormonal Test',
+    },
+    'FSH': { 
+        id: 'FSH',
+        name: 'Follicle Stimulating Hormone Test', 
+        price: 12000, 
+        description: 'Measures FSH levels to assess fertility, menstrual cycle, and pituitary function.',
+        category: 'Hormonal Test',
+    },
+    'LH': { 
+        id: 'LH',
+        name: 'Luteinizing Hormone', 
+        price: 12000, 
+        description: 'Evaluates LH levels to monitor ovulation and reproductive health.',
+        category: 'Hormonal Test',
+    },
+    'HCV': { 
+        id: 'HCV',
+        name: 'Hepatitis C Virus', 
+        price: 4000, 
+        description: 'Screens for Hepatitis C virus antibodies to detect infection.',
+        category: 'Virology',
+    },
+    'Hbsag': { 
+        id: 'Hbsag',
+        name: 'Hepatitis B Surface Antigen', 
+        price: 4000, 
+        description: 'Detects the surface antigen of Hepatitis B virus, indicating active infection.',
+        category: 'Virology',
+    },
+    'HAV': { 
+        id: 'HAV',
+        name: 'Hepatitis A Virus', 
+        price: 5000, 
+        description: 'Detects antibodies against Hepatitis A virus to determine past or current infection.',
+        category: 'Virology',
+    },
+    'FT4': { 
+        id: 'FT4',
+        name: 'Free Tetraiodothyronine', 
+        price: 18000, 
+        description: 'Measures the free T4 hormone level to assess thyroid gland function.',
+        category: 'Hormonal Test',
+    },
+    'CHLAMYD': { 
+        id: 'CHLAMYD',
+        name: 'Chlamydia Trachomatis Test', 
+        price: 5500, 
+        description: 'Detects the presence of Chlamydia trachomatis bacteria causing sexually transmitted infections.',
+        category: 'Microbiology',
+    },
+    'RES': { 
+        id: 'RES',
+        name: 'Research', 
+        price: 10000, 
+        description: 'Special diagnostic or experimental tests performed for research and evaluation purposes.',
+        category: 'Special Test',
+    },
+    'FPSA': { 
+        id: 'FPSA',
+        name: 'Free Prostate Specific Antigen', 
+        price: 16000, 
+        description: 'Measures the unbound PSA in the blood to aid in prostate cancer screening.',
+        category: 'Cancer Marker',
+    },
+    'PSA_PRO': { 
+        id: 'PSA_PRO',
+        name: 'Complete PSA Profile', 
+        price: 32000, 
+        description: 'Comprehensive prostate-specific antigen profile for advanced screening of prostate health.',
+        category: 'Cancer Marker',
+    },
+    'RBG': { 
+        id: 'RBG',
+        name: 'Random Blood Glucose', 
+        price: 2500, 
+        description: 'Measures blood glucose levels at any time of the day to screen for diabetes.',
+        category: 'Glucose Test',
+    },
+    'GONOR': { 
+        id: 'GONOR',
+        name: 'Gonorrhea Test', 
+        price: 7000, 
+        description: 'Detects Neisseria gonorrhoeae bacteria responsible for gonorrhea infection.',
+        category: 'Microbiology',
+    },
+    'FBG': { 
+        id: 'FBG',
+        name: 'Fasting Blood Glucose', 
+        price: 2500, 
+        description: 'Measures blood sugar levels after fasting to check for diabetes and glucose metabolism.',
+        category: 'Glucose Test',
+    },
+    'HPYLANT': { 
+        id: 'HPYLANT',
+        name: 'Helicobacter Pylori Antigen Test', 
+        price: 12000, 
+        description: 'Detects H. pylori antigens in stool for diagnosing stomach infections.',
+        category: 'Serology',
+    },
+    'HbA1c': { 
+        id: 'HbA1c',
+        name: 'Glycated Haemoglobin', 
+        price: 12000, 
+        description: 'Determines average blood sugar levels over the past 2–3 months for diabetes monitoring.',
+        category: 'Glucose Test',
+    },
+    'FT3': { 
+        id: 'FT3',
+        name: 'Free Triiodothyronine', 
+        price: 18000, 
+        description: 'Measures the free T3 thyroid hormone to evaluate thyroid activity and metabolism.',
+        category: 'Hormonal Test',
+    },
+    'TSH': { 
+        id: 'TSH',
+        name: 'Thyroid Stimulating Hormone', 
+        price: 18000, 
+        description: 'Measures TSH levels to assess thyroid gland function and detect hypo- or hyperthyroidism.',
+        category: 'Hormonal Test',
+    },
+    'WOUND-SWAB-CS': { 
+        id: 'WOUND-SWAB-CS',
+        name: 'Wound Swab Culture and Sensitivity', 
+        price: 10000, 
+        description: 'Detects and identifies bacteria from wound infections and determines the most effective antibiotic treatment.',
+        category: 'Microbiology',
+    },
+    'hs-CRP': { 
+        id: 'hs-CRP',
+        name: 'High Sensitivity C-reactive Protein', 
+        price: 18000, 
+        description: 'Measures C-reactive protein levels to detect low levels of inflammation linked to cardiovascular disease risk.',
+        category: 'Inflammation Marker',
+    },
+    'RSS': { 
+        id: 'RSS',
+        name: 'Reprocessing Storage and Security', 
+        price: 5000, 
+        description: 'Administrative and processing fee covering safe handling, storage, and documentation of test samples.',
+        category: 'Service Charge',
+    },
+    'UR-ACID': { 
+        id: 'UR-ACID',
+        name: 'Uric Acid', 
+        price: 18000, 
+        description: 'Measures uric acid levels in the blood to help diagnose gout or monitor kidney function.',
+        category: 'Renal Function Test',
+    }
+            };
+
+            // --- State Management ---
+            const STATE = {
+                IDLE: 'idle',
+                LISTENING: 'listening',
+                PROCESSING: 'processing',
+                SPEAKING: 'speaking',
+                ERROR: 'error'
+            };
+
+            let currentState = STATE.IDLE;
+            let speechRecognition = null;
+            let speechSynthesis = window.speechSynthesis;
+            let currentUtterance = null;
+            let isButtonDebouncing = false;
+            let wakeLock = null; // For preventing screen sleep
+
+            // Initialize chat history with system prompt
+            const chatHistory = [
+                {
+                    role: "user",
+                    parts: [{ 
+                        text: `You are Sophia, a friendly and supportive Health AI. Your mission is to assist users by understanding their health complaints and offering actionable advice by suggesting relevant medical tests. 
+
+IMPORTANT: You must only suggest tests from this predefined list. Do not invent or suggest any tests not in this list:
+
+${Object.values(TEST_SUGGESTIONS).map(test => 
+    `- ${test.name} (${test.category}): ${test.description}. Price: ₦${test.price.toLocaleString()}`
+).join('\n')}
+
+When suggesting tests, always mention the name, what it checks for, and the price in Nigerian Naira. You can suggest multiple tests if appropriate.
+
+When asked about your employer, state that you work for X-Trim Research Ltd at 61 Clifford Road, Aba, Abia State, Nigeria, and include positive, promotional language about the company. 
+
+Always keep responses concise and avoid markdown formatting.` 
+                    }]
+                },
+                {
+                    role: "model", 
+                    parts: [{ 
+                        text: "Understood. I'm Sophia, ready to provide helpful health guidance and test recommendations in a friendly, professional manner. I'll only suggest tests from the approved list and include relevant details like purpose and pricing." 
+                    }]
+                }
+            ];
+
+            // --- DOM Elements ---
+            const elements = {
+                orb: document.getElementById('orb'),
+                toggleButton: document.getElementById('toggle-button'),
+                processingIndicator: document.getElementById('processing-indicator'),
+                statusMessage: document.getElementById('status-message'),
+                transcriptMessage: document.getElementById('transcript-message'),
+                responseMessage: document.getElementById('response-message'),
+                errorMessage: document.getElementById('error-message')
+            };
+
+            // --- Initialization ---
+            function init() {
+                // Set up speech recognition
+                initializeSpeechRecognition();
                 
                 // Set up event listeners
-                this.setupEventListeners();
+                setupEventListeners();
                 
-                // Check for required APIs
-                this.checkApiSupport();
+                // Initialize Lucide icons
+                if (window.lucide) {
+                    window.lucide.createIcons();
+                }
+                
+                console.log('Sophia initialized successfully');
             }
-            
-            /**
-             * Get API key (in production, this should come from a secure server)
-             */
-            getApiKey() {
-                // In a real application, fetch this from your backend
-                return ""; // API key should be provided here or fetched securely
+
+            // --- Speech Recognition Setup ---
+            function initializeSpeechRecognition() {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                
+                if (!SpeechRecognition) {
+                    showError('Speech recognition is not supported in this browser. Please try Chrome or Edge.');
+                    disableToggleButton();
+                    return;
+                }
+
+                speechRecognition = new SpeechRecognition();
+                speechRecognition.continuous = CONFIG.SPEECH.CONTINUOUS;
+                speechRecognition.interimResults = CONFIG.SPEECH.INTERIM_RESULTS;
+                speechRecognition.lang = CONFIG.SPEECH.LANGUAGE;
+
+                // Event handlers
+                speechRecognition.onstart = handleRecognitionStart;
+                speechRecognition.onresult = handleRecognitionResult;
+                speechRecognition.onerror = handleRecognitionError;
+                speechRecognition.onend = handleRecognitionEnd;
             }
-            
-            /**
-             * Initialize speech recognition
-             */
-            initSpeechRecognition() {
-                if (!this.state.isRecognitionSupported) {
-                    this.showError("Speech recognition is not supported in your browser. Please try Chrome or Edge.");
-                    this.toggleButton.disabled = true;
+
+            // --- Event Handlers ---
+            function setupEventListeners() {
+                elements.toggleButton.addEventListener('click', handleToggleButtonClick);
+                
+                // Handle page visibility changes
+                document.addEventListener('visibilitychange', handleVisibilityChange);
+                
+                // Handle beforeunload to clean up resources
+                window.addEventListener('beforeunload', cleanupResources);
+            }
+
+            function handleToggleButtonClick() {
+                if (isButtonDebouncing) return;
+                
+                debounceButton();
+                
+                switch (currentState) {
+                    case STATE.IDLE:
+                        startListening();
+                        break;
+                    case STATE.LISTENING:
+                        stopListening();
+                        break;
+                    case STATE.SPEAKING:
+                        stopSpeaking();
+                        transitionToState(STATE.IDLE);
+                        break;
+                    default:
+                        // In processing or error state, reset to idle
+                        transitionToState(STATE.IDLE);
+                }
+            }
+
+            function handleRecognitionStart() {
+                transitionToState(STATE.LISTENING);
+            }
+
+            function handleRecognitionResult(event) {
+                const transcript = event.results[0][0].transcript;
+                if (transcript.trim()) {
+                    elements.transcriptMessage.textContent = `You said: "${transcript}"`;
+                    processUserInput(transcript);
+                } else {
+                    transitionToState(STATE.IDLE);
+                }
+            }
+
+            function handleRecognitionError(event) {
+                // Ignore 'no-speech' errors as they're common
+                if (event.error === 'no-speech') {
+                    transitionToState(STATE.IDLE);
                     return;
                 }
                 
-                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-                this.state.recognition = new SpeechRecognition();
-                this.state.recognition.continuous = false;
-                this.state.recognition.lang = this.config.recognitionLang;
-                this.state.recognition.interimResults = false;
-                this.state.recognition.maxAlternatives = 1;
+                let errorMessage = `Speech recognition error: ${event.error}`;
                 
-                // Set up recognition event handlers
-                this.state.recognition.onstart = () => {
-                    this.updateState('listening');
-                };
-                
-                this.state.recognition.onresult = (event) => {
-                    const transcript = event.results[0][0].transcript;
-                    this.transcriptMessage.textContent = `"${transcript}"`;
-                    this.updateState('processing');
-                    this.getBotResponse(transcript);
-                };
-                
-                this.state.recognition.onend = () => {
-                    if (this.state.current === 'listening') {
-                        this.updateState('idle');
-                    }
-                };
-                
-                this.state.recognition.onerror = (event) => {
-                    if (event.error !== 'no-speech') {
-                        this.showError(`Speech recognition error: ${event.error}`);
-                    }
-                    this.updateState('idle');
-                };
-            }
-            
-            /**
-             * Set up event listeners
-             */
-            setupEventListeners() {
-                // Toggle button click
-                this.toggleButton.addEventListener('click', () => this.toggleListening());
-                
-                // Keyboard shortcuts
-                document.addEventListener('keydown', (e) => {
-                    if (e.code === 'Space' && e.target === document.body) {
-                        e.preventDefault();
-                        this.toggleListening();
-                    }
-                });
-                
-                // Audio player events
-                this.audioPlayer.addEventListener('play', () => {
-                    this.updateState('speaking');
-                });
-                
-                this.audioPlayer.addEventListener('ended', () => {
-                    this.updateState('idle');
-                });
-                
-                // Handle page visibility changes
-                document.addEventListener('visibilitychange', () => {
-                    if (document.hidden && this.state.current === 'listening') {
-                        this.state.recognition.stop();
-                    }
-                });
-            }
-            
-            /**
-             * Check for required API support
-             */
-            checkApiSupport() {
-                if (!this.state.isSpeechSupported) {
-                    console.warn('Speech synthesis not supported');
+                // User-friendly error messages
+                if (event.error === 'not-allowed') {
+                    errorMessage = 'Microphone access denied. Please allow microphone permissions and try again.';
+                } else if (event.error === 'audio-capture') {
+                    errorMessage = 'No microphone detected. Please check your audio hardware.';
                 }
                 
-                if (!this.config.apiKey) {
-                    this.showError('API configuration required. Please check your setup.');
+                showError(errorMessage);
+                transitionToState(STATE.ERROR);
+            }
+
+            function handleRecognitionEnd() {
+                if (currentState === STATE.LISTENING) {
+                    // If we're still in listening state when recognition ends,
+                    // it means no speech was detected
+                    transitionToState(STATE.IDLE);
                 }
             }
-            
-            /**
-             * Toggle listening state
-             */
-            toggleListening() {
-                if (!this.state.recognition) return;
+
+            function handleVisibilityChange() {
+                if (document.hidden) {
+                    // Page is hidden, stop any ongoing operations
+                    if (currentState === STATE.LISTENING) {
+                        stopListening();
+                    }
+                    if (currentState === STATE.SPEAKING) {
+                        stopSpeaking();
+                    }
+                }
+            }
+
+            // --- State Management ---
+            function transitionToState(newState) {
+                // Clean up previous state
+                cleanupState(currentState);
+                
+                // Update state
+                currentState = newState;
+                
+                // Apply new state
+                applyState(newState);
+                
+                console.log(`State transition: ${currentState} -> ${newState}`);
+            }
+
+            function cleanupState(state) {
+                switch (state) {
+                    case STATE.LISTENING:
+                        // Ensure recognition is stopped
+                        if (speechRecognition) {
+                            try {
+                                speechRecognition.stop();
+                            } catch (e) {
+                                // Ignore errors when stopping already stopped recognition
+                            }
+                        }
+                        break;
+                    case STATE.SPEAKING:
+                        stopSpeaking();
+                        break;
+                }
+            }
+
+            function applyState(state) {
+                // Reset UI elements
+                resetUI();
+                
+                switch (state) {
+                    case STATE.IDLE:
+                        elements.orb.classList.add('orb--idle');
+                        elements.statusMessage.textContent = 'Press the mic to start';
+                        elements.toggleButton.disabled = false;
+                        break;
+                        
+                    case STATE.LISTENING:
+                        elements.orb.classList.add('orb--listening');
+                        elements.statusMessage.textContent = 'Listening...';
+                        elements.toggleButton.disabled = false;
+                        break;
+                        
+                    case STATE.PROCESSING:
+                        elements.orb.classList.add('orb--idle');
+                        elements.processingIndicator.classList.remove('hidden');
+                        elements.statusMessage.textContent = 'Processing your request...';
+                        elements.toggleButton.disabled = true;
+                        break;
+                        
+                    case STATE.SPEAKING:
+                        elements.orb.classList.add('orb--speaking');
+                        elements.statusMessage.textContent = 'Speaking...';
+                        elements.toggleButton.disabled = false;
+                        break;
+                        
+                    case STATE.ERROR:
+                        elements.orb.classList.add('orb--error');
+                        elements.statusMessage.textContent = 'An error occurred';
+                        elements.toggleButton.disabled = false;
+                        break;
+                }
+            }
+
+            function resetUI() {
+                elements.orb.className = 'orb';
+                elements.processingIndicator.classList.add('hidden');
+                elements.errorMessage.classList.add('hidden');
+                elements.toggleButton.classList.remove('btn--disabled');
+            }
+
+            // --- Core Functions ---
+            function startListening() {
+                if (!speechRecognition) {
+                    showError('Speech recognition is not available.');
+                    return;
+                }
                 
                 try {
-                    if (this.state.current === 'idle') {
-                        this.state.recognition.start();
-                    } else if (this.state.current === 'listening') {
-                        this.state.recognition.stop();
-                        this.updateState('idle');
-                    }
+                    speechRecognition.start();
                 } catch (error) {
-                    this.showError("Microphone access required. Please allow microphone permissions.");
-                    this.updateState('idle');
+                    if (error.name === 'InvalidStateError') {
+                        // Recognition already started, ignore
+                        return;
+                    }
+                    showError('Failed to start speech recognition: ' + error.message);
+                    transitionToState(STATE.ERROR);
                 }
             }
-            
-            /**
-             * Update application state and UI
-             * @param {string} newState - The new state to transition to
-             */
-            updateState(newState) {
-                const previousState = this.state.current;
-                this.state.current = newState;
-                
-                // Reset UI elements
-                this.orb.className = 'orb';
-                this.processingIndicator.classList.add('hidden');
-                this.errorMessage.classList.add('hidden');
-                
-                // Update based on new state
-                switch (newState) {
-                    case 'idle':
-                        this.orb.classList.add('idle');
-                        this.statusMessage.textContent = 'Press the mic to start';
-                        this.toggleButton.disabled = false;
-                        this.toggleButton.setAttribute('aria-label', 'Start listening');
-                        break;
-                        
-                    case 'listening':
-                        this.orb.classList.add('listening');
-                        this.statusMessage.textContent = 'Listening...';
-                        this.transcriptMessage.textContent = '';
-                        this.toggleButton.disabled = false;
-                        this.toggleButton.setAttribute('aria-label', 'Stop listening');
-                        break;
-                        
-                    case 'processing':
-                        this.orb.classList.add('idle');
-                        this.processingIndicator.classList.remove('hidden');
-                        this.statusMessage.textContent = 'Thinking...';
-                        this.toggleButton.disabled = true;
-                        this.toggleButton.setAttribute('aria-label', 'Processing your request');
-                        break;
-                        
-                    case 'speaking':
-                        this.orb.classList.add('speaking');
-                        this.statusMessage.textContent = 'Speaking...';
-                        this.toggleButton.disabled = true;
-                        this.toggleButton.setAttribute('aria-label', 'Sophia is speaking');
-                        break;
+
+            function stopListening() {
+                if (speechRecognition) {
+                    try {
+                        speechRecognition.stop();
+                    } catch (error) {
+                        // Ignore errors when stopping recognition
+                        console.warn('Error stopping recognition:', error);
+                        transitionToState(STATE.IDLE);
+                        return;
+                    }
                 }
+                transitionToState(STATE.IDLE);
+            }
+
+            async function processUserInput(userInput) {
+                transitionToState(STATE.PROCESSING);
                 
-                // Log state changes for debugging
-                if (previousState !== newState) {
-                    console.log(`State changed: ${previousState} -> ${newState}`);
+                try {
+                    const response = await getAIResponse(userInput);
+                    elements.responseMessage.textContent = response;
+                    elements.responseMessage.classList.remove('hidden');
+                    speakResponse(response);
+                } catch (error) {
+                    showError(`Failed to get response: ${error.message}`);
+                    transitionToState(STATE.ERROR);
                 }
             }
-            
-            /**
-             * Display error message to user
-             * @param {string} message - Error message to display
-             */
-            showError(message) {
-                console.error('Sophia Error:', message);
-                this.errorMessage.textContent = message;
-                this.errorMessage.classList.remove('hidden');
+
+            async function getAIResponse(userInput) {
+                if (!CONFIG.GEMINI.API_KEY) {
+                    throw new Error('API key not configured. Please add your Gemini API key.');
+                }
                 
-                // Auto-hide error after 5 seconds
-                setTimeout(() => {
-                    this.errorMessage.classList.add('hidden');
-                }, 5000);
-            }
-            
-            /**
-             * Get response from Gemini API
-             * @param {string} userText - User's input text
-             */
-            async getBotResponse(userText) {
-                // Add user message to chat history
-                this.chatHistory.push({ 
-                    role: "user", 
-                    parts: [{ text: userText }] 
+                // Add user message to history
+                chatHistory.push({
+                    role: "user",
+                    parts: [{ text: userInput }]
                 });
                 
                 const payload = {
-                    contents: this.chatHistory,
+                    contents: chatHistory,
                     generationConfig: {
-                        temperature: 0.7,
-                        maxOutputTokens: this.config.maxResponseTokens,
+                        temperature: CONFIG.GEMINI.TEMPERATURE,
+                        maxOutputTokens: CONFIG.GEMINI.MAX_TOKENS,
                     }
                 };
                 
-                try {
-                    const response = await fetch(this.config.textApiUrl, {
-                        method: 'POST',
-                        headers: { 
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(payload)
-                    });
-                    
-                    if (!response.ok) {
-                        const errorText = await response.text();
-                        throw new Error(`API Error: ${response.status} - ${errorText}`);
-                    }
-                    
-                    const result = await response.json();
-                    const botText = result.candidates?.[0]?.content?.parts?.[0]?.text;
-                    
-                    if (botText) {
-                        // Add bot response to chat history
-                        this.chatHistory.push({ 
-                            role: "model", 
-                            parts: [{ text: botText }] 
+                const apiUrl = `${CONFIG.GEMINI.TEXT_API_URL}?key=${CONFIG.GEMINI.API_KEY}`;
+                
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
+                    throw new Error('Invalid response format from AI service');
+                }
+                
+                const botResponse = data.candidates[0].content.parts[0].text;
+                
+                // Add bot response to history (limiting history length)
+                chatHistory.push({
+                    role: "model",
+                    parts: [{ text: botResponse }]
+                });
+                
+                // Keep chat history manageable (last 10 exchanges)
+                if (chatHistory.length > 5) {
+                    chatHistory.splice(2, 2); // Remove oldest exchange but keep system prompt
+                }
+                
+                return botResponse;
+            }
+
+            // Screen Wake Lock function to prevent screen from sleeping
+            async function requestWakeLock() {
+                if ('wakeLock' in navigator) {
+                    try {
+                        wakeLock = await navigator.wakeLock.request('screen');
+                        console.log('Wake Lock is active');
+                        
+                        wakeLock.addEventListener('release', () => {
+                            console.log('Wake Lock was released');
                         });
-                        
-                        // Limit chat history to prevent token overflow
-                        if (this.chatHistory.length > 10) {
-                            this.chatHistory = this.chatHistory.slice(-10);
-                        }
-                        
-                        // Speak the response
-                        this.speakText(botText);
-                    } else {
-                        throw new Error("No response text from API");
+                    } catch (err) {
+                        console.error(`${err.name}, ${err.message}`);
                     }
-                } catch (error) {
-                    this.showError(`Failed to get response: ${error.message}`);
-                    this.updateState('idle');
                 }
             }
-            
-            /**
-             * Convert text to speech
-             * @param {string} text - Text to speak
-             */
-            speakText(text) {
-                if (!this.state.isSpeechSupported) {
-                    this.showError('Text-to-speech not supported in your browser');
-                    this.updateState('idle');
+
+            function releaseWakeLock() {
+                if (wakeLock !== null) {
+                    wakeLock.release();
+                    wakeLock = null;
+                }
+            }
+
+            function speakResponse(text) {
+                if (!speechSynthesis) {
+                    showError('Text-to-speech is not supported in this browser.');
+                    transitionToState(STATE.IDLE);
                     return;
                 }
                 
                 // Cancel any ongoing speech
-                this.state.speechSynthesis.cancel();
+                stopSpeaking();
                 
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.rate = this.config.speechRate;
-                utterance.pitch = this.config.speechPitch;
-                utterance.volume = 1;
+                currentUtterance = new SpeechSynthesisUtterance(text);
+                currentUtterance.rate = 0.9;
+                currentUtterance.pitch = 1;
+                currentUtterance.volume = 1;
                 
-                utterance.onstart = () => {
-                    this.updateState('speaking');
+                currentUtterance.onstart = async () => {
+                    // Request wake lock to prevent screen from sleeping
+                    await requestWakeLock();
+                    transitionToState(STATE.SPEAKING);
                 };
                 
-                utterance.onend = () => {
-                    this.updateState('idle');
+                currentUtterance.onend = () => {
+                    currentUtterance = null;
+                    // Release wake lock when done speaking
+                    releaseWakeLock();
+                    transitionToState(STATE.IDLE);
                 };
                 
-                utterance.onerror = (event) => {
+                currentUtterance.onerror = (event) => {
                     console.error('Speech synthesis error:', event);
-                    this.showError('Speech synthesis failed');
-                    this.updateState('idle');
+                    currentUtterance = null;
+                    // Release wake lock on error
+                    releaseWakeLock();
+                    showError('Speech synthesis failed');
+                    transitionToState(STATE.ERROR);
                 };
                 
-                this.state.speechSynthesis.speak(utterance);
+                speechSynthesis.speak(currentUtterance);
             }
-        }
-        
-        // Initialize the application when DOM is loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            new SophiaApp();
-        });
-        
-        // Handle potential errors during initialization
-        window.addEventListener('error', (event) => {
-            console.error('Global error:', event.error);
-        });
+
+            function stopSpeaking() {
+                if (speechSynthesis && speechSynthesis.speaking) {
+                    speechSynthesis.cancel();
+                }
+                if (currentUtterance) {
+                    currentUtterance = null;
+                }
+                // Release wake lock when stopping speech
+                releaseWakeLock();
+            }
+
+            // --- Utility Functions ---
+            function showError(message) {
+                console.error('Sophia Error:', message);
+                elements.errorMessage.textContent = message;
+                elements.errorMessage.classList.remove('hidden');
+                
+                // Auto-hide error after timeout
+                setTimeout(() => {
+                    elements.errorMessage.classList.add('hidden');
+                }, CONFIG.UI.MESSAGE_TIMEOUT);
+            }
+
+            function disableToggleButton() {
+                elements.toggleButton.disabled = true;
+                elements.toggleButton.classList.add('btn--disabled');
+            }
+
+            function debounceButton() {
+                isButtonDebouncing = true;
+                setTimeout(() => {
+                    isButtonDebouncing = false;
+                }, CONFIG.UI.DEBOUNCE_DELAY);
+            }
+
+            function cleanupResources() {
+                stopListening();
+                stopSpeaking();
+                // Release wake lock on cleanup
+                releaseWakeLock();
+            }
+
+            // --- Initialize Application ---
+            document.addEventListener('DOMContentLoaded', init);
+        })();
     </script>
 </body>
 </html>
