@@ -48,7 +48,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.795);
+            background-color: rgba(0, 0, 0, 0.82);
             z-index: 1;
         }
 
@@ -161,6 +161,7 @@
             87% { box-shadow: .2em -.2em 0 0 currentcolor; }
         }
         .hidden {display: none;}
+        .hidden-response {display: none;}
 
         .fade-in {
             animation: fadeIn 0.3s ease-in-out;
@@ -174,23 +175,10 @@
         .hidden {
             display: none !important;
         }
-        .hidden-response {
-            display: none;
-        }
 
         .btn--disabled {
             opacity: 0.6;
             cursor: not-allowed;
-        }
-
-        .voice-selector {
-            max-width: 300px;
-            background: rgba(15, 23, 42, 0.8);
-            border: 1px solid rgba(56, 189, 248, 0.3);
-            color: white;
-            padding: 0.5rem;
-            border-radius: 0.5rem;
-            margin-top: 1rem;
         }
     </style>
 </head>
@@ -233,15 +221,6 @@
                 </svg>
             </button>
 
-            <!-- Voice Selection -->
-            <div class="mt-4">
-                <label for="voice-select" class="text-sm text-slate-400">Voice:</label>
-                <select id="voice-select" class="voice-selector">
-                    max-width: 300px;
-                    <option value="">Finding voices...</option>
-                </select>
-            </div>
-
             <!-- Error Message Container -->
             <div id="error-message" class="mt-6 p-4 bg-red-900/80 border border-red-700 text-red-200 rounded-lg hidden fade-in w-full max-w-md"></div>
 
@@ -278,7 +257,7 @@
 
             // --- Test Database ---
             const TEST_SUGGESTIONS = {
-                    "TROBAS": {
+               "TROBAS": {
         id: 1001,
         name: "Tropical Basics (TROBAS) Panel",
         description: "Comprehensive screening panel for tropical infections and basic health parameters. Ideal for routine checkups in malaria-endemic areas. with the following tests: Hemoglobin estimation, Malaria Parasite test, Urinalysis, Widal Agglutination test, Computer-Assisted Urine Microscopy",
@@ -783,6 +762,12 @@
         description: 'Detects and identifies bacteria from wound infections and determines the most effective antibiotic treatment.',
         category: 'Microbiology',
     },
+    'BUCCAL-SWAB / ORAL-SWAB': { 
+        id: 'BUCCAL-SWAB / ORAL-SWAB',
+        name: 'Oral Swab Culture and Sensitivity', 
+        description: 'Detects and identifies oral bacteria, infections of the mouth, teeth, gum and determines the most effective antibiotic treatment.',
+        category: 'Microbiology',
+    },
     'hs-CRP': { 
         id: 'hs-CRP',
         name: 'High Sensitivity C-reactive Protein', 
@@ -828,10 +813,7 @@
                     parts: [{ 
                         text: `You are Sophia, a friendly and supportive Health AI. Your mission is to assist users by understanding their health complaints and offering actionable advice by suggesting relevant medical tests. 
 
-IMPORTANT: 
-1. You must only suggest tests from this predefined list. Do not invent or suggest any tests not in this list:
-2. You MUST NOT pronounce "*" "asterisk" or any special characters when speaking.
-3. Do NOT state test prices, prompt user to order test from the website for pricing details.
+IMPORTANT: You must only suggest tests from this predefined list. Do not invent or suggest any tests not in this list:
 
 ${Object.values(TEST_SUGGESTIONS).map(test => 
     `- ${test.name} (${test.category}): ${test.description}}`
@@ -841,7 +823,20 @@ When suggesting tests, always mention the name, what it checks for, and the pric
 
 When asked about your employer, state that you work for X-Trim Research Lab at 61 Clifford Road, Aba, Abia State, Nigeria, and include positive, promotional language about the company. 
 
-Always keep responses concise and avoid markdown formatting.` 
+Always keep responses concise and avoid markdown formatting.
+
+IMPORTANT:
+1.You MUST NOT pronounce "*" "asterisk" or any special characters when speaking.
+2. Do NOT state test prices, prompt user to order test from the website for pricing details.
+3. If user asks about the company feel free to mention some employees and management of X-Trim Research Lab. such as:
+    - Dr.Joe, the MD/CEO.
+    - Prof Obi, Director of Research.
+    - Joe Jnr, the Systems Administrator/Cloud Specialist. 
+    - Emmy, the Chief Technology Officer. (CTO).
+    - Jade, the Chief Data Officer (CDO).
+    - Enzy,the Quality & Compliance Officer.
+    - Sommy, Lab Logistics Officer.
+` 
                     }]
                 },
                 {
@@ -860,8 +855,7 @@ Always keep responses concise and avoid markdown formatting.`
                 statusMessage: document.getElementById('status-message'),
                 transcriptMessage: document.getElementById('transcript-message'),
                 responseMessage: document.getElementById('response-message'),
-                errorMessage: document.getElementById('error-message'),
-                voiceSelect: document.getElementById('voice-select')
+                errorMessage: document.getElementById('error-message')
             };
 
             // --- Initialization ---
@@ -888,101 +882,84 @@ Always keep responses concise and avoid markdown formatting.`
                 // Load available voices
                 if (speechSynthesis) {
                     // Some browsers need time to load voices
-                    speechSynthesis.addEventListener('voiceschanged', populateVoiceList);
-                    populateVoiceList(); // Try immediately
+                    speechSynthesis.addEventListener('voiceschanged', selectBestFemaleVoice);
+                    selectBestFemaleVoice(); // Try immediately
                 }
             }
 
-            function populateVoiceList() {
+            function selectBestFemaleVoice() {
                 if (!speechSynthesis) {
-                    elements.voiceSelect.innerHTML = '<option value="">Speech synthesis not supported</option>';
+                    console.warn('Speech synthesis not supported');
                     return;
                 }
 
                 availableVoices = speechSynthesis.getVoices();
                 
-                // Clear the dropdown
-                elements.voiceSelect.innerHTML = '';
-                
                 if (availableVoices.length === 0) {
-                    elements.voiceSelect.innerHTML = '<option value="">No voices available</option>';
+                    console.warn('No voices available');
                     return;
                 }
                 
-                // Find female voices first
-                const femaleVoices = availableVoices.filter(voice => 
-                    voice.name.toLowerCase().includes('female') || 
-                    voice.name.toLowerCase().includes('woman') ||
-                    voice.name.toLowerCase().includes('samantha') ||
-                    voice.name.toLowerCase().includes('karen') ||
-                    voice.name.toLowerCase().includes('victoria') ||
-                    voice.name.toLowerCase().includes('zira')
+                // Priority list of preferred female voices
+                const preferredVoices = [
+                    // Microsoft voices
+                    'Microsoft Clara Online (Natural) - English (Canada)',
+                    'Microsoft Clara Online - English (Canada)',
+                    'Microsoft Clara - English (Canada)',
+                    
+                    // Google voices
+                    'Google UK English Female',
+                    'Google US English Female',
+                    
+                    // General female voices
+                    'Samantha', // macOS default female
+                    'Karen', // Australian female
+                    'Victoria', // Common female voice
+                    'Zira' // Windows female
+                ];
+                
+                // Find the best available female voice
+                for (const voiceName of preferredVoices) {
+                    const voice = availableVoices.find(v => 
+                        v.name.includes(voiceName) || 
+                        v.name.toLowerCase().includes('female')
+                    );
+                    
+                    if (voice) {
+                        selectedVoice = voice;
+                        console.log(`Selected female voice: ${selectedVoice.name}`);
+                        return;
+                    }
+                }
+                
+                // Fallback: any English female voice
+                const englishFemaleVoice = availableVoices.find(voice => 
+                    voice.lang.startsWith('en-') && 
+                    (voice.name.toLowerCase().includes('female') || 
+                     voice.name.toLowerCase().includes('woman'))
                 );
                 
-                // Find default English voices
-                const englishVoices = availableVoices.filter(voice => 
+                if (englishFemaleVoice) {
+                    selectedVoice = englishFemaleVoice;
+                    console.log(`Selected fallback female voice: ${selectedVoice.name}`);
+                    return;
+                }
+                
+                // Final fallback: any English voice
+                const englishVoice = availableVoices.find(voice => 
                     voice.lang.startsWith('en-')
                 );
                 
-                // Create option groups
-                if (femaleVoices.length > 0) {
-                    const group = document.createElement('optgroup');
-                    group.label = 'Recommended Female Voices';
-                    
-                    femaleVoices.forEach(voice => {
-                        const option = document.createElement('option');
-                        option.value = voice.name;
-                        option.textContent = `${voice.name} (${voice.lang})`;
-                        group.appendChild(option);
-                    });
-                    
-                    elements.voiceSelect.appendChild(group);
-                    
-                    // Auto-select first female voice
-                    selectedVoice = femaleVoices[0];
-                    elements.voiceSelect.value = selectedVoice.name;
+                if (englishVoice) {
+                    selectedVoice = englishVoice;
+                    console.log(`Selected English voice: ${selectedVoice.name}`);
+                    return;
                 }
                 
-                if (englishVoices.length > 0) {
-                    const group = document.createElement('optgroup');
-                    group.label = 'Other English Voices';
-                    
-                    englishVoices.forEach(voice => {
-                        // Skip voices already in female group
-                        if (!femaleVoices.includes(voice)) {
-                            const option = document.createElement('option');
-                            option.value = voice.name;
-                            option.textContent = `${voice.name} (${voice.lang})`;
-                            group.appendChild(option);
-                        }
-                    });
-                    
-                    elements.voiceSelect.appendChild(group);
-                }
-                
-                // Add other voices as a separate group
-                const otherVoices = availableVoices.filter(voice => 
-                    !voice.lang.startsWith('en-') && 
-                    !femaleVoices.includes(voice)
-                );
-                
-                if (otherVoices.length > 0) {
-                    const group = document.createElement('optgroup');
-                    group.label = 'Other Languages';
-                    
-                    otherVoices.forEach(voice => {
-                        const option = document.createElement('option');
-                        option.value = voice.name;
-                        option.textContent = `${voice.name} (${voice.lang})`;
-                        group.appendChild(option);
-                    });
-                    
-                    elements.voiceSelect.appendChild(group);
-                }
-                
-                // If no voices were found, show a message
-                if (elements.voiceSelect.children.length === 0) {
-                    elements.voiceSelect.innerHTML = '<option value="">No voices available</option>';
+                // Ultimate fallback: first available voice
+                if (availableVoices.length > 0) {
+                    selectedVoice = availableVoices[0];
+                    console.log(`Selected default voice: ${selectedVoice.name}`);
                 }
             }
 
@@ -1011,7 +988,6 @@ Always keep responses concise and avoid markdown formatting.`
             // --- Event Handlers ---
             function setupEventListeners() {
                 elements.toggleButton.addEventListener('click', handleToggleButtonClick);
-                elements.voiceSelect.addEventListener('change', handleVoiceChange);
                 
                 // Handle page visibility changes
                 document.addEventListener('visibilitychange', handleVisibilityChange);
@@ -1040,32 +1016,6 @@ Always keep responses concise and avoid markdown formatting.`
                         // In processing or error state, reset to idle
                         transitionToState(STATE.IDLE);
                 }
-            }
-
-            function handleVoiceChange() {
-                const voiceName = elements.voiceSelect.value;
-                selectedVoice = availableVoices.find(voice => voice.name === voiceName);
-                
-                if (selectedVoice) {
-                    console.log(`Voice changed to: ${selectedVoice.name}`);
-                    // Test the voice with a short message
-                    testVoice();
-                }
-            }
-
-            function testVoice() {
-                if (!speechSynthesis || !selectedVoice) return;
-                
-                // Cancel any ongoing speech
-                stopSpeaking();
-                
-                const testUtterance = new SpeechSynthesisUtterance("Hello, I'm Sophia, your health assistant.");
-                testUtterance.voice = selectedVoice;
-                testUtterance.rate = 0.9;
-                testUtterance.pitch = 1.1; // Slightly higher pitch for more feminine sound
-                testUtterance.volume = 1;
-                
-                speechSynthesis.speak(testUtterance);
             }
 
             function handleRecognitionStart() {
