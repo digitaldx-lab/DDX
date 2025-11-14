@@ -174,6 +174,9 @@
         .hidden {
             display: none !important;
         }
+        .hidden-response {
+            display: none;
+        }
 
         .btn--disabled {
             opacity: 0.6;
@@ -181,6 +184,7 @@
         }
 
         .voice-selector {
+            max-width: 300px;
             background: rgba(15, 23, 42, 0.8);
             border: 1px solid rgba(56, 189, 248, 0.3);
             color: white;
@@ -195,7 +199,7 @@
         <div class="flex flex-col items-center justify-center text-center">
             <!-- Header -->
             <header class="mb-8">
-                <h1 class="text-3xl font-bold text-white mb-2"><span style="color: red;">X</span><span style="color: aqua;">-Trim Research Labs.</span></h1>
+                <h1 class="text-3xl font-bold text-white mb-2"><span style="color: red;">X</span><span style="color: aqua;">-Trim Research Lab.</span></h1>
                 <h1 class="text-3xl font-bold text-white mb-2">Sophia</h1>
                 <p class="text-slate-400">Your AI Health Assistant</p>
             </header>
@@ -213,7 +217,7 @@
             <div class="h-24 mb-8 w-full">
                 <p id="status-message" class="text-xl text-slate-400 mb-2">Press the mic to start</p>
                 <p id="transcript-message" class="text-lg text-slate-300 min-h-[1.5rem] fade-in"></p>
-                <p id="response-message" class="hidden text-md text-emerald-300 mt-2 min-h-[1.5rem] fade-in"></p>
+                <p id="response-message" class="hidden-response text-md text-emerald-300 mt-2 min-h-[1.5rem] fade-in"></p>
             </div>
 
             <!-- Control Button -->
@@ -233,6 +237,7 @@
             <div class="mt-4">
                 <label for="voice-select" class="text-sm text-slate-400">Voice:</label>
                 <select id="voice-select" class="voice-selector">
+                    max-width: 300px;
                     <option value="">Finding voices...</option>
                 </select>
             </div>
@@ -826,6 +831,7 @@
 IMPORTANT: 
 1. You must only suggest tests from this predefined list. Do not invent or suggest any tests not in this list:
 2. You MUST NOT pronounce "*" "asterisk" or any special characters when speaking.
+3. Do NOT state test prices, prompt user to order test from the website for pricing details.
 
 ${Object.values(TEST_SUGGESTIONS).map(test => 
     `- ${test.name} (${test.category}): ${test.description}}`
